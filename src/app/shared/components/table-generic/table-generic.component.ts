@@ -17,6 +17,7 @@ import {
 } from '../../model/table-column-param.model';
 import { PaginatedDataSource } from '../../common/paginated-datasource';
 import { SearchProductComponent } from '../../../features/product/search-product/search-product.component';
+import { TableGenericService } from './table-generic.service';
 
 @Component({
   selector: 'app-table-generic',
@@ -25,7 +26,7 @@ import { SearchProductComponent } from '../../../features/product/search-product
   templateUrl: './table-generic.component.html',
   styleUrl: './table-generic.component.css',
 })
-export class TableGenericComponent<T> implements AfterViewInit {
+export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   public columnTypeEnum = ColumnTypeParamEnum;
 
   private _columns?: TableColumnParamModel[];
@@ -49,7 +50,16 @@ export class TableGenericComponent<T> implements AfterViewInit {
 
   pageIndex?: number;
 
-  constructor(private _liveAnnouncer: LiveAnnouncer) {}
+  constructor(
+    private _liveAnnouncer: LiveAnnouncer,
+    private readonly tableGenericService: TableGenericService
+  ) {}
+
+  ngOnInit(): void {
+    this.tableGenericService.onPageIndexChangeObs.subscribe(
+      (index) => (this.pageIndex = index)
+    );
+  }
 
   ngAfterViewInit() {
     this.paginatedDataSource.dataSource.paginator = this.paginator!;
@@ -67,5 +77,6 @@ export class TableGenericComponent<T> implements AfterViewInit {
 
   onPageChange(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
+    this.tableGenericService.sendPageIndex(this.pageIndex);
   }
 }

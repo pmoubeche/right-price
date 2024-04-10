@@ -1,20 +1,7 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
-import { MaterialModule } from '../../../shared/material/material.module';
-import { ProductInfosModel } from '../../../shared/model/product-attribute-displayed.model';
-import { Product, ResponseProducts } from '../../../shared/model/product.model';
-import {
-  ColumnTypeParamEnum,
-  TableColumnParamModel,
-} from '../../../shared/model/table-column-param.model';
 import {
   EcoscoreGrade,
   NovagroupGrade,
@@ -25,8 +12,13 @@ import {
   NovagroupLinks,
   NutriscoreLinks,
 } from '../../../shared/enum/svg-urls.enum';
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
+import { MaterialModule } from '../../../shared/material/material.module';
+import { ProductInfosModel } from '../../../shared/model/product-attribute-displayed.model';
+import { ResponseProducts } from '../../../shared/model/product.model';
+import {
+  ColumnTypeParamEnum,
+  TableColumnParamModel,
+} from '../../../shared/model/table-column-param.model';
 
 @Component({
   selector: 'app-list-product',

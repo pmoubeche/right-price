@@ -15,6 +15,7 @@ import {
   ResponseProducts,
 } from '../../../shared/model/product.model';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
+import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 
 export enum ChipParamSearch {
   BARCODE = 'Barcode',
@@ -45,15 +46,18 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   public chipList: string[] = Object.values(ChipParamSearch);
   public selectedChip?: string;
   public searchForm?: FormGroup;
+  public pageIndex?: number;
 
   private subscription: Subscription = new Subscription();
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly openFoodFactApiService: OpenFoodFactsApiService
+    private readonly openFoodFactApiService: OpenFoodFactsApiService,
+    private readonly tableGenericService: TableGenericService
   ) {}
 
   ngOnInit(): void {
     this.setForm();
+    this.switchPage();
   }
 
   /**
@@ -63,6 +67,16 @@ export class SearchProductComponent implements OnInit, OnDestroy {
     this.searchForm = this.formBuilder.group({
       [this.INPUT_TEXT]: [''],
       [this.CHIP_OPTION]: [],
+    });
+  }
+
+  private switchPage(): void {
+    this.tableGenericService.onPageIndexChangeObs.subscribe((index) => {
+      if (index >= 0) {
+        this.pageIndex = index;
+        // page number is equal to page index +1
+        this.search(index + 1);
+      }
     });
   }
 
