@@ -1,0 +1,12 @@
+@use 'app-utils' as utils;
+
+// Mixin utilisée pour surcharger le thème des mat-radio-button d'Angular Material
+@mixin theme($theme) {
+  mat-radio-button {
+    // Unifie la couleur du background du bouton radio
+    // afin de supprimer le point blanc visible à un certain niveau de zoom
+    .mdc-radio__inner-circle {
+      background-color: var(--mdc-radio-selected-icon-color);
+    }
+  }
+}

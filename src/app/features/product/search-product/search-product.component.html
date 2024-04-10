@@ -1,0 +1,31 @@
+<mat-expansion-panel expanded="true">
+  <mat-expansion-panel-header>
+    <mat-panel-title i18n>Search food</mat-panel-title>
+  </mat-expansion-panel-header>
+  <form [formGroup]="searchForm!">
+    <mat-chip-listbox [formControlName]="CHIP_OPTION">
+      @for (chipParam of chipList; track $index) {
+      <mat-chip-option color="primary" [selected]="selectedChip">{{
+        chipParam
+      }}</mat-chip-option>
+      }
+    </mat-chip-listbox>
+    <br />
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        type="text"
+        placeholder="Search product"
+        aria-label="Search"
+        [formControlName]="INPUT_TEXT"
+      />
+      <button mat-icon-button matSuffix (click)="search()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+</mat-expansion-panel>
+
+<h3>{{ product?._id }}</h3>
+
+<img src="{{ product?.image_front_small_url }}" />

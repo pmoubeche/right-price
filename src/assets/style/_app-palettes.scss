@@ -1,0 +1,149 @@
+// Polices définies dans la charte
+// https://confluence.constellation.soprasteria.com/display/TOCATA2/00.0.1.2+-+Polices
+$sombre-emphase-haute: rgba(#000000, 0.87);
+$sombre-emphase-moyenne: rgba(#000000, 0.6);
+$sombre-emphase-basse: rgba(#000000, 0.38);
+
+$clair-emphase-haute: rgba(#FFFFFF, 0.87);
+$clair-emphase-moyenne: rgba(#FFFFFF, 0.6);
+$clair-emphase-basse: rgba(#FFFFFF, 0.38);
+
+$arriere-plan-app: #F1F1F1;
+$arriere-plan-composant: #FFFFFF;
+
+// Palettes générées à partir des couleurs définies dans la charte
+$palette-principale: (
+  50: #e3f1fb,
+  100: #bcdbf5,
+  200: #94c5ef,
+  300: #6dafe8,// Couleur ligne switch
+  400: #529ee4,
+  500: #4c7ed0,// Couleur lien (valeur initiale = #3d8fdf)
+  600: #3881d2,
+  700: #3170bf,
+  800: #2b5fad,// Couleur principale
+  900: #21428d,
+  contrast: (
+    50: $sombre-emphase-haute,
+    100: $sombre-emphase-haute,
+    200: $sombre-emphase-haute,
+    300: $sombre-emphase-haute,
+    400: $sombre-emphase-haute,
+    500: $clair-emphase-haute,
+    600: $clair-emphase-haute,
+    700: $clair-emphase-haute,
+    800: $clair-emphase-haute,
+    900: $clair-emphase-haute,
+  )
+);
+
+$palette-secondaire: (
+  50: #e0f1f2,
+  100: #b2ddde,
+  200: #7fc8c9,
+  300: #4cb3b2,
+  400: #25a2a0,
+  500: #00928e,
+  600: #008580,// Couleur secondaire
+  700: #027570,
+  800: #056560,
+  900: #064943,
+  contrast: (
+    50: $sombre-emphase-haute,
+    100: $sombre-emphase-haute,
+    200: $sombre-emphase-haute,
+    300: $sombre-emphase-haute,
+    400: $sombre-emphase-haute,
+    500: $clair-emphase-haute,
+    600: $clair-emphase-haute,
+    700: $clair-emphase-haute,
+    800: $clair-emphase-haute,
+    900: $clair-emphase-haute,
+  )
+);
+
+$palette-danger: (
+  50: #fffee6,
+  100: #fffac1,
+  200: #fef697,
+  300: #fdf16b,
+  400: #fbed46,
+  500: #f8e814,
+  600: #ffdc1c,
+  700: #ffc30f,
+  800: #ffab00,// Couleur avertissement
+  900: #ec6000,// Couleur tertiaire (valeur initiale = #fe7f00)
+  contrast: (
+    50: $sombre-emphase-haute,
+    100: $sombre-emphase-haute,
+    200: $sombre-emphase-haute,
+    300: $sombre-emphase-haute,
+    400: $sombre-emphase-haute,
+    500: $clair-emphase-haute,
+    600: $clair-emphase-haute,
+    700: $clair-emphase-haute,
+    800: $clair-emphase-haute,
+    900: $clair-emphase-haute,
+  )
+);
+
+$palette-erreur: (
+  50: #ffebee,
+  100: #ffccd1,
+  200: #f39998,
+  300: #eb716f,
+  400: #f54f4a,
+  500: #f93e2e,
+  600: #eb332e,
+  700: #d92828,// Couleur erreur
+  800: #cc2021,
+  900: #be0e13,
+  contrast: (
+    50: $sombre-emphase-haute,
+    100: $sombre-emphase-haute,
+    200: $sombre-emphase-haute,
+    300: $sombre-emphase-haute,
+    400: $sombre-emphase-haute,
+    500: $clair-emphase-haute,
+    600: $clair-emphase-haute,
+    700: $clair-emphase-haute,
+    800: $clair-emphase-haute,
+    900: $clair-emphase-haute,
+  )
+);
+
+$palette-arriere-plan: (
+  status-bar: #e0e0e0,
+  app-bar:    #f5f5f5,
+  background: #f1f1f1,// Arrière-plan app
+  hover:      rgba(black, 0.04),
+  card:       white,// Arrière-plan composant
+  dialog:     white,
+  disabled-button: rgba(black, 0.12),
+  raised-button: white,
+  focused-button: rgba(black, 0.12),
+  selected-button: #e0e0e0,
+  selected-disabled-button: #9e9e9e,
+  disabled-button-toggle: #eeeeee,
+  unselected-chip: #e0e0e0,
+  disabled-list-option: #eeeeee,
+  tooltip: #616161,
+);
+
+$palette-avant-plan: (
+  base:              black,
+  divider:           rgba(black, 0.12),
+  dividers:          rgba(black, 0.12),
+  disabled:          $sombre-emphase-basse,
+  disabled-button:   rgba(black, 0.26),
+  disabled-text:     $sombre-emphase-basse,
+  elevation:         black,
+  hint-text:         $sombre-emphase-basse,
+  secondary-text:    $sombre-emphase-moyenne,
+  icon:              rgba(black, 0.54),
+  icons:             rgba(black, 0.54),
+  text:              $sombre-emphase-haute,
+  slider-min:        $sombre-emphase-haute,
+  slider-off:        rgba(black, 0.26),
+  slider-off-active: $sombre-emphase-basse,
+);

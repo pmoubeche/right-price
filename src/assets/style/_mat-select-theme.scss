@@ -1,0 +1,11 @@
+@use 'app-utils' as utils;
+
+/// Mixin utilisée pour surcharger le thème des mat-select d'Angular Material
+@mixin theme($theme) {
+  mat-select {
+    // Force le passage à la ligne du texte dans le mat-select
+    .mat-mdc-select-value-text {
+      white-space: normal;
+    }
+  }
+}

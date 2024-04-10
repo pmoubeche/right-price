@@ -1,0 +1,12 @@
+@use 'app-utils' as utils;
+
+/// Mixin de normalisation des éléments HTML natifs
+@mixin normalisation() {
+  html {
+    background-color: utils.get-couleur-arriere-plan-app();
+  }
+
+  body {
+    margin: 0;
+  }
+}

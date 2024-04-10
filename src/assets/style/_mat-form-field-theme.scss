@@ -1,0 +1,63 @@
+@use 'app-utils' as utils;
+
+/// Mixin utilisée pour surcharger le thème des champs de formulaire d'Angular Material
+@mixin theme($theme) {
+  mat-form-field {
+    // Ajustement de la marge sous les champs de formulaire
+    margin-bottom: 0.5rem;
+
+    // Classe utilisée pour forcer l'affichage de la flèche au survol d'un input champ référentiel
+    .input-champ-referentiel:hover {
+      cursor: default;
+    }
+
+    // Ajustement de l'aspect des champs de type "consultation" selon la charte
+    &.consultation {
+      /*
+       * Supprime les events type click ou hover au niveau du champ,
+       * ce qui empêche d'afficher le curseur de saisie et de changer
+       * la couleur d'arrière-plan du champ
+       */
+      pointer-events: none;
+
+      /*
+       * Supprime les events type click ou hover au niveau du champ en mode survol,
+       * ce qui empêche d'afficher le curseur de saisie et de changer
+       * la couleur d'arrière-plan du champ
+       */
+      &:hover {
+        pointer-events: none;
+      }
+
+      // Force la couleur d'arrière-plan du champ à blanc
+      .mdc-text-field--filled {
+        background-color: utils.get-couleur-arriere-plan-composant();
+      }
+
+      /*
+       * Supprime les events type click ou hover au niveau du label,
+       * ce qui empêche d'afficher le curseur de saisie et de changer
+       * la couleur d'arrière-plan du champ
+       */
+      .mdc-floating-label {
+        pointer-events: none !important;
+      }
+
+      /*
+       * Supprime les events type click ou hover des suffix des champs,
+       * ce qui empêche d'afficher le curseur de saisie et de changer
+       * la couleur d'arrière-plan du champ
+       */
+      .mat-mdc-form-field-icon-suffix {
+        pointer-events: none;
+      }
+    }
+
+    /*
+     * Ajoute un espace devant l'astérisque des champs obligatoires
+     */
+    .mdc-floating-label--required:not(.mdc-floating-label--hide-required-marker)::after {
+      content: " *" !important;
+    }
+  }
+}

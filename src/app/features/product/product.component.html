@@ -1,0 +1,6 @@
+<br />
+<app-search-product
+  (eventHttpProductsChange)="onHttpProductsChange($event)"
+></app-search-product>
+<br />
+<app-list-product [httpProducts]="httpProducts"></app-list-product>

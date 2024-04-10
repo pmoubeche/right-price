@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.example-form {
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }

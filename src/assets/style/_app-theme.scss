@@ -1,0 +1,177 @@
+@use 'sass:map';
+
+@use '@angular/material' as material;
+
+@use 'app-palettes' as palettes;
+
+@use 'mat-dialog-theme' as mat-dialog;
+@use 'mat-form-field-theme' as mat-form-field;
+@use 'mat-icon-theme' as mat-icon;
+@use 'mat-paginator-theme' as mat-paginator;
+@use 'mat-slide-toggle-theme' as mat-slide-toggle;
+@use 'mat-snackbar-theme' as mat-snackbar;
+@use 'mat-radio-button-theme' as mat-radio-button;
+@use 'mat-select-theme' as mat-select;
+
+/// Mixin qui permet d'appliquer le thème de l'application
+@mixin theme() {
+  // On définit la configuration de base
+  $theme-base: _definir-theme-base();
+
+  // On enrichit la configuration de base
+  $theme-final: _enrichir-theme-base($theme-base);
+
+  // On applique le thème à tous les composants
+  @include material.all-component-themes($theme-final);
+
+  // On applique la typographie par défaut à tous les composants
+  @include material.all-component-typographies($theme-final);
+
+  // On ajoute les thèmes spécifiques aux composants
+  @include _ajouter-themes-composants($theme-final);
+}
+
+/// Fonction qui permet de définir le thème de base de l'application
+@function _definir-theme-base() {
+  // On définit les couleurs personnalisées
+  $couleurs: (
+    primary: material.define-palette(palettes.$palette-principale, 800),
+    accent: material.define-palette(palettes.$palette-secondaire, 600),
+    warn: material.define-palette(palettes.$palette-erreur, 700),
+  );
+
+  // On définit les éléments HTML personnalisés
+  // NOTE: headline-1 doit correspondre à headline-5 et headline-2 doit correspondre à headline-6
+  // pour que la configuration fonctionne avec tous les composants
+  $typographie: material.define-typography-config(
+    $headline-1:
+      material.define-typography-level(
+        $font-size: 24px,
+        $line-height: 28px,
+        $font-weight: 400,
+        $letter-spacing: 0px,
+      ),
+    $headline-2:
+      material.define-typography-level(
+        $font-size: 20px,
+        $line-height: 23px,
+        $font-weight: 500,
+        $letter-spacing: 0px,
+      ),
+    $headline-3:
+      material.define-typography-level(
+        $font-size: 16px,
+        $line-height: 19px,
+        $font-weight: 400,
+        $letter-spacing: 0px,
+      ),
+    $headline-4:
+      material.define-typography-level(
+        $font-size: 16px,
+        $line-height: 19px,
+        $font-weight: 400,
+        $letter-spacing: 0px,
+      ),
+    $headline-5:
+      material.define-typography-level(
+        $font-size: 24px,
+        $line-height: 28px,
+        $font-weight: 400,
+        $letter-spacing: 0px,
+      ),
+    $headline-6:
+      material.define-typography-level(
+        $font-size: 20px,
+        $line-height: 23px,
+        $font-weight: 500,
+        $letter-spacing: 0px,
+      ),
+    $subtitle-1:
+      material.define-typography-level(
+        $font-size: 16px,
+        $line-height: 19px,
+        $font-weight: 400,
+        $letter-spacing: 0px,
+      ),
+    $subtitle-2:
+      material.define-typography-level(
+        $font-size: 14px,
+        $line-height: 16px,
+        $font-weight: 500,
+        $letter-spacing: 0.15px,
+      ),
+    $body-1:
+      material.define-typography-level(
+        $font-size: 16px,
+        $line-height: 19px,
+        $font-weight: 400,
+        $letter-spacing: 0px,
+      ),
+    $body-2:
+      material.define-typography-level(
+        $font-size: 14px,
+        $line-height: 16px,
+        $font-weight: 400,
+        $letter-spacing: 0.15px,
+      ),
+    $caption:
+      material.define-typography-level(
+        $font-size: 12px,
+        $line-height: 14px,
+        $font-weight: 400,
+        $letter-spacing: 0px,
+      ),
+    $button:
+      material.define-typography-level(
+        $font-size: 14px,
+        $line-height: 19px,
+        $font-weight: 500,
+        $letter-spacing: 0px,
+      ),
+    $overline:
+      material.define-typography-level(
+        $font-size: 14px,
+        $line-height: 16px,
+        $font-weight: 500,
+        $letter-spacing: 0.15px,
+      ),
+  );
+
+  // On définit le thème clair (pas de thème sombre)
+  @return material.define-light-theme(
+    (
+      color: $couleurs,
+      typography: $typographie,
+    )
+  );
+}
+
+/// Fonction qui permet d'ajouter la palette danger et de surcharger la configuration
+/// de l'arrière-plan
+/// @param {Map} $theme-base le thème de base
+@function _enrichir-theme-base($theme-base) {
+  @return map.deep-merge(
+    $theme-base,
+    (
+      color: (
+        danger: material.define-palette(palettes.$palette-danger),
+        background: palettes.$palette-arriere-plan,
+        foreground: palettes.$palette-avant-plan,
+      ),
+    )
+  );
+}
+
+/// Fonction qui permet d'ajouter les thèmes spécifiques aux composants dans
+/// le thème de l'application
+/// @param {Map} $theme le thème auquel on ajoute les thèmes des composants
+@mixin _ajouter-themes-composants($theme) {
+  @include mat-dialog.theme($theme);
+  @include mat-form-field.theme($theme);
+  @include mat-paginator.theme($theme);
+  @include mat-slide-toggle.theme($theme);
+  @include mat-icon.theme($theme);
+  @include mat-snackbar.theme($theme);
+  @include mat-radio-button.theme($theme);
+  @include mat-select.theme($theme);
+}
