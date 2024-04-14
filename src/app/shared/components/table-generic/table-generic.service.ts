@@ -11,10 +11,17 @@ export class TableGenericService {
   public loadingBs = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingBs.asObservable();
 
+  public selectItemBs = new BehaviorSubject<string>('');
+  public selectItem$ = this.selectItemBs.asObservable();
+
   constructor() {}
 
   onPageChange(pageIndex: number) {
     this.onPageIndexChangeBs.next(pageIndex);
     this.loadingBs.next(true);
+  }
+
+  onSelectItem(itemId: string) {
+    this.selectItemBs.next(itemId);
   }
 }

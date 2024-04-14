@@ -41,6 +41,8 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   displayedColumns: (string | undefined)[] = [];
   @Input() paginatedDataSource = new PaginatedDataSource<T>();
+  @Input() isPaginated = true;
+  @Input() isClickable = false;
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -79,5 +81,9 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   onPageChange(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.tableGenericService.onPageChange(this.pageIndex);
+  }
+
+  onSelectItem(row: any): void {
+    this.tableGenericService.onSelectItem(row.id);
   }
 }

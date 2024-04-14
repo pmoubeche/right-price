@@ -6,6 +6,7 @@ export class TableColumnParamModel {
   icone?: string;
   width?: string;
   isClickable?: boolean;
+  applyStyleWithImage?: boolean = true;
 }
 
 export enum ColumnTypeParamEnum {

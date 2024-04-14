@@ -1,3 +1,18 @@
-<mat-expansion-panel>
+<mat-expansion-panel [expanded]="true">
   <mat-expansion-panel-header>Food details</mat-expansion-panel-header>
+  <mat-grid-list cols="2" rowHeight="1:1">
+    <mat-grid-tile title="Product">
+      <img src="{{ product?.image_front_url }}" />
+      <br />
+      <p>{{ product?.generic_name }}</p>
+    </mat-grid-tile>
+    <mat-grid-tile title="Ingredients"
+      ><app-table-generic
+        [columns]="columnParamsIngredients"
+        [isPaginated]="false"
+        [paginatedDataSource]="ingredientDataSources"
+      >
+      </app-table-generic>
+    </mat-grid-tile>
+  </mat-grid-list>
 </mat-expansion-panel>

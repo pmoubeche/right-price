@@ -50,7 +50,6 @@ export class ListProductComponent {
     return this._httpProducts;
   }
 
-  dataProducts = new MatTableDataSource<ProductInfosModel>();
   paginatedDataProducts = new PaginatedDataSource<ProductInfosModel>();
   eventPageIndexChange = new EventEmitter<Event>();
 

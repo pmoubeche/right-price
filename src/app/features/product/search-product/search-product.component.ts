@@ -35,12 +35,12 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   readonly INPUT_TEXT: string = 'inputText';
   readonly CHIP_OPTION: string = 'chipOption';
 
-  @Input() public product?: Product;
-  @Input() public products: Product[] = [];
+  @Input() public httpProduct: ResponseProduct = new ResponseProduct();
   @Input() public httpProducts: ResponseProducts = new ResponseProducts();
 
   @Output() eventProductsChange = new EventEmitter<Product[]>();
   @Output() eventHttpProductsChange = new EventEmitter<ResponseProducts>();
+  @Output() eventHttpProductChange = new EventEmitter<ResponseProduct>();
 
   productRes?: ResponseProduct;
   public chipList: string[] = Object.values(ChipParamSearch);
@@ -57,6 +57,13 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setForm();
     this.switchPage();
+    this.selectFromTableList();
+  }
+
+  private selectFromTableList() {
+    this.tableGenericService.selectItem$.subscribe((barcode) => {
+      this.searchById(barcode);
+    });
   }
 
   /**
@@ -65,7 +72,7 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   setForm(): void {
     this.searchForm = this.formBuilder.group({
       [this.INPUT_TEXT]: [''],
-      [this.CHIP_OPTION]: [],
+      [this.CHIP_OPTION]: [''],
     });
   }
 
@@ -79,6 +86,8 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
   search(pageIndex?: number): void {
+    this.httpProduct = new ResponseProduct();
+    this.httpProducts = new ResponseProducts();
     switch (this.searchForm?.get(this.CHIP_OPTION)?.value) {
       case ChipParamSearch.BARCODE:
         this.searchById();
@@ -98,13 +107,16 @@ export class SearchProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  searchById(): void {
+  searchById(barcode?: string): void {
     this.subscription.add(
       this.openFoodFactApiService
-        .findProductByBarCode(this.searchForm?.get(this.INPUT_TEXT)?.value)
+        .findProductByBarCode(
+          barcode ? barcode : this.searchForm?.get(this.INPUT_TEXT)?.value
+        )
         .pipe(
           tap((response: ResponseProduct) => {
-            this.product = response.product;
+            this.httpProduct = response;
+            this.eventHttpProductChange.emit(this.httpProduct);
           })
           // catchError(() => {
           //   return of()
