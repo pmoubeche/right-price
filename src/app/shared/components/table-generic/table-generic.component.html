@@ -1,4 +1,5 @@
 <div class="mat-elevation-z8">
+  @if (paginatedDataSource.dataSource && this.loading === false) {
   <table
     mat-table
     [dataSource]="paginatedDataSource.dataSource"
@@ -48,4 +49,7 @@
     aria-label="Select page"
   >
   </mat-paginator>
+  } @else {
+  <mat-spinner style="margin: 0 auto"></mat-spinner>
+  }
 </div>

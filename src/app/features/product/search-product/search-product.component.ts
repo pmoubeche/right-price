@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Observable, Subscription, finalize, tap } from 'rxjs';
 import { MaterialModule } from '../../../shared/material/material.module';
 import {
   Product,
@@ -46,7 +46,6 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   public chipList: string[] = Object.values(ChipParamSearch);
   public selectedChip?: string;
   public searchForm?: FormGroup;
-  public pageIndex?: number;
 
   private subscription: Subscription = new Subscription();
   constructor(
@@ -71,9 +70,8 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
   private switchPage(): void {
-    this.tableGenericService.onPageIndexChangeObs.subscribe((index) => {
+    this.tableGenericService.onPageIndexChange$.subscribe((index) => {
       if (index >= 0) {
-        this.pageIndex = index;
         // page number is equal to page index +1
         this.search(index + 1);
       }
@@ -155,6 +153,10 @@ export class SearchProductComponent implements OnInit, OnDestroy {
         tap((response: ResponseProducts) => {
           this.httpProducts = response;
           this.eventHttpProductsChange.emit(this.httpProducts);
+          this.tableGenericService.loadingBs.next(true);
+        }),
+        finalize(() => {
+          this.tableGenericService.loadingBs.next(false);
         })
       )
       .subscribe();

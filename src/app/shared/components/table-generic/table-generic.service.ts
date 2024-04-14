@@ -5,13 +5,16 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class TableGenericService {
-  private behaviorSubjectOnPageIndexChange = new BehaviorSubject<number>(-1);
-  public onPageIndexChangeObs =
-    this.behaviorSubjectOnPageIndexChange.asObservable();
+  private onPageIndexChangeBs = new BehaviorSubject<number>(-1);
+  public onPageIndexChange$ = this.onPageIndexChangeBs.asObservable();
+
+  public loadingBs = new BehaviorSubject<boolean>(false);
+  public loading$ = this.loadingBs.asObservable();
 
   constructor() {}
 
-  sendPageIndex(pageIndex: number) {
-    this.behaviorSubjectOnPageIndexChange.next(pageIndex);
+  onPageChange(pageIndex: number) {
+    this.onPageIndexChangeBs.next(pageIndex);
+    this.loadingBs.next(true);
   }
 }
