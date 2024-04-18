@@ -37,7 +37,11 @@
       class="row-link"
     ></tr>
     } @else{
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      [ngStyle]="{ height: rowHeight }"
+    ></tr>
     }
   </table>
 

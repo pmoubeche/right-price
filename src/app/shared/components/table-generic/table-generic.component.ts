@@ -15,11 +15,12 @@ import {
   TableColumnParamModel,
 } from '../../model/table-column-param.model';
 import { TableGenericService } from './table-generic.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-table-generic',
   standalone: true,
-  imports: [MaterialModule],
+  imports: [MaterialModule, CommonModule],
   templateUrl: './table-generic.component.html',
   styleUrl: './table-generic.component.css',
 })
@@ -41,6 +42,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   displayedColumns: (string | undefined)[] = [];
   @Input() paginatedDataSource = new PaginatedDataSource<T>();
+  @Input() rowHeight?: string;
   @Input() isPaginated = true;
   @Input() isClickable = false;
 

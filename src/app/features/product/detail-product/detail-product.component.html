@@ -1,18 +1,89 @@
 <mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header>Food details</mat-expansion-panel-header>
-  <mat-grid-list cols="2" rowHeight="1:1">
-    <mat-grid-tile title="Product">
-      <img src="{{ product?.image_front_url }}" />
-      <br />
-      <p>{{ product?.generic_name }}</p>
+  <mat-expansion-panel-header>Product details</mat-expansion-panel-header>
+  <mat-grid-list cols="3" rowHeight="1:2">
+    <mat-grid-tile [colspan]="1" title="Product">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{
+            product?.product_name! | uppercaseFirstLetterFormat
+          }}</mat-card-title>
+        </mat-card-header>
+        <div class="product-image">
+          <img mat-card-image src="{{ product?.image_front_url }}" />
+        </div>
+        <mat-card-actions>
+          <img
+            mat-card-image
+            class="product-score"
+            src="{{ nutriscoreImageUrl }}"
+          />
+          <img
+            mat-card-image
+            class="product-score"
+            src="{{ ecoscoreImageUrl }}"
+          />
+          <img
+            mat-card-image
+            class="product-score"
+            src="{{ novagroupImageUrl }}"
+          />
+        </mat-card-actions>
+      </mat-card>
     </mat-grid-tile>
-    <mat-grid-tile title="Ingredients"
-      ><app-table-generic
-        [columns]="columnParamsIngredients"
+    <mat-grid-tile [colspan]="1">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Details</mat-card-title>
+        </mat-card-header>
+        <div style="padding: 1rem 1rem 1rem 1rem">
+          <p>
+            <strong>Barcode :</strong>
+            {{ product?._id }}
+          </p>
+          <p><strong> Name :</strong> {{ product?.product_name }}</p>
+          <p>
+            <strong>Quantity :</strong>
+            {{ product?.product_quantity }}
+            {{ product?.product_quantity_unit }}
+          </p>
+          <p><strong> Brands :</strong> {{ product?.brands }}</p>
+          <p><strong> Categories :</strong> {{ product?.categories }}</p>
+          <p><strong> Packaging:</strong> {{ product?.packaging }}</p>
+          <br />
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Ingredients</mat-card-title>
+        </mat-card-header>
+        <app-table-generic
+          [columns]="columnParamsIngredients"
+          [isPaginated]="false"
+          [paginatedDataSource]="ingredientDataSources"
+          [rowHeight]="'1.5rem'"
+        >
+        </app-table-generic>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <mat-grid-list cols="2">
+    <mat-grid-tile [colspan]="1">
+      <app-table-generic
+        [columns]="columnParamsNutriments"
         [isPaginated]="false"
-        [paginatedDataSource]="ingredientDataSources"
+        [paginatedDataSource]="nutrimentsDataSources"
       >
       </app-table-generic>
+    </mat-grid-tile>
+
+    <mat-grid-tile [colspan]="1">
+      <app-chart
+        type="pie"
+        [data]="chartPieData!"
+        [options]="chartOptions"
+      ></app-chart>
     </mat-grid-tile>
   </mat-grid-list>
 </mat-expansion-panel>

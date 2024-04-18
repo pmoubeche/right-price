@@ -1,0 +1,24 @@
+.product-image {
+  display: inline-flex;
+  justify-content: center;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+.product-score {
+  height: 6rem;
+  padding: 1rem 1rem 1rem 1rem;
+}
+
+.mat-mdc-card-header {
+  display: flex;
+  padding: 1.5rem 1.5rem 1.5rem;
+}
+
+.mdc-card__actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 1rem;
+  justify-content: flex-end;
+}
