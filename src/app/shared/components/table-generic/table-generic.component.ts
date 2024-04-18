@@ -1,28 +1,26 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   Input,
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MaterialModule } from '../../material/material.module';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { PaginatedDataSource } from '../../common/paginated-datasource';
+import { MaterialModule } from '../../material/material.module';
 import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../model/table-column-param.model';
-import { PaginatedDataSource } from '../../common/paginated-datasource';
-import { SearchProductComponent } from '../../../features/product/search-product/search-product.component';
 import { TableGenericService } from './table-generic.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-table-generic',
   standalone: true,
-  imports: [MaterialModule],
+  imports: [MaterialModule, CommonModule],
   templateUrl: './table-generic.component.html',
   styleUrl: './table-generic.component.css',
 })
@@ -44,11 +42,15 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   displayedColumns: (string | undefined)[] = [];
   @Input() paginatedDataSource = new PaginatedDataSource<T>();
+  @Input() rowHeight?: string;
+  @Input() isPaginated = true;
+  @Input() isClickable = false;
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
   pageIndex?: number;
+  loading = false;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -56,8 +58,11 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.tableGenericService.onPageIndexChangeObs.subscribe(
+    this.tableGenericService.onPageIndexChange$.subscribe(
       (index) => (this.pageIndex = index)
+    );
+    this.tableGenericService.loading$.subscribe(
+      (loading) => (this.loading = loading)
     );
   }
 
@@ -77,6 +82,10 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   onPageChange(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
-    this.tableGenericService.sendPageIndex(this.pageIndex);
+    this.tableGenericService.onPageChange(this.pageIndex);
+  }
+
+  onSelectItem(row: any): void {
+    this.tableGenericService.onSelectItem(row.id);
   }
 }

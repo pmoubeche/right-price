@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Observable, Subscription, finalize, tap } from 'rxjs';
 import { MaterialModule } from '../../../shared/material/material.module';
 import {
   Product,
@@ -35,18 +35,17 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   readonly INPUT_TEXT: string = 'inputText';
   readonly CHIP_OPTION: string = 'chipOption';
 
-  @Input() public product?: Product;
-  @Input() public products: Product[] = [];
+  @Input() public httpProduct: ResponseProduct = new ResponseProduct();
   @Input() public httpProducts: ResponseProducts = new ResponseProducts();
 
   @Output() eventProductsChange = new EventEmitter<Product[]>();
   @Output() eventHttpProductsChange = new EventEmitter<ResponseProducts>();
+  @Output() eventHttpProductChange = new EventEmitter<ResponseProduct>();
 
   productRes?: ResponseProduct;
   public chipList: string[] = Object.values(ChipParamSearch);
   public selectedChip?: string;
   public searchForm?: FormGroup;
-  public pageIndex?: number;
 
   private subscription: Subscription = new Subscription();
   constructor(
@@ -58,6 +57,13 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setForm();
     this.switchPage();
+    this.selectFromTableList();
+  }
+
+  private selectFromTableList() {
+    this.tableGenericService.selectItem$.subscribe((barcode) => {
+      this.searchById(barcode);
+    });
   }
 
   /**
@@ -66,14 +72,13 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   setForm(): void {
     this.searchForm = this.formBuilder.group({
       [this.INPUT_TEXT]: [''],
-      [this.CHIP_OPTION]: [],
+      [this.CHIP_OPTION]: [''],
     });
   }
 
   private switchPage(): void {
-    this.tableGenericService.onPageIndexChangeObs.subscribe((index) => {
+    this.tableGenericService.onPageIndexChange$.subscribe((index) => {
       if (index >= 0) {
-        this.pageIndex = index;
         // page number is equal to page index +1
         this.search(index + 1);
       }
@@ -81,6 +86,8 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
   search(pageIndex?: number): void {
+    this.httpProduct = new ResponseProduct();
+    this.httpProducts = new ResponseProducts();
     switch (this.searchForm?.get(this.CHIP_OPTION)?.value) {
       case ChipParamSearch.BARCODE:
         this.searchById();
@@ -100,13 +107,16 @@ export class SearchProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  searchById(): void {
+  searchById(barcode?: string): void {
     this.subscription.add(
       this.openFoodFactApiService
-        .findProductByBarCode(this.searchForm?.get(this.INPUT_TEXT)?.value)
+        .findProductByBarCode(
+          barcode ? barcode : this.searchForm?.get(this.INPUT_TEXT)?.value
+        )
         .pipe(
           tap((response: ResponseProduct) => {
-            this.product = response.product;
+            this.httpProduct = response;
+            this.eventHttpProductChange.emit(this.httpProduct);
           })
           // catchError(() => {
           //   return of()
@@ -155,6 +165,10 @@ export class SearchProductComponent implements OnInit, OnDestroy {
         tap((response: ResponseProducts) => {
           this.httpProducts = response;
           this.eventHttpProductsChange.emit(this.httpProducts);
+          this.tableGenericService.loadingBs.next(true);
+        }),
+        finalize(() => {
+          this.tableGenericService.loadingBs.next(false);
         })
       )
       .subscribe();

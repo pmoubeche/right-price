@@ -19,6 +19,8 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../../shared/model/table-column-param.model';
+import { ProductUtils } from '../../../shared/utils/product.utils';
+import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-first-letter-format.pipe';
 
 @Component({
   selector: 'app-list-product',
@@ -50,7 +52,6 @@ export class ListProductComponent {
     return this._httpProducts;
   }
 
-  dataProducts = new MatTableDataSource<ProductInfosModel>();
   paginatedDataProducts = new PaginatedDataSource<ProductInfosModel>();
   eventPageIndexChange = new EventEmitter<Event>();
 
@@ -83,6 +84,10 @@ export class ListProductComponent {
     },
   ];
 
+  constructor(
+    private readonly uppercaseFristLetterPipe: UppercaseFirstLetterFormatPipe
+  ) {}
+
   setProductsInfoFromResponseProducts(): void {
     if (this.httpProducts.products) {
       this.productsAttributesToDisplay = this.httpProducts.products.map(
@@ -90,65 +95,16 @@ export class ListProductComponent {
           ({
             id: productApi._id,
             image: productApi.image_small_url,
-            label: productApi.abbreviated_product_name,
-            nutriscore: this.getUrlNutriscore(productApi.nutriscore_grade!),
-            ecoscore: this.getUrlEcoscore(productApi.ecoscore_grade!),
-            novagroup: this.getUrlNovagroup(productApi.nova_group!),
+            label: this.uppercaseFristLetterPipe.transform(
+              productApi.product_name!
+            ),
+            nutriscore: ProductUtils.getUrlNutriscore(
+              productApi.nutriscore_grade!
+            ),
+            ecoscore: ProductUtils.getUrlEcoscore(productApi.ecoscore_grade!),
+            novagroup: ProductUtils.getUrlNovagroup(productApi.nova_group!),
           } as ProductInfosModel)
       );
-    }
-  }
-
-  getUrlNutriscore(grade: string): string {
-    switch (grade) {
-      case NutriscoreGrade.A:
-        return NutriscoreLinks.NUTRISCORE_A;
-      case NutriscoreGrade.B:
-        return NutriscoreLinks.NUTRISCORE_B;
-      case NutriscoreGrade.C:
-        return NutriscoreLinks.NUTRISCORE_C;
-      case NutriscoreGrade.D:
-        return NutriscoreLinks.NUTRISCORE_D;
-      case NutriscoreGrade.E:
-        return NutriscoreLinks.NUTRISCORE_E;
-      case NutriscoreGrade.UNKNOWN:
-        return NutriscoreLinks.NUTRISCORE_UNKNOWN;
-      default:
-        return NutriscoreLinks.NUTRISCORE_UNKNOWN;
-    }
-  }
-
-  getUrlEcoscore(grade: string): string {
-    switch (grade) {
-      case EcoscoreGrade.A:
-        return EcoscoreLinks.ECOSCORE_A;
-      case EcoscoreGrade.B:
-        return EcoscoreLinks.ECOSCORE_B;
-      case EcoscoreGrade.C:
-        return EcoscoreLinks.ECOSCORE_C;
-      case EcoscoreGrade.D:
-        return EcoscoreLinks.ECOSCORE_D;
-      case EcoscoreGrade.UNKNOWN:
-        return EcoscoreLinks.ECOSCORE_UNKNOWN;
-      default:
-        return EcoscoreLinks.ECOSCORE_UNKNOWN;
-    }
-  }
-
-  getUrlNovagroup(grade: number): string {
-    switch (grade) {
-      case NovagroupGrade.GRADE_1:
-        return NovagroupLinks.NOVAGROUP_1;
-      case NovagroupGrade.GRADE_2:
-        return NovagroupLinks.NOVAGROUP_2;
-      case NovagroupGrade.GRADE_3:
-        return NovagroupLinks.NOVAGROUP_3;
-      case NovagroupGrade.GRADE_4:
-        return NovagroupLinks.NOVAGROUP_4;
-      case NovagroupGrade.UNKNOWN:
-        return NovagroupLinks.NOVAGROUP_UNKNOWN;
-      default:
-        return NovagroupLinks.NOVAGROUP_UNKNOWN;
     }
   }
 }

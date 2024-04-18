@@ -4,8 +4,9 @@ export class TableColumnParamModel {
   label?: string;
   type?: string = '';
   icone?: string;
-  width?: string;
+  colWidth?: string;
   isClickable?: boolean;
+  applyStyleWithImage?: boolean = true;
 }
 
 export enum ColumnTypeParamEnum {

@@ -1,6 +1,9 @@
 <br />
 <app-search-product
   (eventHttpProductsChange)="onHttpProductsChange($event)"
+  (eventHttpProductChange)="onHttpProductChange($event)"
 ></app-search-product>
 <br />
 <app-list-product [httpProducts]="httpProducts"></app-list-product>
+<br />
+<app-detail-product [httpProduct]="httpProduct"></app-detail-product>

@@ -25,6 +25,7 @@ import type {
   ></canvas>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [':host { display: block }'],
+  standalone: true,
 })
 export class ChartComponent implements AfterViewInit, OnChanges {
   @ViewChild('ref') ref!: ElementRef<HTMLCanvasElement>;
@@ -68,10 +69,7 @@ export class ChartComponent implements AfterViewInit, OnChanges {
   renderChart() {
     const node = this.ref.nativeElement;
 
-    // In order to allow for universal rendering, we import chartjs runtime with `require` to prevent node errors
-    // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/no-shadow
     this.zone.runOutsideAngular(async () => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { Chart } = await import('chart.js');
       this.chartInstance = new Chart(node, {
         type: this.type,

@@ -1,4 +1,5 @@
 <div class="mat-elevation-z8">
+  @if (paginatedDataSource.dataSource && this.loading === false) {
   <table
     mat-table
     [dataSource]="paginatedDataSource.dataSource"
@@ -16,28 +17,35 @@
         {{ column.label }}
       </th>
       <td mat-cell *matCellDef="let element">
-        <div
-          style="
-            margin-top: 5px;
-            margin-bottom: 5%;
-            display: grid;
-            justify-content: center;
-          "
-        >
-          @if(column.type! === columnTypeEnum.IMAGE){
+        @if(column.type! === columnTypeEnum.IMAGE){
+        <div class="row-with-image">
           <img src="{{ element[column.columDef!] }}" height="80px" />
-          } @else {
-          <strong>{{ element[column.columDef!] }}</strong>
-          }
         </div>
+        } @else {
+        {{ element[column.columDef!] }}
+        }
       </td>
     </ng-container>
     }
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    @if(isClickable){
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="onSelectItem(row)"
+      class="row-link"
+    ></tr>
+    } @else{
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      [ngStyle]="{ height: rowHeight }"
+    ></tr>
+    }
   </table>
 
+  @if(isPaginated){
   <mat-paginator
     [length]="paginatedDataSource.count"
     [pageIndex]="paginatedDataSource.page"
@@ -48,4 +56,7 @@
     aria-label="Select page"
   >
   </mat-paginator>
+  } } @else {
+  <mat-spinner style="margin: 0 auto"></mat-spinner>
+  }
 </div>
