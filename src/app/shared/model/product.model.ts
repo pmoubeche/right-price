@@ -214,6 +214,7 @@ export class Product {
   nutrient_levels?: NutrientLevels;
   nutrient_levels_tags?: string[];
   nutriments?: Nutriments;
+  nutriments_estimated?: Nutriments;
   nutriscore?: { [key: string]: Nutriscore };
   nutriscore_2021_tags?: string[];
   nutriscore_2023_tags?: string[];

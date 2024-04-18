@@ -29,7 +29,7 @@ export enum ChipParamSearch {
   standalone: true,
   imports: [MaterialModule, ReactiveFormsModule],
   templateUrl: './search-product.component.html',
-  styleUrl: './search-product.component.css',
+  styleUrl: './search-product.component.scss',
 })
 export class SearchProductComponent implements OnInit, OnDestroy {
   readonly INPUT_TEXT: string = 'inputText';

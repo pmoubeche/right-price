@@ -8,6 +8,6 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [MaterialModule, SidenavContentComponent, RouterLink],
   templateUrl: './sidenav.component.html',
-  styleUrl: './sidenav.component.css',
+  styleUrl: './sidenav.component.scss',
 })
 export class SidenavComponent {}

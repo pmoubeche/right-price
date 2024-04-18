@@ -9,9 +9,13 @@ import {
   NovagroupLinks,
   NutriscoreLinks,
 } from '../enum/svg-urls.enum';
-import { Nutriments } from '../model/product.model';
+import { Nutriments, Product } from '../model/product.model';
 
 export class ProductUtils {
+  public static readonly UNIT_GRAMME = 'g';
+  public static readonly UNIT_KJ = 'kJ';
+  public static readonly UNIT_KCAL = 'kcal';
+
   static getUrlNutriscore(grade: string): string {
     switch (grade) {
       case NutriscoreGrade.A:
@@ -70,63 +74,51 @@ export class ProductUtils {
       {
         id: '0',
         nutriment: 'Energie (kJ)',
-        value: `${nutriment['energy-kj_100g']?.toString()} ${
-          nutriment['energy-kj_unit']
-        }`,
+        value: `${nutriment['energy-kj_100g']?.toString()} ${this.UNIT_KJ}`,
       },
       {
         id: '1',
         nutriment: 'Energie (kcal)',
-        value: `${nutriment['energy-kcal_100g']?.toString()} ${
-          nutriment['energy-kcal_unit']
-        }`,
+        value: `${nutriment['energy-kcal_100g']?.toString()} ${this.UNIT_KCAL}`,
       },
       {
         id: '2',
         nutriment: 'Matières grasses',
-        value: `${nutriment['fat_100g']?.toString()} ${nutriment['fat_unit']}`,
+        value: `${nutriment['fat_100g']?.toString()} ${this.UNIT_GRAMME}`,
       },
       {
         id: '3',
         nutriment: '--Acides gras saturés',
         value: `${nutriment['saturated-fat_100g']?.toString()} ${
-          nutriment['saturated-fat_unit']
+          this.UNIT_GRAMME
         }`,
       },
       {
         id: '4',
         nutriment: 'Glucides',
         value: `${nutriment['carbohydrates_100g']?.toString()} ${
-          nutriment['carbohydrates_unit']
+          this.UNIT_GRAMME
         }`,
       },
       {
         id: '5',
         nutriment: '--Sucres',
-        value: `${nutriment['sugars_100g']?.toString()} ${
-          nutriment['sugars_unit']
-        }`,
+        value: `${nutriment['sugars_100g']?.toString()} ${this.UNIT_GRAMME}`,
       },
       {
         id: '6',
         nutriment: '--Fibres alimentaires',
-        value: `${nutriment['fiber_100g']?.toString()} ${
-          nutriment['fiber_unit']
-        }`,
+        value: `${nutriment['fiber_100g']?.toString()} ${this.UNIT_GRAMME}`,
       },
       {
         id: '7',
         nutriment: 'Protéines',
-        value: `${nutriment['proteins_100g']?.toString()} ${
-          nutriment['proteins_unit']
-        }`,
+        value: `${nutriment['proteins_100g']?.toString()} ${this.UNIT_GRAMME}`,
       },
       {
         id: '8',
         nutriment: 'Sel',
-        value: `${nutriment['salt_100g']?.toString()} ${
-          nutriment['salt_unit']
-        }`,
+        value: `${nutriment['salt_100g']?.toString()} ${this.UNIT_GRAMME}`,
       },
     ];
   }
@@ -143,5 +135,13 @@ export class ProductUtils {
       ['Protéines', nutriment['proteins_100g']!],
       ['Restes', leftoversProp],
     ]);
+  }
+
+  static setNutrimentsEstimatedIfNutrimentsUndefined(
+    product: Product
+  ): Nutriments {
+    return product.nutriments!['energy-kcal_100g']
+      ? product.nutriments!
+      : product.nutriments_estimated!;
   }
 }

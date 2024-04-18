@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [MaterialModule, CommonModule],
   templateUrl: './table-generic.component.html',
-  styleUrl: './table-generic.component.css',
+  styleUrl: './table-generic.component.scss',
 })
 export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   public columnTypeEnum = ColumnTypeParamEnum;

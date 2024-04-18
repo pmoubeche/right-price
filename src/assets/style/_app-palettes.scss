@@ -18,10 +18,10 @@ $palette-principale: (
   200: #94c5ef,
   300: #6dafe8,// Couleur ligne switch
   400: #529ee4,
-  500: #4c7ed0,// Couleur lien (valeur initiale = #3d8fdf)
-  600: #3881d2,
-  700: #3170bf,
-  800: #2b5fad,// Couleur principale
+  500: #FBFADA,// Couleur lien (valeur initiale = #3d8fdf)
+  600: #ADBC9F,
+  700: #436850,
+  800: #12372A,// Couleur principale
   900: #21428d,
   contrast: (
     50: $sombre-emphase-haute,
@@ -114,7 +114,7 @@ $palette-erreur: (
 
 $palette-arriere-plan: (
   status-bar: #e0e0e0,
-  app-bar:    #f5f5f5,
+  app-bar:    #ADBC9F,
   background: #f1f1f1,// Arrière-plan app
   hover:      rgba(black, 0.04),
   card:       white,// Arrière-plan composant

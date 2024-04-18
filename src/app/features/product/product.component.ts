@@ -20,7 +20,7 @@ import { SearchProductComponent } from './search-product/search-product.componen
     MaterialModule,
   ],
   templateUrl: './product.component.html',
-  styleUrl: './product.component.css',
+  styleUrl: './product.component.scss',
 })
 export class ProductComponent {
   public httpProducts: ResponseProducts = new ResponseProducts();

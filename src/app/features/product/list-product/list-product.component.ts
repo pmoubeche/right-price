@@ -27,7 +27,7 @@ import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-
   standalone: true,
   imports: [TableGenericComponent, MaterialModule],
   templateUrl: './list-product.component.html',
-  styleUrl: './list-product.component.css',
+  styleUrl: './list-product.component.scss',
 })
 export class ListProductComponent {
   public productsAttributesToDisplay: ProductInfosModel[] = [];

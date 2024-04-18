@@ -56,7 +56,7 @@ export class NutrimentInfoModel {
     ChartComponent,
   ],
   templateUrl: './detail-product.component.html',
-  styleUrl: './detail-product.component.css',
+  styleUrl: './detail-product.component.scss',
 })
 export class DetailProductComponent implements OnInit {
   private _httpProduct!: ResponseProduct;
@@ -185,6 +185,8 @@ export class DetailProductComponent implements OnInit {
 
   setNutrimentsInfoFromResponseProduct(): void {
     if (this.product) {
+      this.product.nutriments =
+        ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product);
       this.nutrimentInfo = ProductUtils.setNutrimentsTable(
         this.product.nutriments!
       );
@@ -192,6 +194,8 @@ export class DetailProductComponent implements OnInit {
   }
 
   setChartPieData(): void {
+    this.product!.nutriments =
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
     let nutrimentChartPieMap = ProductUtils.setNutrimentChartPieMap(
       this.product?.nutriments!
     );

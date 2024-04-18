@@ -2,7 +2,10 @@
   <mat-expansion-panel-header>
     <mat-panel-title i18n>Search food</mat-panel-title>
   </mat-expansion-panel-header>
-  <form [formGroup]="searchForm!">
+  <form
+    [formGroup]="searchForm!"
+    style="display: grid; justify-content: center"
+  >
     <mat-chip-listbox [formControlName]="CHIP_OPTION">
       @for (chipParam of chipList; track $index) {
       <mat-chip-option color="primary" [selected]="selectedChip">{{
