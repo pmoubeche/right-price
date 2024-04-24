@@ -43,6 +43,8 @@ export class NutrimentInfoModel {
   id?: string;
   nutriment?: string;
   value?: string;
+  ajr?: string;
+  percentAjr_100g?: number;
 }
 
 @Component({
@@ -61,7 +63,9 @@ export class NutrimentInfoModel {
 export class DetailProductComponent implements OnInit {
   private _httpProduct!: ResponseProduct;
   public ingredientsInfo?: IngredientInfoModel[] = [];
-  public nutrimentInfo?: NutrimentInfoModel[] = [];
+  public macroNutrimentInfo?: NutrimentInfoModel[] = [];
+  public microNutrimentInfo?: NutrimentInfoModel[] = [];
+  public sugarsInfo?: NutrimentInfoModel[] = [];
   public product?: Product;
 
   public nutriscoreImageUrl?: string;
@@ -75,10 +79,17 @@ export class DetailProductComponent implements OnInit {
     this.setIngredientsInfoFromResponseProduct();
     this.ingredientDataSources.dataSource =
       new MatTableDataSource<IngredientInfoModel>(this.ingredientsInfo);
-    this.setNutrimentsInfoFromResponseProduct();
-    this.nutrimentsDataSources.dataSource =
-      new MatTableDataSource<NutrimentInfoModel>(this.nutrimentInfo);
-    this.setChartPieData();
+    this.setInfoFromResponseProduct();
+
+    this.macroNutrimentsDataSources.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfo);
+    this.setMacroNutrimentsChartPieData();
+
+    this.microNutrimentsDataSources.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.microNutrimentInfo);
+    this.setSugarsChartPieData();
+    this.sugarsDataSources.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.sugarsInfo);
   }
 
   get httpProduct() {
@@ -86,7 +97,9 @@ export class DetailProductComponent implements OnInit {
   }
 
   ingredientDataSources = new PaginatedDataSource<IngredientInfoModel>();
-  nutrimentsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
+  macroNutrimentsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
+  microNutrimentsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
+  sugarsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
 
   columnParamsIngredients: TableColumnParamModel[] = [
     {
@@ -104,7 +117,7 @@ export class DetailProductComponent implements OnInit {
     },
   ];
 
-  columnParamsNutriments: TableColumnParamModel[] = [
+  columnParamsMacroNutriments: TableColumnParamModel[] = [
     {
       id: '1',
       label: 'Nutriment',
@@ -120,7 +133,24 @@ export class DetailProductComponent implements OnInit {
     },
   ];
 
-  chartPieData?: ChartData;
+  columnParamsSugars: TableColumnParamModel[] = [
+    {
+      id: '1',
+      label: 'Sugars',
+      columDef: 'nutriment',
+      type: ColumnTypeParamEnum.STRING,
+      applyStyleWithImage: false,
+    },
+    {
+      id: '2',
+      label: 'Value per 100g',
+      columDef: 'value',
+      type: ColumnTypeParamEnum.STRING,
+    },
+  ];
+
+  macroNutrimentschartPieData?: ChartData;
+  sugarsChartPieData?: ChartData;
 
   chartOptions: ChartOptions = {
     responsive: true,
@@ -183,30 +213,69 @@ export class DetailProductComponent implements OnInit {
     }
   }
 
-  setNutrimentsInfoFromResponseProduct(): void {
+  setInfoFromResponseProduct(): void {
     if (this.product) {
       this.product.nutriments =
         ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product);
-      this.nutrimentInfo = ProductUtils.setNutrimentsTable(
+      this.macroNutrimentInfo = ProductUtils.setMacroNutrimentsTable(
+        this.product.nutriments!
+      );
+      this.sugarsInfo = ProductUtils.setSugarsTable(this.product.nutriments!);
+      this.microNutrimentInfo = ProductUtils.setMicroNutrimentsTable(
         this.product.nutriments!
       );
     }
   }
 
-  setChartPieData(): void {
+  setMacroNutrimentsChartPieData(): void {
     this.product!.nutriments =
       ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
-    let nutrimentChartPieMap = ProductUtils.setNutrimentChartPieMap(
+    let nutrimentChartPieMap = ProductUtils.setMacroNutrimentChartPieMap(
       this.product?.nutriments!
     );
 
-    this.chartPieData = {
+    this.macroNutrimentschartPieData = {
       labels: Array.from(nutrimentChartPieMap.keys()),
       datasets: [
         {
           data: Array.from(nutrimentChartPieMap.values()),
           backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F0EBE3'],
           hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F0EBE3'],
+        },
+      ],
+    };
+  }
+
+  setSugarsChartPieData(): void {
+    this.product!.nutriments =
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
+    let sugarsChartPieMap = ProductUtils.setSugarsChartPieMap(
+      this.product?.nutriments!
+    );
+
+    this.sugarsChartPieData = {
+      labels: Array.from(sugarsChartPieMap.keys()),
+      datasets: [
+        {
+          data: Array.from(sugarsChartPieMap.values()),
+          backgroundColor: [
+            '#21428d',
+            '#2b5fad',
+            '#3170bf',
+            '#3881d2',
+            '#4c7ed0',
+            '#529ee4',
+            '#6dafe8',
+          ],
+          hoverBackgroundColor: [
+            '#21428d',
+            '#2b5fad',
+            '#3170bf',
+            '#3881d2',
+            '#4c7ed0',
+            '#529ee4',
+            '#6dafe8',
+          ],
         },
       ],
     };

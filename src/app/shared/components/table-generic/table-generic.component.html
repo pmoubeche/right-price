@@ -19,7 +19,10 @@
       <td mat-cell *matCellDef="let element">
         @if(column.type! === columnTypeEnum.IMAGE){
         <div class="row-with-image">
-          <img src="{{ element[column.columDef!] }}" height="80px" />
+          <img
+            src="{{ element[column.columDef!] }}"
+            [ngStyle]="{ height: rowHeight }"
+          />
         </div>
         } @else {
         {{ element[column.columDef!] }}

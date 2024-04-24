@@ -72,9 +72,9 @@
     <mat-grid-tile [colspan]="1">
       <app-table-generic
         style="min-width: 90%; min-height: 90%"
-        [columns]="columnParamsNutriments"
+        [columns]="columnParamsMacroNutriments"
         [isPaginated]="false"
-        [paginatedDataSource]="nutrimentsDataSources"
+        [paginatedDataSource]="macroNutrimentsDataSources"
       >
       </app-table-generic>
     </mat-grid-tile>
@@ -83,9 +83,32 @@
       <app-chart
         style="min-width: 90%; min-height: 90%"
         type="pie"
-        [data]="chartPieData!"
+        [data]="macroNutrimentschartPieData!"
         [options]="chartOptions"
       ></app-chart>
     </mat-grid-tile>
   </mat-grid-list>
+
+  @if(product?.nutriments_estimated){
+  <mat-grid-list cols="2">
+    <mat-grid-tile [colspan]="1">
+      <app-table-generic
+        style="min-width: 90%; min-height: 90%"
+        [columns]="columnParamsSugars"
+        [isPaginated]="false"
+        [paginatedDataSource]="sugarsDataSources"
+      >
+      </app-table-generic>
+    </mat-grid-tile>
+
+    <mat-grid-tile [colspan]="1">
+      <app-chart
+        style="min-width: 90%; min-height: 90%"
+        type="pie"
+        [data]="sugarsChartPieData!"
+        [options]="chartOptions"
+      ></app-chart>
+    </mat-grid-tile>
+  </mat-grid-list>
+  }
 </mat-expansion-panel>
