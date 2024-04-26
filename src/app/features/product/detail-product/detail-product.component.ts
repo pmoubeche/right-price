@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartData, ChartOptions } from 'chart.js';
 import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
+import { ChartsImports } from '../../../shared/components/chart/chart-imports';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../../shared/material/material.module';
@@ -13,25 +14,6 @@ import {
 import { PercentFormatPipe } from '../../../shared/pipes/percent-format.pipe';
 import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-first-letter-format.pipe';
 import { ProductUtils } from '../../../shared/utils/product.utils';
-import {
-  ArcElement,
-  BarController,
-  BarElement,
-  CategoryScale,
-  Chart,
-  DoughnutController,
-  LinearScale,
-  LineController,
-  LineElement,
-  PieController,
-  PointElement,
-  PolarAreaController,
-  RadarController,
-  RadialLinearScale,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 
 export class IngredientInfoModel {
   id?: string;
@@ -43,6 +25,8 @@ export class NutrimentInfoModel {
   id?: string;
   nutriment?: string;
   value?: string;
+  ajr?: string;
+  percentAjr_100g?: number;
 }
 
 @Component({
@@ -56,12 +40,14 @@ export class NutrimentInfoModel {
     ChartComponent,
   ],
   templateUrl: './detail-product.component.html',
-  styleUrl: './detail-product.component.css',
+  styleUrl: './detail-product.component.scss',
 })
 export class DetailProductComponent implements OnInit {
   private _httpProduct!: ResponseProduct;
   public ingredientsInfo?: IngredientInfoModel[] = [];
-  public nutrimentInfo?: NutrimentInfoModel[] = [];
+  public macroNutrimentInfo?: NutrimentInfoModel[] = [];
+  public microNutrimentInfo?: NutrimentInfoModel[] = [];
+  public sugarsInfo?: NutrimentInfoModel[] = [];
   public product?: Product;
 
   public nutriscoreImageUrl?: string;
@@ -75,10 +61,19 @@ export class DetailProductComponent implements OnInit {
     this.setIngredientsInfoFromResponseProduct();
     this.ingredientDataSources.dataSource =
       new MatTableDataSource<IngredientInfoModel>(this.ingredientsInfo);
-    this.setNutrimentsInfoFromResponseProduct();
-    this.nutrimentsDataSources.dataSource =
-      new MatTableDataSource<NutrimentInfoModel>(this.nutrimentInfo);
-    this.setChartPieData();
+    this.setInfoFromResponseProduct();
+
+    this.macroNutrimentsDataSources.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfo);
+    this.setMacroNutrimentsChartPieData();
+
+    this.sugarsDataSources.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.sugarsInfo);
+    this.setSugarsChartPieData();
+
+    this.microNutrimentsDataSources.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.microNutrimentInfo);
+    this.setMicroNutrimentsChartBarsData();
   }
 
   get httpProduct() {
@@ -86,44 +81,102 @@ export class DetailProductComponent implements OnInit {
   }
 
   ingredientDataSources = new PaginatedDataSource<IngredientInfoModel>();
-  nutrimentsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
+  macroNutrimentsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
+  microNutrimentsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
+  sugarsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
 
   columnParamsIngredients: TableColumnParamModel[] = [
     {
       id: '1',
-      label: 'Ingredient',
+      label: `Ingredients (${this.product?.ingredients?.length})`,
       columDef: 'ingredient',
       type: ColumnTypeParamEnum.STRING,
       applyStyleWithImage: false,
     },
     {
       id: '2',
-      label: 'Percentage',
+      label: 'Pourcentage (%)',
       columDef: 'percentage',
       type: ColumnTypeParamEnum.STRING,
     },
   ];
 
-  columnParamsNutriments: TableColumnParamModel[] = [
+  columnParamsMacroNutriments: TableColumnParamModel[] = [
     {
       id: '1',
       label: 'Nutriment',
       columDef: 'nutriment',
       type: ColumnTypeParamEnum.STRING,
-      applyStyleWithImage: false,
     },
     {
       id: '2',
-      label: 'Value per 100g',
+      label: 'Valeur pour 100g',
       columDef: 'value',
       type: ColumnTypeParamEnum.STRING,
     },
   ];
 
-  chartPieData?: ChartData;
+  columnParamsSugars: TableColumnParamModel[] = [
+    {
+      id: '1',
+      label: 'Sucres',
+      columDef: 'nutriment',
+      type: ColumnTypeParamEnum.STRING,
+    },
+    {
+      id: '2',
+      label: 'Valeur pour 100g',
+      columDef: 'value',
+      type: ColumnTypeParamEnum.STRING,
+    },
+  ];
+
+  columnParamsMicroNutriments: TableColumnParamModel[] = [
+    {
+      id: '1',
+      label: 'Micro-nutriment',
+      columDef: 'nutriment',
+      type: ColumnTypeParamEnum.STRING,
+    },
+    {
+      id: '2',
+      label: 'Valeur pour 100g',
+      columDef: 'value',
+      type: ColumnTypeParamEnum.STRING,
+    },
+    {
+      id: '3',
+      label: 'AJR',
+      columDef: 'ajr',
+      type: ColumnTypeParamEnum.STRING,
+    },
+    {
+      id: '4',
+      label: 'AJR pour 100g',
+      columDef: 'percentAjr_100g',
+      type: ColumnTypeParamEnum.PERCENT,
+    },
+  ];
+
+  macroNutrimentschartPieData?: ChartData;
+  sugarsChartPieData?: ChartData;
+  microNutrimentschartPieData?: ChartData;
 
   chartOptions: ChartOptions = {
     responsive: true,
+  };
+
+  optionsBar: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        stacked: true,
+        ticks: { format: { style: 'percent' } },
+      },
+      x: { stacked: true },
+    },
   };
 
   constructor(
@@ -132,24 +185,7 @@ export class DetailProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Chart.register(
-      ArcElement,
-      BarController,
-      BarElement,
-      CategoryScale,
-      DoughnutController,
-      LinearScale,
-      LineController,
-      LineElement,
-      PieController,
-      PointElement,
-      PolarAreaController,
-      RadarController,
-      RadialLinearScale,
-      Title,
-      Tooltip,
-      Legend
-    );
+    ChartsImports.setChartImports();
   }
 
   private setUrlsForImagesCard() {
@@ -173,7 +209,8 @@ export class DetailProductComponent implements OnInit {
               id: ingredient.id,
               ingredient: this.uppercaseFirstLetter.transform(ingredient.text!),
               percentage: this.formatPercentPipe.transform(
-                ingredient.percent_estimate!
+                ingredient.percent_estimate!,
+                1
               ),
             } as IngredientInfoModel)
         )
@@ -183,26 +220,101 @@ export class DetailProductComponent implements OnInit {
     }
   }
 
-  setNutrimentsInfoFromResponseProduct(): void {
+  setInfoFromResponseProduct(): void {
     if (this.product) {
-      this.nutrimentInfo = ProductUtils.setNutrimentsTable(
+      this.product.nutriments =
+        ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product);
+      this.macroNutrimentInfo = ProductUtils.setMacroNutrimentsTable(
+        this.product.nutriments!
+      );
+      this.sugarsInfo = ProductUtils.setSugarsTable(this.product.nutriments!);
+      this.microNutrimentInfo = ProductUtils.setMicroNutrimentsTable(
         this.product.nutriments!
       );
     }
   }
 
-  setChartPieData(): void {
-    let nutrimentChartPieMap = ProductUtils.setNutrimentChartPieMap(
+  setMacroNutrimentsChartPieData(): void {
+    this.product!.nutriments =
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
+    let nutrimentChartPieMap = ProductUtils.setMacroNutrimentChartPieMap(
       this.product?.nutriments!
     );
 
-    this.chartPieData = {
+    this.macroNutrimentschartPieData = {
       labels: Array.from(nutrimentChartPieMap.keys()),
       datasets: [
         {
           data: Array.from(nutrimentChartPieMap.values()),
           backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F0EBE3'],
           hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F0EBE3'],
+        },
+      ],
+    };
+  }
+
+  setSugarsChartPieData(): void {
+    this.product!.nutriments =
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
+    let sugarsChartPieMap = ProductUtils.setSugarsChartPieMap(
+      this.product?.nutriments!
+    );
+
+    this.sugarsChartPieData = {
+      labels: Array.from(sugarsChartPieMap.keys()),
+      datasets: [
+        {
+          data: Array.from(sugarsChartPieMap.values()),
+          backgroundColor: [
+            '#21428d',
+            '#2b5fad',
+            '#3170bf',
+            '#3881d2',
+            '#4c7ed0',
+            '#529ee4',
+            '#6dafe8',
+          ],
+          hoverBackgroundColor: [
+            '#21428d',
+            '#2b5fad',
+            '#3170bf',
+            '#3881d2',
+            '#4c7ed0',
+            '#529ee4',
+            '#6dafe8',
+          ],
+        },
+      ],
+    };
+  }
+
+  setMicroNutrimentsChartBarsData(): void {
+    this.product!.nutriments =
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
+    let micronutrimentChartMap = ProductUtils.setMicroNutrimentsChartMap(
+      this.product?.nutriments!
+    );
+
+    this.microNutrimentschartPieData = {
+      labels: Array.from(micronutrimentChartMap.keys()),
+      datasets: [
+        {
+          label: 'Pourcentage AJR pour 100g',
+          data: Array.from(micronutrimentChartMap.values()),
+          fill: true,
+          backgroundColor: ['#7fc8c9'],
+          borderColor: ['#056560'],
+          borderWidth: 1,
+        },
+        {
+          label: 'Pourcentage AJR (100%)',
+          data: Array.from(micronutrimentChartMap.values())
+            .map((val) => 1 - val)
+            .map((val) => (val < 0 ? 0 : val)),
+          fill: true,
+          backgroundColor: ['#f1f1f1'],
+          borderColor: ['#f1f1f1'],
+          borderWidth: 1,
         },
       ],
     };

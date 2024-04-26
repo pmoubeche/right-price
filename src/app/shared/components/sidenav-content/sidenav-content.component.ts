@@ -7,6 +7,6 @@ import { MaterialModule } from '../../material/material.module';
   standalone: true,
   imports: [MaterialModule, RouterOutlet],
   templateUrl: './sidenav-content.component.html',
-  styleUrl: './sidenav-content.component.css',
+  styleUrl: './sidenav-content.component.scss',
 })
 export class SidenavContentComponent {}

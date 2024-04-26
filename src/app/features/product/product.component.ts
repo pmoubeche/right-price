@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MaterialModule } from '../../shared/material/material.module';
 import { ProductInfosModel } from '../../shared/model/product-attribute-displayed.model';
 import {
-  Product,
   ResponseProduct,
   ResponseProducts,
 } from '../../shared/model/product.model';
@@ -20,7 +19,7 @@ import { SearchProductComponent } from './search-product/search-product.componen
     MaterialModule,
   ],
   templateUrl: './product.component.html',
-  styleUrl: './product.component.css',
+  styleUrl: './product.component.scss',
 })
 export class ProductComponent {
   public httpProducts: ResponseProducts = new ResponseProducts();

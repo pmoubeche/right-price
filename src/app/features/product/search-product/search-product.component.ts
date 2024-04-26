@@ -6,7 +6,12 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Observable, Subscription, finalize, tap } from 'rxjs';
 import { MaterialModule } from '../../../shared/material/material.module';
 import {
@@ -29,7 +34,7 @@ export enum ChipParamSearch {
   standalone: true,
   imports: [MaterialModule, ReactiveFormsModule],
   templateUrl: './search-product.component.html',
-  styleUrl: './search-product.component.css',
+  styleUrl: './search-product.component.scss',
 })
 export class SearchProductComponent implements OnInit, OnDestroy {
   readonly INPUT_TEXT: string = 'inputText';
@@ -48,6 +53,10 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   public searchForm?: FormGroup;
 
   private subscription: Subscription = new Subscription();
+
+  get textInputControl(): FormControl {
+    return this.searchForm?.get(this.INPUT_TEXT) as FormControl;
+  }
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly openFoodFactApiService: OpenFoodFactsApiService,
@@ -172,6 +181,10 @@ export class SearchProductComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  resetForm() {
+    this.textInputControl.reset();
   }
 
   ngOnDestroy(): void {

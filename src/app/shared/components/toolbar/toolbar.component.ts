@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [MaterialModule, LoginGoogleComponent],
   templateUrl: './toolbar.component.html',
-  styleUrl: './toolbar.component.css',
+  styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
   constructor(private readonly router: Router) {}

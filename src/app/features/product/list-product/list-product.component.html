@@ -1,4 +1,4 @@
-<mat-expansion-panel expanded="true">
+<mat-expansion-panel expanded="true" style="max-width: 99%">
   <mat-expansion-panel-header
     >Corresponding products</mat-expansion-panel-header
   >
@@ -6,5 +6,6 @@
     [columns]="columnParamsProductList"
     [paginatedDataSource]="paginatedDataProducts"
     [isClickable]="true"
+    [rowHeight]="'80px'"
   ></app-table-generic>
 </mat-expansion-panel>

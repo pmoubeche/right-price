@@ -14,4 +14,5 @@ export enum ColumnTypeParamEnum {
   NUMBER = 'number',
   IMAGE = 'image',
   DATE = 'date',
+  PERCENT = 'percent',
 }

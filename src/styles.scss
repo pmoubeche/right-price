@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use '@angular/material' as mat;
+@use 'app-theme';
+@use 'normalisation';
+
+
+@include mat.core();
+
+@include app-theme.theme();
+
+@include normalisation.normalisation();
+
+:root {
+  --couleur-principale: #2b5fad;
+  --couleur-erreur: #d92828;
+}
+
+html {
+  overflow-x: initial !important;
+}
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Google Sans", arial, sans-serif;
+}

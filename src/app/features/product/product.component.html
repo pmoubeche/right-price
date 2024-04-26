@@ -5,5 +5,7 @@
 ></app-search-product>
 <br />
 <app-list-product [httpProducts]="httpProducts"></app-list-product>
+@if(httpProduct.product){
 <br />
 <app-detail-product [httpProduct]="httpProduct"></app-detail-product>
+}

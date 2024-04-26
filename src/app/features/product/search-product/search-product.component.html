@@ -1,8 +1,11 @@
-<mat-expansion-panel expanded="true">
+<mat-expansion-panel expanded="true" style="max-width: 99%">
   <mat-expansion-panel-header>
     <mat-panel-title i18n>Search food</mat-panel-title>
   </mat-expansion-panel-header>
-  <form [formGroup]="searchForm!">
+  <form
+    [formGroup]="searchForm!"
+    style="display: grid; justify-content: center"
+  >
     <mat-chip-listbox [formControlName]="CHIP_OPTION">
       @for (chipParam of chipList; track $index) {
       <mat-chip-option color="primary" [selected]="selectedChip">{{
@@ -18,7 +21,14 @@
         placeholder="Search product"
         aria-label="Search"
         [formControlName]="INPUT_TEXT"
+        (keydown.enter)="$event.preventDefault()"
+        (keyup.enter)="search()"
       />
+      @if(textInputControl.value){
+      <button mat-icon-button matSuffix (click)="resetForm()">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
       <button mat-icon-button matSuffix (click)="search()">
         <mat-icon>search</mat-icon>
       </button>
