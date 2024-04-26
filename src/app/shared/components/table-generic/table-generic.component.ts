@@ -16,11 +16,12 @@ import {
 } from '../../model/table-column-param.model';
 import { TableGenericService } from './table-generic.service';
 import { CommonModule } from '@angular/common';
+import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 
 @Component({
   selector: 'app-table-generic',
   standalone: true,
-  imports: [MaterialModule, CommonModule],
+  imports: [MaterialModule, CommonModule, PercentFormatPipe],
   templateUrl: './table-generic.component.html',
   styleUrl: './table-generic.component.scss',
 })
@@ -54,7 +55,8 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
-    private readonly tableGenericService: TableGenericService
+    private readonly tableGenericService: TableGenericService,
+    private readonly formatPercentPipe: PercentFormatPipe
   ) {}
 
   ngOnInit(): void {

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartData, ChartOptions } from 'chart.js';
 import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
+import { ChartsImports } from '../../../shared/components/chart/chart-imports';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../../shared/material/material.module';
@@ -13,25 +14,6 @@ import {
 import { PercentFormatPipe } from '../../../shared/pipes/percent-format.pipe';
 import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-first-letter-format.pipe';
 import { ProductUtils } from '../../../shared/utils/product.utils';
-import {
-  ArcElement,
-  BarController,
-  BarElement,
-  CategoryScale,
-  Chart,
-  DoughnutController,
-  LinearScale,
-  LineController,
-  LineElement,
-  PieController,
-  PointElement,
-  PolarAreaController,
-  RadarController,
-  RadialLinearScale,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 
 export class IngredientInfoModel {
   id?: string;
@@ -85,11 +67,13 @@ export class DetailProductComponent implements OnInit {
       new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfo);
     this.setMacroNutrimentsChartPieData();
 
-    this.microNutrimentsDataSources.dataSource =
-      new MatTableDataSource<NutrimentInfoModel>(this.microNutrimentInfo);
-    this.setSugarsChartPieData();
     this.sugarsDataSources.dataSource =
       new MatTableDataSource<NutrimentInfoModel>(this.sugarsInfo);
+    this.setSugarsChartPieData();
+
+    this.microNutrimentsDataSources.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.microNutrimentInfo);
+    this.setMicroNutrimentsChartBarsData();
   }
 
   get httpProduct() {
@@ -104,14 +88,14 @@ export class DetailProductComponent implements OnInit {
   columnParamsIngredients: TableColumnParamModel[] = [
     {
       id: '1',
-      label: 'Ingredient',
+      label: `Ingredients (${this.product?.ingredients?.length})`,
       columDef: 'ingredient',
       type: ColumnTypeParamEnum.STRING,
       applyStyleWithImage: false,
     },
     {
       id: '2',
-      label: 'Percentage',
+      label: 'Pourcentage (%)',
       columDef: 'percentage',
       type: ColumnTypeParamEnum.STRING,
     },
@@ -123,11 +107,10 @@ export class DetailProductComponent implements OnInit {
       label: 'Nutriment',
       columDef: 'nutriment',
       type: ColumnTypeParamEnum.STRING,
-      applyStyleWithImage: false,
     },
     {
       id: '2',
-      label: 'Value per 100g',
+      label: 'Valeur pour 100g',
       columDef: 'value',
       type: ColumnTypeParamEnum.STRING,
     },
@@ -136,24 +119,64 @@ export class DetailProductComponent implements OnInit {
   columnParamsSugars: TableColumnParamModel[] = [
     {
       id: '1',
-      label: 'Sugars',
+      label: 'Sucres',
       columDef: 'nutriment',
       type: ColumnTypeParamEnum.STRING,
-      applyStyleWithImage: false,
     },
     {
       id: '2',
-      label: 'Value per 100g',
+      label: 'Valeur pour 100g',
       columDef: 'value',
       type: ColumnTypeParamEnum.STRING,
     },
   ];
 
+  columnParamsMicroNutriments: TableColumnParamModel[] = [
+    {
+      id: '1',
+      label: 'Micro-nutriment',
+      columDef: 'nutriment',
+      type: ColumnTypeParamEnum.STRING,
+    },
+    {
+      id: '2',
+      label: 'Valeur pour 100g',
+      columDef: 'value',
+      type: ColumnTypeParamEnum.STRING,
+    },
+    {
+      id: '3',
+      label: 'AJR',
+      columDef: 'ajr',
+      type: ColumnTypeParamEnum.STRING,
+    },
+    {
+      id: '4',
+      label: 'AJR pour 100g',
+      columDef: 'percentAjr_100g',
+      type: ColumnTypeParamEnum.PERCENT,
+    },
+  ];
+
   macroNutrimentschartPieData?: ChartData;
   sugarsChartPieData?: ChartData;
+  microNutrimentschartPieData?: ChartData;
 
   chartOptions: ChartOptions = {
     responsive: true,
+  };
+
+  optionsBar: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        stacked: true,
+        ticks: { format: { style: 'percent' } },
+      },
+      x: { stacked: true },
+    },
   };
 
   constructor(
@@ -162,24 +185,7 @@ export class DetailProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Chart.register(
-      ArcElement,
-      BarController,
-      BarElement,
-      CategoryScale,
-      DoughnutController,
-      LinearScale,
-      LineController,
-      LineElement,
-      PieController,
-      PointElement,
-      PolarAreaController,
-      RadarController,
-      RadialLinearScale,
-      Title,
-      Tooltip,
-      Legend
-    );
+    ChartsImports.setChartImports();
   }
 
   private setUrlsForImagesCard() {
@@ -203,7 +209,8 @@ export class DetailProductComponent implements OnInit {
               id: ingredient.id,
               ingredient: this.uppercaseFirstLetter.transform(ingredient.text!),
               percentage: this.formatPercentPipe.transform(
-                ingredient.percent_estimate!
+                ingredient.percent_estimate!,
+                1
               ),
             } as IngredientInfoModel)
         )
@@ -276,6 +283,38 @@ export class DetailProductComponent implements OnInit {
             '#529ee4',
             '#6dafe8',
           ],
+        },
+      ],
+    };
+  }
+
+  setMicroNutrimentsChartBarsData(): void {
+    this.product!.nutriments =
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
+    let micronutrimentChartMap = ProductUtils.setMicroNutrimentsChartMap(
+      this.product?.nutriments!
+    );
+
+    this.microNutrimentschartPieData = {
+      labels: Array.from(micronutrimentChartMap.keys()),
+      datasets: [
+        {
+          label: 'Pourcentage AJR pour 100g',
+          data: Array.from(micronutrimentChartMap.values()),
+          fill: true,
+          backgroundColor: ['#7fc8c9'],
+          borderColor: ['#056560'],
+          borderWidth: 1,
+        },
+        {
+          label: 'Pourcentage AJR (100%)',
+          data: Array.from(micronutrimentChartMap.values())
+            .map((val) => 1 - val)
+            .map((val) => (val < 0 ? 0 : val)),
+          fill: true,
+          backgroundColor: ['#f1f1f1'],
+          borderColor: ['#f1f1f1'],
+          borderWidth: 1,
         },
       ],
     };

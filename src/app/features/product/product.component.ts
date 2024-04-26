@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MaterialModule } from '../../shared/material/material.module';
 import { ProductInfosModel } from '../../shared/model/product-attribute-displayed.model';
 import {
-  Product,
   ResponseProduct,
   ResponseProducts,
 } from '../../shared/model/product.model';

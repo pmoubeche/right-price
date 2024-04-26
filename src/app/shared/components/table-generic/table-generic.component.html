@@ -1,4 +1,7 @@
-<div class="mat-elevation-z8">
+<div
+  class="mat-elevation-z8"
+  style="max-width: 98%; display: grid; justify-content: center"
+>
   @if (paginatedDataSource.dataSource && this.loading === false) {
   <table
     mat-table
@@ -24,6 +27,8 @@
             [ngStyle]="{ height: rowHeight }"
           />
         </div>
+        } @else if(column.type! === columnTypeEnum.PERCENT) {
+        {{ element[column.columDef!] | percentFormat : 100 }}
         } @else {
         {{ element[column.columDef!] }}
         }

@@ -2,16 +2,6 @@ import { Component, EventEmitter, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
-import {
-  EcoscoreGrade,
-  NovagroupGrade,
-  NutriscoreGrade,
-} from '../../../shared/enum/score-grade.enum';
-import {
-  EcoscoreLinks,
-  NovagroupLinks,
-  NutriscoreLinks,
-} from '../../../shared/enum/svg-urls.enum';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { ProductInfosModel } from '../../../shared/model/product-attribute-displayed.model';
 import { ResponseProducts } from '../../../shared/model/product.model';
@@ -19,8 +9,8 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../../shared/model/table-column-param.model';
-import { ProductUtils } from '../../../shared/utils/product.utils';
 import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-first-letter-format.pipe';
+import { ProductUtils } from '../../../shared/utils/product.utils';
 
 @Component({
   selector: 'app-list-product',
@@ -96,7 +86,7 @@ export class ListProductComponent {
             id: productApi._id,
             image: productApi.image_small_url,
             label: this.uppercaseFristLetterPipe.transform(
-              productApi.product_name!
+              productApi?.product_name!
             ),
             nutriscore: ProductUtils.getUrlNutriscore(
               productApi.nutriscore_grade!

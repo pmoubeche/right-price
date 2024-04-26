@@ -1,15 +1,21 @@
-<mat-expansion-panel [expanded]="true">
+<mat-expansion-panel [expanded]="true" style="max-width: 99%">
   <mat-expansion-panel-header>Product details</mat-expansion-panel-header>
-  <mat-grid-list cols="3" rowHeight="1:2">
+  <mat-grid-list cols="3" rowHeight="1:1.5">
     <mat-grid-tile [colspan]="1" title="Product">
-      <mat-card style="min-width: 90%; min-height: 90%">
+      <mat-card
+        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
+      >
         <mat-card-header>
           <mat-card-title>{{
             product?.product_name! | uppercaseFirstLetterFormat
           }}</mat-card-title>
         </mat-card-header>
         <div class="product-image">
-          <img mat-card-image src="{{ product?.image_front_url }}" />
+          <img
+            mat-card-image
+            src="{{ product?.image_front_url }}"
+            style="height: 200px"
+          />
         </div>
         <mat-card-actions>
           <img
@@ -28,33 +34,30 @@
             src="{{ novagroupImageUrl }}"
           />
         </mat-card-actions>
+        <mat-card-footer>
+          <div style="padding: 1rem 1rem 1rem 1rem">
+            <p>
+              <strong>Barcode :</strong>
+              {{ product?._id }}
+            </p>
+            <p><strong> Name :</strong> {{ product?.product_name }}</p>
+            <p>
+              <strong>Quantity :</strong>
+              {{ product?.product_quantity }}
+              {{ product?.product_quantity_unit }}
+            </p>
+            <p><strong> Brands :</strong> {{ product?.brands }}</p>
+            <p><strong> Categories :</strong> {{ product?.categories }}</p>
+            <p><strong> Packaging:</strong> {{ product?.packaging }}</p>
+            <br />
+          </div>
+        </mat-card-footer>
       </mat-card>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="1">
-      <mat-card style="min-width: 90%; min-height: 90%">
-        <mat-card-header>
-          <mat-card-title>Details</mat-card-title>
-        </mat-card-header>
-        <div style="padding: 1rem 1rem 1rem 1rem">
-          <p>
-            <strong>Barcode :</strong>
-            {{ product?._id }}
-          </p>
-          <p><strong> Name :</strong> {{ product?.product_name }}</p>
-          <p>
-            <strong>Quantity :</strong>
-            {{ product?.product_quantity }}
-            {{ product?.product_quantity_unit }}
-          </p>
-          <p><strong> Brands :</strong> {{ product?.brands }}</p>
-          <p><strong> Categories :</strong> {{ product?.categories }}</p>
-          <p><strong> Packaging:</strong> {{ product?.packaging }}</p>
-          <br />
-        </div>
-      </mat-card>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1">
-      <mat-card style="min-width: 90%; min-height: 90%">
+      <mat-card
+        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
+      >
         <mat-card-header>
           <mat-card-title>Ingredients</mat-card-title>
         </mat-card-header>
@@ -67,47 +70,86 @@
         </app-table-generic>
       </mat-card>
     </mat-grid-tile>
-  </mat-grid-list>
-  <mat-grid-list cols="2">
     <mat-grid-tile [colspan]="1">
-      <app-table-generic
-        style="min-width: 90%; min-height: 90%"
-        [columns]="columnParamsMacroNutriments"
-        [isPaginated]="false"
-        [paginatedDataSource]="macroNutrimentsDataSources"
+      <mat-card
+        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
       >
-      </app-table-generic>
-    </mat-grid-tile>
-
-    <mat-grid-tile [colspan]="1">
-      <app-chart
-        style="min-width: 90%; min-height: 90%"
-        type="pie"
-        [data]="macroNutrimentschartPieData!"
-        [options]="chartOptions"
-      ></app-chart>
+        <mat-card-header>
+          <mat-card-title>Valeurs nutritionnelles</mat-card-title>
+        </mat-card-header>
+        <app-table-generic
+          [columns]="columnParamsMacroNutriments"
+          [isPaginated]="false"
+          [paginatedDataSource]="macroNutrimentsDataSources"
+          [rowHeight]="'1.5rem'"
+        >
+        </app-table-generic>
+        <br />
+        <app-chart
+          style="height: 300px; display: flex; justify-content: center"
+          type="doughnut"
+          [data]="macroNutrimentschartPieData!"
+          [options]="chartOptions"
+        ></app-chart>
+        <br />
+      </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
 
   @if(product?.nutriments_estimated){
-  <mat-grid-list cols="2">
+  <mat-grid-list cols="2" rowHeight="1:1.5">
     <mat-grid-tile [colspan]="1">
-      <app-table-generic
-        style="min-width: 90%; min-height: 90%"
-        [columns]="columnParamsSugars"
-        [isPaginated]="false"
-        [paginatedDataSource]="sugarsDataSources"
+      <mat-card
+        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
       >
-      </app-table-generic>
+        <mat-card-header>
+          <mat-card-title>Sucres</mat-card-title>
+        </mat-card-header>
+        <app-table-generic
+          [columns]="columnParamsSugars"
+          [isPaginated]="false"
+          [paginatedDataSource]="sugarsDataSources"
+          [rowHeight]="'1.5rem'"
+        >
+        </app-table-generic>
+        <br />
+        <br />
+        <app-chart
+          style="height: 300px; display: flex; justify-content: center"
+          type="doughnut"
+          [data]="sugarsChartPieData!"
+          [options]="chartOptions"
+          [height]="50"
+          [width]="50"
+        ></app-chart>
+        <br />
+      </mat-card>
     </mat-grid-tile>
 
     <mat-grid-tile [colspan]="1">
-      <app-chart
-        style="min-width: 90%; min-height: 90%"
-        type="pie"
-        [data]="sugarsChartPieData!"
-        [options]="chartOptions"
-      ></app-chart>
+      <mat-card
+        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
+      >
+        <mat-card-header>
+          <mat-card-title>Micro-Nutriments</mat-card-title>
+        </mat-card-header>
+        <app-table-generic
+          [columns]="columnParamsMicroNutriments"
+          [isPaginated]="false"
+          [paginatedDataSource]="microNutrimentsDataSources"
+          [rowHeight]="'1.5rem'"
+        >
+        </app-table-generic>
+        <br />
+        <br />
+        <app-chart
+          type="bar"
+          [data]="microNutrimentschartPieData!"
+          [options]="optionsBar"
+          [height]="400"
+        ></app-chart>
+        <br />
+      </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
   }
