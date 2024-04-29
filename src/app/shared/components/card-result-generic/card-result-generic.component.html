@@ -1,0 +1,60 @@
+<div class="mat-elevation-z8" style="display: grid; justify-content: center">
+  <div class="card-wrapper">
+    @for (productInfoModel of productsAttributesToDisplay; track $index) {
+    <mat-card
+      class="card-link"
+      style="
+        min-width: 90%;
+        min-height: 90%;
+        max-width: 90%;
+        max-height: 90%;
+        display: flex;
+        justify-content: space-between;
+      "
+      (click)="onSelectItem(productInfoModel.id)"
+    >
+      <mat-card-header>
+        <mat-card-title>{{ productInfoModel?.label! }}</mat-card-title>
+      </mat-card-header>
+      <div class="product-image">
+        <img
+          mat-card-image
+          src="{{ productInfoModel?.image }}"
+          style="height: 90%; width: auto"
+        />
+      </div>
+      <mat-card-actions class="mat-card-actions">
+        <img
+          mat-card-image
+          class="product-score"
+          src="{{ productInfoModel?.nutriscore }}"
+        />
+        <img
+          mat-card-image
+          class="product-score"
+          src="{{ productInfoModel?.ecoscore }}"
+        />
+        <img
+          mat-card-image
+          class="product-score"
+          src="{{ productInfoModel?.novagroup }}"
+        />
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+  @if(isPaginated){
+  <br />
+  <mat-paginator
+    style="display: flex; justify-content: center"
+    [length]="httpProducts.count"
+    [pageIndex]="httpProducts.page"
+    [pageSize]="httpProducts.page_size"
+    [pageSizeOptions]="[httpProducts.page_count!]"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+    aria-label="Select page"
+  >
+  </mat-paginator>
+  }
+</div>

@@ -2,10 +2,7 @@
   <mat-expansion-panel-header
     >Corresponding products</mat-expansion-panel-header
   >
-  <app-table-generic
-    [columns]="columnParamsProductList"
-    [paginatedDataSource]="paginatedDataProducts"
-    [isClickable]="true"
-    [rowHeight]="'80px'"
-  ></app-table-generic>
+  <app-card-result-generic
+    [httpProducts]="httpProducts"
+  ></app-card-result-generic>
 </mat-expansion-panel>
