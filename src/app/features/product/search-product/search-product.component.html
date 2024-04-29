@@ -22,14 +22,14 @@
         aria-label="Search"
         [formControlName]="INPUT_TEXT"
         (keydown.enter)="$event.preventDefault()"
-        (keyup.enter)="search()"
+        (keyup.enter)="search(pageIndex, pageSize)"
       />
       @if(textInputControl.value){
       <button mat-icon-button matSuffix (click)="resetForm()">
         <mat-icon>close</mat-icon>
       </button>
       }
-      <button mat-icon-button matSuffix (click)="search()">
+      <button mat-icon-button matSuffix (click)="search(pageIndex, pageSize)">
         <mat-icon>search</mat-icon>
       </button>
     </mat-form-field>

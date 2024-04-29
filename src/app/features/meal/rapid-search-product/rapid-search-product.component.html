@@ -1,0 +1,17 @@
+<app-search-product
+  (eventHttpProductsChange)="onHttpProductsChange($event)"
+  (eventHttpProductChange)="onHttpProductChange($event)"
+  [pageSize]="6"
+></app-search-product>
+<br />
+@if(httpProducts !== undefined && httpProducts.products!.length >0){
+<mat-expansion-panel [expanded]="true" style="max-width: 99%">
+  <br />
+  <br />
+  <app-card-result-generic
+    [isSlider]="true"
+    [httpProducts]="httpProducts"
+    [isReducedSearch]="true"
+  ></app-card-result-generic>
+</mat-expansion-panel>
+}
