@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartData, ChartOptions } from 'chart.js';
 import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
@@ -42,7 +42,7 @@ export class NutrimentInfoModel {
   templateUrl: './detail-product.component.html',
   styleUrl: './detail-product.component.scss',
 })
-export class DetailProductComponent implements OnInit {
+export class DetailProductComponent implements OnInit, AfterViewInit {
   private _httpProduct!: ResponseProduct;
   public ingredientsInfo?: IngredientInfoModel[] = [];
   public macroNutrimentInfo?: NutrimentInfoModel[] = [];
@@ -59,6 +59,7 @@ export class DetailProductComponent implements OnInit {
     this.product = httpProduct.product;
     this.setUrlsForImagesCard();
     this.setIngredientsInfoFromResponseProduct();
+    this.ingredientCount = this.product?.ingredients?.length;
     this.ingredientDataSources.dataSource =
       new MatTableDataSource<IngredientInfoModel>(this.ingredientsInfo);
     this.setInfoFromResponseProduct();
@@ -80,6 +81,8 @@ export class DetailProductComponent implements OnInit {
     return this._httpProduct;
   }
 
+  ingredientCount?: number;
+
   ingredientDataSources = new PaginatedDataSource<IngredientInfoModel>();
   macroNutrimentsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
   microNutrimentsDataSources = new PaginatedDataSource<NutrimentInfoModel>();
@@ -88,7 +91,7 @@ export class DetailProductComponent implements OnInit {
   columnParamsIngredients: TableColumnParamModel[] = [
     {
       id: '1',
-      label: `Ingredients (${this.product?.ingredients?.length})`,
+      label: `Ingredients (${this.ingredientCount})`,
       columDef: 'ingredient',
       type: ColumnTypeParamEnum.STRING,
       applyStyleWithImage: false,
@@ -186,6 +189,10 @@ export class DetailProductComponent implements OnInit {
 
   ngOnInit(): void {
     ChartsImports.setChartImports();
+  }
+
+  ngAfterViewInit(): void {
+    this.ingredientCount = this.product?.ingredients?.length;
   }
 
   private setUrlsForImagesCard() {

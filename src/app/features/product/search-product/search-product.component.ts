@@ -21,6 +21,7 @@ import {
 } from '../../../shared/model/product.model';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
+import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
 
 export enum ChipParamSearch {
   BARCODE = 'Barcode',
@@ -42,6 +43,8 @@ export class SearchProductComponent implements OnInit, OnDestroy {
 
   @Input() public httpProduct: ResponseProduct = new ResponseProduct();
   @Input() public httpProducts: ResponseProducts = new ResponseProducts();
+  @Input() pageSize?: number = 24;
+  public pageIndex?: number;
 
   @Output() eventProductsChange = new EventEmitter<Product[]>();
   @Output() eventHttpProductsChange = new EventEmitter<ResponseProducts>();
@@ -60,17 +63,18 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly openFoodFactApiService: OpenFoodFactsApiService,
-    private readonly tableGenericService: TableGenericService
+    private readonly tableGenericService: TableGenericService,
+    private readonly cardResultService: CardResultGenericService
   ) {}
 
   ngOnInit(): void {
     this.setForm();
     this.switchPage();
-    this.selectFromTableList();
+    this.selectFromCardList();
   }
 
-  private selectFromTableList() {
-    this.tableGenericService.selectItem$.subscribe((barcode) => {
+  private selectFromCardList() {
+    this.cardResultService.selectItem$.subscribe((barcode) => {
       this.searchById(barcode);
     });
   }
@@ -86,15 +90,20 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
   private switchPage(): void {
-    this.tableGenericService.onPageIndexChange$.subscribe((index) => {
-      if (index >= 0) {
+    this.cardResultService.onPageIndexChange$.subscribe((oPIBs) => {
+      if (oPIBs.pageIndex >= 0 && oPIBs.pageSize) {
+        this.pageIndex = oPIBs.pageIndex;
+        this.search(oPIBs.pageIndex + 1, oPIBs.pageSize);
+      } else if (oPIBs.pageIndex >= 0) {
+        this.pageIndex = oPIBs.pageIndex;
         // page number is equal to page index +1
-        this.search(index + 1);
+        this.search(oPIBs.pageIndex + 1);
       }
     });
   }
 
-  search(pageIndex?: number): void {
+  search(pageIndex?: number, pageSize?: number): void {
+    this.pageIndex = pageIndex;
     this.httpProduct = new ResponseProduct();
     this.httpProducts = new ResponseProducts();
     switch (this.searchForm?.get(this.CHIP_OPTION)?.value) {
@@ -108,10 +117,10 @@ export class SearchProductComponent implements OnInit, OnDestroy {
         this.searchByCategory(pageIndex);
         break;
       case ChipParamSearch.TERM:
-        this.searchByTerm(pageIndex);
+        this.searchByTerm(pageIndex, pageSize);
         break;
       default:
-        this.searchByTerm(pageIndex);
+        this.searchByTerm(pageIndex, pageSize);
         break;
     }
   }
@@ -157,12 +166,13 @@ export class SearchProductComponent implements OnInit, OnDestroy {
     );
   }
 
-  searchByTerm(pageIndex?: number): void {
+  searchByTerm(pageIndex?: number, pageSize?: number): void {
     this.subscription.add(
       this.setProductsFromApi(
         this.openFoodFactApiService.findProductsBySearchTerm(
           this.searchForm?.get(this.INPUT_TEXT)?.value,
-          pageIndex
+          pageIndex,
+          pageSize
         )
       )
     );

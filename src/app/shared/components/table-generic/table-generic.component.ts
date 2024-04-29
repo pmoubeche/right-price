@@ -1,4 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -14,9 +15,8 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../model/table-column-param.model';
-import { TableGenericService } from './table-generic.service';
-import { CommonModule } from '@angular/common';
 import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
+import { TableGenericService } from './table-generic.service';
 
 @Component({
   selector: 'app-table-generic',
@@ -55,8 +55,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
-    private readonly tableGenericService: TableGenericService,
-    private readonly formatPercentPipe: PercentFormatPipe
+    private readonly tableGenericService: TableGenericService
   ) {}
 
   ngOnInit(): void {
