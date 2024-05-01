@@ -1,0 +1,44 @@
+<mat-expansion-panel
+  [expanded]="isExpandedBreakfast"
+  style="max-width: 33%; padding: 1rem"
+>
+  <mat-expansion-panel-header>
+    <mat-panel-title> Petit déjeuner </mat-panel-title>
+  </mat-expansion-panel-header>
+  <app-table-generic
+    [isPaginated]="false"
+    [columns]="columnParamsMeal"
+    [paginatedDataSource]="dataSourceBreakfast"
+    [rowHeight]="'40px'"
+  ></app-table-generic>
+</mat-expansion-panel>
+<br />
+<mat-expansion-panel
+  [expanded]="isExpandedLunch"
+  style="max-width: 33%; padding: 1rem"
+>
+  <mat-expansion-panel-header>
+    <mat-panel-title> Déjeuner </mat-panel-title>
+  </mat-expansion-panel-header>
+  <app-table-generic
+    [isPaginated]="false"
+    [columns]="columnParamsMeal"
+    [paginatedDataSource]="dataSourceLunch"
+    [rowHeight]="'40px'"
+  ></app-table-generic>
+</mat-expansion-panel>
+<br />
+<mat-expansion-panel
+  [expanded]="isExpandedDinner"
+  style="max-width: 33%; padding: 1rem"
+>
+  <mat-expansion-panel-header>
+    <mat-panel-title> Diner </mat-panel-title>
+  </mat-expansion-panel-header>
+  <app-table-generic
+    [isPaginated]="false"
+    [columns]="columnParamsMeal"
+    [paginatedDataSource]="dataSourceDinner"
+    [rowHeight]="'40px'"
+  ></app-table-generic>
+</mat-expansion-panel>

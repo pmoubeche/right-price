@@ -25,13 +25,11 @@ export class ProductComponent {
   public httpProducts: ResponseProducts = new ResponseProducts();
   public httpProduct: ResponseProduct = new ResponseProduct();
 
-  productsAttributesToDisplay: ProductInfosModel[] = [];
-
   onHttpProductsChange(httpProducts: ResponseProducts): void {
     this.httpProducts = httpProducts;
   }
 
-  onHttpProductChange(httpProducts: ResponseProduct): void {
-    this.httpProduct = httpProducts;
+  onHttpProductChange(httpProduct: ResponseProduct): void {
+    this.httpProduct = httpProduct;
   }
 }

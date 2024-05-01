@@ -17,15 +17,23 @@ import {
 } from '../../model/table-column-param.model';
 import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { TableGenericService } from './table-generic.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-table-generic',
   standalone: true,
-  imports: [MaterialModule, CommonModule, PercentFormatPipe],
+  imports: [
+    MaterialModule,
+    CommonModule,
+    PercentFormatPipe,
+    ReactiveFormsModule,
+  ],
   templateUrl: './table-generic.component.html',
   styleUrl: './table-generic.component.scss',
 })
 export class TableGenericComponent<T> implements AfterViewInit, OnInit {
+  readonly EDITABLE_FIELD = 'field';
+
   public columnTypeEnum = ColumnTypeParamEnum;
 
   private _columns?: TableColumnParamModel[];
@@ -52,9 +60,13 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   pageIndex?: number;
   loading = false;
+  isEditableEnabled = false;
+
+  editForm?: FormGroup;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
+    private readonly formBuilder: FormBuilder,
     private readonly tableGenericService: TableGenericService
   ) {}
 
@@ -65,6 +77,12 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     this.tableGenericService.loading$.subscribe(
       (loading) => (this.loading = loading)
     );
+  }
+
+  initForm(): void {
+    this.editForm = this.formBuilder.group({
+      [this.EDITABLE_FIELD]: [],
+    });
   }
 
   ngAfterViewInit() {
@@ -88,5 +106,29 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   onSelectItem(row: any): void {
     this.tableGenericService.onSelectItem(row.id);
+  }
+
+  onEditField(): void {
+    this.isEditableEnabled = true;
+  }
+
+  onValidateField(line: T, column: TableColumnParamModel, value: any): void {
+    this.paginatedDataSource.dataSource.data.forEach((lineData) => {
+      if (lineData === line) {
+        const listCols = Object.getOwnPropertyNames(line);
+        listCols.forEach((col) => {
+          if (column.columDef === col) {
+            // @ts-ignore
+            lineData[column.columDef] = value;
+          }
+        });
+      }
+    });
+    this.isEditableEnabled = false;
+  }
+
+  onDeleteElement(ligne: any) {
+    this.paginatedDataSource.dataSource.data =
+      this.paginatedDataSource.dataSource.data.filter((el) => el !== ligne);
   }
 }

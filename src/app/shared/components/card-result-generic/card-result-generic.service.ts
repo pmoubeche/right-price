@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,17 +15,17 @@ export class CardResultGenericService {
   public loadingBs = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingBs.asObservable();
 
-  public selectItemBs = new BehaviorSubject<string>('');
+  public selectItemBs = new BehaviorSubject<ProductInfosModel>(
+    new ProductInfosModel()
+  );
   public selectItem$ = this.selectItemBs.asObservable();
-
-  constructor() {}
 
   onPageChange(pageIndex: number, pageSize?: number) {
     this.onPageIndexChangeBs.next({ pageIndex, pageSize });
     this.loadingBs.next(true);
   }
 
-  onSelectItem(itemId: string) {
-    this.selectItemBs.next(itemId);
+  onSelectItem(product: ProductInfosModel) {
+    this.selectItemBs.next(product);
   }
 }

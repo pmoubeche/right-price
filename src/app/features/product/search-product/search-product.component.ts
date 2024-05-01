@@ -74,8 +74,8 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
   private selectFromCardList() {
-    this.cardResultService.selectItem$.subscribe((barcode) => {
-      this.searchById(barcode);
+    this.cardResultService.selectItem$.subscribe((item) => {
+      this.searchById(item.id);
     });
   }
 
