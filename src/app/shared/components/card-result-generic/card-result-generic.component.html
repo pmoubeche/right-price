@@ -1,8 +1,8 @@
 <div class="mat-elevation-z8" style="display: grid; justify-content: center">
-  <div class="card-wrapper">
+  <div class="card-wrapper" style="--nb: {{ countProductPerLine }}">
     @for (productInfoModel of productsAttributesToDisplay; track $index) {
     <mat-card
-      class="card-link"
+      [ngClass]="isSelectableCard ? 'card-link' : ''"
       style="
         min-width: 90%;
         min-height: 90%;
@@ -11,9 +11,9 @@
         display: flex;
         justify-content: space-between;
       "
-      (click)="onSelectItem(productInfoModel.id)"
+      (click)="onSelectItem(productInfoModel)"
     >
-      <mat-card-header>
+      <mat-card-header style="min-width: 14.625rem">
         <mat-card-title>{{ productInfoModel?.label! }}</mat-card-title>
       </mat-card-header>
       <div class="product-image">
@@ -43,7 +43,7 @@
     </mat-card>
     }
   </div>
-  @if(isPaginated){
+  @if(isPaginated && httpProducts !== undefined){
   <br />
   <mat-paginator
     style="display: flex; justify-content: center"

@@ -6,6 +6,7 @@ export class TableColumnParamModel {
   icone?: string;
   colWidth?: string;
   isClickable?: boolean;
+  isEditable?: boolean;
   applyStyleWithImage?: boolean = true;
 }
 
@@ -15,4 +16,5 @@ export enum ColumnTypeParamEnum {
   IMAGE = 'image',
   DATE = 'date',
   PERCENT = 'percent',
+  ACTIONS = 'actions',
 }

@@ -29,9 +29,44 @@
         </div>
         } @else if(column.type! === columnTypeEnum.PERCENT) {
         {{ element[column.columDef!] | percentFormat : 100 }}
+        } @else if (column.type! === columnTypeEnum.ACTIONS) {
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onEditField()">
+            <mat-icon color="primary">edit</mat-icon>
+            <span>Modifier</span>
+          </button>
+          <button mat-menu-item (click)="onDeleteElement(element)">
+            <mat-icon color="warn">delete_forever</mat-icon>
+            <span>Supprimer</span>
+          </button>
+        </mat-menu>
+        } @else { @if(column.isEditable && isEditableEnabled){
+        <form [formGroup]="editForm!">
+          <mat-form-field
+            style="padding: 0.5rem"
+            appearance="outline"
+            [formControlName]="EDITABLE_FIELD"
+            ngDefaultControl
+          >
+            <mat-label>{{ column.label }}</mat-label>
+            <input matInput [value]="element[column.columDef!]" />
+          </mat-form-field>
+          <button
+            mat-button
+            matSuffix
+            (click)="
+              onValidateField(element, column, element[column.columDef!])
+            "
+          >
+            <mat-icon color="accent">check</mat-icon>
+          </button>
+        </form>
         } @else {
         {{ element[column.columDef!] }}
-        }
+        } }
       </td>
     </ng-container>
     }

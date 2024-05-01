@@ -1,17 +1,16 @@
 <app-search-product
   (eventHttpProductsChange)="onHttpProductsChange($event)"
   (eventHttpProductChange)="onHttpProductChange($event)"
-  [pageSize]="6"
+  [pageSize]="pageSize"
 ></app-search-product>
 <br />
-@if(httpProducts !== undefined && httpProducts.products!.length >0){
 <mat-expansion-panel [expanded]="true" style="max-width: 99%">
-  <br />
-  <br />
+  <mat-expansion-panel-header>
+    Résultats de la recherche</mat-expansion-panel-header
+  >
   <app-card-result-generic
-    [isSlider]="true"
     [httpProducts]="httpProducts"
-    [isReducedSearch]="true"
+    [pageSize]="pageSize"
+    [isSelectableCard]="false"
   ></app-card-result-generic>
 </mat-expansion-panel>
-}
