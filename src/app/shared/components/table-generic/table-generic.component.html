@@ -1,6 +1,11 @@
 <div
   class="mat-elevation-z8"
-  style="max-width: 98%; display: grid; justify-content: center"
+  style="
+    max-width: 98%;
+    display: grid;
+    justify-content: center;
+    margin-left: -2rem;
+  "
 >
   @if (paginatedDataSource.dataSource && this.loading === false) {
   <table
@@ -16,10 +21,21 @@
         *matHeaderCellDef
         mat-sort-header
         sortActionDescription="Sort by {{ column.columDef }}"
+        [ngStyle]="{
+          'min-width': column.colWidth,
+          padding: column.padding ? column.padding : ''
+        }"
       >
         {{ column.label }}
       </th>
-      <td mat-cell *matCellDef="let element">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [ngStyle]="{
+          'min-width': column.colWidth,
+          padding: column.padding ? column.padding : ''
+        }"
+      >
         @if(column.type! === columnTypeEnum.IMAGE){
         <div class="row-with-image">
           <img
@@ -34,32 +50,43 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="onEditField()">
+          <button mat-menu-item (click)="onEditField(element, columns)">
             <mat-icon color="primary">edit</mat-icon>
             <span>Modifier</span>
           </button>
-          <button mat-menu-item (click)="onDeleteElement(element)">
+          <button mat-menu-item (click)="deleteElement(element)">
             <mat-icon color="warn">delete_forever</mat-icon>
             <span>Supprimer</span>
           </button>
         </mat-menu>
-        } @else { @if(column.isEditable && isEditableEnabled){
-        <form [formGroup]="editForm!">
+        } @else { @if(column.isEditable && element.isEditable$ | async ){
+        <form
+          [formGroup]="editForm!"
+          style="
+            display: inline-flex;
+            align-items: center;
+            height: 3rem;
+            margin-top: 2rem;
+            margin-left: -0.5rem;
+          "
+        >
           <mat-form-field
-            style="padding: 0.5rem"
+            style="padding: 0.5rem; font-size: 12px; max-width: 5rem"
             appearance="outline"
             [formControlName]="EDITABLE_FIELD"
             ngDefaultControl
           >
             <mat-label>{{ column.label }}</mat-label>
-            <input matInput [value]="element[column.columDef!]" />
+            <input
+              matInput
+              [value]="element[column.columDef!]"
+              style="height: 0.75rem"
+            />
           </mat-form-field>
           <button
             mat-button
-            matSuffix
-            (click)="
-              onValidateField(element, column, element[column.columDef!])
-            "
+            (click)="onValidateUpdateField(element)"
+            style="height: 3rem; margin-top: -1.5rem"
           >
             <mat-icon color="accent">check</mat-icon>
           </button>

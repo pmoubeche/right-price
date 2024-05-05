@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -17,7 +19,19 @@ import {
 } from '../../model/table-column-param.model';
 import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { TableGenericService } from './table-generic.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { of } from 'rxjs';
+
+export class UpdateData {
+  element: any;
+  formInputValue: any;
+}
 
 @Component({
   selector: 'app-table-generic',
@@ -27,6 +41,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     PercentFormatPipe,
     ReactiveFormsModule,
+    FormsModule,
   ],
   templateUrl: './table-generic.component.html',
   styleUrl: './table-generic.component.scss',
@@ -55,6 +70,9 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   @Input() isPaginated = true;
   @Input() isClickable = false;
 
+  @Output() onDeleteItem = new EventEmitter<T>();
+  @Output() onValidateUpdateItem = new EventEmitter<UpdateData>();
+
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
@@ -63,6 +81,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   isEditableEnabled = false;
 
   editForm?: FormGroup;
+  editModifyValue?: { columnDef: string; value: any };
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -81,7 +100,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   initForm(): void {
     this.editForm = this.formBuilder.group({
-      [this.EDITABLE_FIELD]: [],
+      [this.EDITABLE_FIELD]: [new FormControl(this.editModifyValue?.value)],
     });
   }
 
@@ -108,27 +127,31 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     this.tableGenericService.onSelectItem(row.id);
   }
 
-  onEditField(): void {
-    this.isEditableEnabled = true;
+  onEditField(line: any, columns: any): void {
+    if (Array.isArray(columns)) {
+      columns.forEach((column) => {
+        if (column.isEditable) {
+          this.editModifyValue = {
+            columnDef: column.columDef,
+            value: line[column.columDef],
+          };
+        }
+      });
+    }
+    this.initForm();
+    line.isEditable = true;
+    line.isEditable$ = of(line.isEditable);
   }
 
-  onValidateField(line: T, column: TableColumnParamModel, value: any): void {
-    this.paginatedDataSource.dataSource.data.forEach((lineData) => {
-      if (lineData === line) {
-        const listCols = Object.getOwnPropertyNames(line);
-        listCols.forEach((col) => {
-          if (column.columDef === col) {
-            // @ts-ignore
-            lineData[column.columDef] = value;
-          }
-        });
-      }
-    });
-    this.isEditableEnabled = false;
+  onValidateUpdateField(line: T): void {
+    const data: UpdateData = {
+      element: line,
+      formInputValue: this.editForm?.get(this.EDITABLE_FIELD)!.value,
+    };
+    this.onValidateUpdateItem.next(data);
   }
 
-  onDeleteElement(ligne: any) {
-    this.paginatedDataSource.dataSource.data =
-      this.paginatedDataSource.dataSource.data.filter((el) => el !== ligne);
+  deleteElement(ligne: T): void {
+    this.onDeleteItem.emit(ligne);
   }
 }

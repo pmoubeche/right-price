@@ -1,17 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { Subscription, switchMap, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../../shared/material/material.module';
-import {
-  MealProductInfoModel,
-  ProductInfosModel,
-} from '../../../shared/model/product-attribute-displayed.model';
-import { ResponseProduct } from '../../../shared/model/product.model';
-import { MatTableDataSource } from '@angular/material/table';
+import { MealProductInfoModel } from '../../../shared/model/product-attribute-displayed.model';
 import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../../shared/model/table-column-param.model';
+import { MealProductApiService } from '../../../shared/services/meal-product-api.service';
+import { MealService } from '../meal.service';
 
 @Component({
   selector: 'app-table-product-meal',
@@ -20,13 +19,15 @@ import {
   templateUrl: './table-product-meal.component.html',
   styleUrl: './table-product-meal.component.scss',
 })
-export class TableProductMealComponent {
+export class TableProductMealComponent implements OnInit, OnDestroy {
   isExpandedBreakfast = false;
   isExpandedLunch = false;
   isExpandedDinner = false;
 
+  dateSelected?: string;
+
   @Input() set mealProduct(mealProductInfoModel: MealProductInfoModel) {
-    if (mealProductInfoModel.meal !== undefined) {
+    if (mealProductInfoModel.mealId !== undefined) {
       this._mealProduct = mealProductInfoModel;
       this.addProductToRightList(mealProductInfoModel);
     }
@@ -38,25 +39,28 @@ export class TableProductMealComponent {
     return this._mealProduct!;
   }
 
-  private mealProductsBreakfast: MealProductInfoModel[] = [];
+  public mealProductsBreakfast: MealProductInfoModel[] = [];
 
-  private mealProductsLunch: MealProductInfoModel[] = [];
+  public mealProductsLunch: MealProductInfoModel[] = [];
 
-  private mealProductsDinner: MealProductInfoModel[] = [];
+  public mealProductsDinner: MealProductInfoModel[] = [];
 
   columnParamsMeal: TableColumnParamModel[] = [
     {
       id: '1',
       label: 'Aliment',
-      columDef: 'image',
+      columDef: 'imageProduct',
       type: ColumnTypeParamEnum.IMAGE,
       applyStyleWithImage: true,
+      colWidth: '6rem',
     },
     {
       id: '2',
       label: 'Libellé',
-      columDef: 'label',
+      columDef: 'labelProduct',
+      isEditable: false,
       type: ColumnTypeParamEnum.STRING,
+      colWidth: '6rem',
     },
     {
       id: '3',
@@ -64,19 +68,23 @@ export class TableProductMealComponent {
       columDef: 'nutriscore',
       type: ColumnTypeParamEnum.IMAGE,
       applyStyleWithImage: true,
+      padding: '0 0 0 0',
     },
     {
       id: '4',
       label: 'Quantité',
       columDef: 'quantity',
+      type: ColumnTypeParamEnum.NUMBER,
+      colWidth: '6rem',
       isEditable: true,
-      type: ColumnTypeParamEnum.STRING,
+      padding: '0 0 0 1rem',
     },
     {
       id: '5',
       label: 'Actions',
       columDef: ColumnTypeParamEnum.ACTIONS,
       type: ColumnTypeParamEnum.ACTIONS,
+      colWidth: '6rem',
     },
   ];
 
@@ -84,8 +92,54 @@ export class TableProductMealComponent {
   dataSourceLunch = new PaginatedDataSource<MealProductInfoModel>();
   dataSourceDinner = new PaginatedDataSource<MealProductInfoModel>();
 
+  subscription = new Subscription();
+
+  constructor(
+    private readonly mealProductApiService: MealProductApiService,
+    private readonly mealService: MealService
+  ) {}
+
+  ngOnInit(): void {
+    this.initDataMealsOnInitAndDateChange();
+  }
+
+  private initDataMealsOnInitAndDateChange() {
+    this.subscription.add(
+      this.mealService.dateSelected$
+        .pipe(
+          switchMap((selectedDate) =>
+            this.mealProductApiService.getMealProducts(selectedDate).pipe(
+              tap((mealProductInfosList) => {
+                this.cleanDatasOnInit();
+                if (mealProductInfosList.length > 0) {
+                  mealProductInfosList.forEach((productInfo) => {
+                    this.addProductToRightList(productInfo);
+                    productInfo.isEditable = false;
+                  });
+                }
+              })
+            )
+          )
+        )
+        .subscribe()
+    );
+  }
+
+  cleanDatasOnInit() {
+    this.mealProductsBreakfast = [];
+    this.mealProductsLunch = [];
+    this.mealProductsDinner = [];
+
+    this.dataSourceBreakfast.dataSource =
+      new MatTableDataSource<MealProductInfoModel>(this.mealProductsBreakfast);
+    this.dataSourceLunch.dataSource =
+      new MatTableDataSource<MealProductInfoModel>(this.mealProductsLunch);
+    this.dataSourceDinner.dataSource =
+      new MatTableDataSource<MealProductInfoModel>(this.mealProductsDinner);
+  }
+
   addProductToRightList(mealProduct: MealProductInfoModel): void {
-    switch (mealProduct.meal) {
+    switch (mealProduct.mealType) {
       case 'breakfast':
         this.mealProductsBreakfast.push(mealProduct);
         this.dataSourceBreakfast.dataSource =
@@ -109,5 +163,74 @@ export class TableProductMealComponent {
       default:
         break;
     }
+  }
+
+  deleteProductFromRightList(mealProduct: MealProductInfoModel): void {
+    switch (mealProduct.mealType) {
+      case 'breakfast':
+        this.mealProductsBreakfast = this.mealProductsBreakfast.filter(
+          (mealProductFromList) =>
+            mealProduct.idProduct !== mealProductFromList.idProduct
+        );
+        if (this.mealProductsBreakfast.length === 0) {
+          this.isExpandedBreakfast = false;
+        }
+        break;
+      case 'lunch':
+        this.mealProductsLunch = this.mealProductsLunch.filter(
+          (mealProductFromList) =>
+            mealProduct.idProduct !== mealProductFromList.idProduct
+        );
+        if (this.mealProductsLunch.length === 0) {
+          this.isExpandedLunch = false;
+        }
+        break;
+      case 'dinner':
+        this.mealProductsDinner = this.mealProductsDinner.filter(
+          (mealProductFromList) =>
+            mealProduct.idProduct !== mealProductFromList.idProduct
+        );
+        if (this.mealProductsDinner.length === 0) {
+          this.isExpandedDinner = false;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  deleteLProductMeal(mealProductInfoParam: any): void {
+    const param: MealProductInfoModel = mealProductInfoParam;
+    this.subscription.add(
+      this.mealProductApiService
+        .deleteMealProduct(param.idLProductMeal!)
+        .pipe(
+          tap(() => {
+            this.deleteProductFromRightList(param);
+            this.initDataMealsOnInitAndDateChange();
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  updateLProductMealQuantity(event: any): void {
+    const mealProduct: MealProductInfoModel = event.element;
+    const quantity: number = event.formInputValue;
+    mealProduct.quantity = quantity;
+    this.subscription.add(
+      this.mealProductApiService
+        .updateMealProduct(mealProduct)
+        .pipe(
+          tap(() => {
+            this.initDataMealsOnInitAndDateChange();
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

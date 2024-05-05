@@ -7,6 +7,8 @@
   </mat-expansion-panel-header>
   <app-table-generic
     [isPaginated]="false"
+    (onDeleteItem)="deleteLProductMeal($event)"
+    (onValidateUpdateItem)="updateLProductMealQuantity($event)"
     [columns]="columnParamsMeal"
     [paginatedDataSource]="dataSourceBreakfast"
     [rowHeight]="'40px'"
@@ -22,6 +24,8 @@
   </mat-expansion-panel-header>
   <app-table-generic
     [isPaginated]="false"
+    (onDeleteItem)="deleteLProductMeal($event)"
+    (onValidateUpdateItem)="updateLProductMealQuantity($event)"
     [columns]="columnParamsMeal"
     [paginatedDataSource]="dataSourceLunch"
     [rowHeight]="'40px'"
@@ -36,6 +40,8 @@
     <mat-panel-title> Diner </mat-panel-title>
   </mat-expansion-panel-header>
   <app-table-generic
+    (onDeleteItem)="deleteLProductMeal($event)"
+    (onValidateUpdateItem)="updateLProductMealQuantity($event)"
     [isPaginated]="false"
     [columns]="columnParamsMeal"
     [paginatedDataSource]="dataSourceDinner"

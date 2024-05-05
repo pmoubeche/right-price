@@ -13,7 +13,6 @@
   <app-card-result-generic
     [httpProducts]="httpProducts"
     [pageSize]="6"
-    (eventSelectProduct)="onSelectProduct($event)"
   ></app-card-result-generic>
 </mat-expansion-panel>
 <br />
@@ -29,6 +28,8 @@
         matInput
         [matDatepicker]="picker"
         [formControlName]="DATE_MEAL_INPUT"
+        ngDefaultControl
+        (dateChange)="onDateChange($event)"
       />
       <mat-datepicker-toggle
         matIconSuffix
@@ -44,7 +45,6 @@
         max-width: 33%;
         margin-bottom: 1.8rem;
       "
-      [formControlName]="PRODUCT_INFO_FORM"
     >
       @if(productInfoModelSelected!.id !== undefined){
       <mat-card-actions class="mat-card-actions">
@@ -107,4 +107,7 @@
   </form>
 </mat-expansion-panel>
 <br />
-<app-table-product-meal [mealProduct]="mealProduct"></app-table-product-meal>
+<app-table-product-meal
+  #tableProductMealComponent
+  [mealProduct]="mealProduct"
+></app-table-product-meal>

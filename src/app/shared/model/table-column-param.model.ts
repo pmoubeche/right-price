@@ -5,6 +5,7 @@ export class TableColumnParamModel {
   type?: string = '';
   icone?: string;
   colWidth?: string;
+  padding?: string;
   isClickable?: boolean;
   isEditable?: boolean;
   applyStyleWithImage?: boolean = true;
