@@ -66,8 +66,6 @@ export class CardResultGenericComponent implements OnInit {
   @Input() pageSize? = 24;
   @Input() isSelectedForMeal = false;
 
-  @Output() eventSelectProduct = new EventEmitter<MealProductInfoModel>();
-
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
   pageIndex?: number;

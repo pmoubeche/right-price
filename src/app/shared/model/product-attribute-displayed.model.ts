@@ -1,4 +1,5 @@
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 export class ProductInfosModel {
   id?: string;
@@ -10,12 +11,27 @@ export class ProductInfosModel {
 }
 
 export class MealProductInfoModel {
-  id?: string;
-  image?: string;
-  label?: string;
+  idProduct?: string;
+  imageProduct?: string;
+  labelProduct?: string;
   nutriscore?: string;
   quantity?: number;
-  meal?: string;
+  mealId?: string;
+  mealType?: string;
+  idLProductMeal?: string;
+  date?: string;
+  isEditable? = false;
+  isEditable$? = new Observable<boolean>();
+}
+
+export class MealProductParam {
+  mealId?: string;
+  barcodeProduct?: string;
+  nameProduct?: string;
+  imageProduct?: string;
+  nutriscore?: string;
+  quantity?: number;
+  mealType?: string;
   date?: string;
 }
 

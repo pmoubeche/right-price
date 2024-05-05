@@ -46,7 +46,6 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   @Input() pageSize?: number = 24;
   public pageIndex?: number;
 
-  @Output() eventProductsChange = new EventEmitter<Product[]>();
   @Output() eventHttpProductsChange = new EventEmitter<ResponseProducts>();
   @Output() eventHttpProductChange = new EventEmitter<ResponseProduct>();
 
