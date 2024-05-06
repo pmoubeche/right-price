@@ -1,4 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { SearchProductComponent } from '../product/search-product/search-product.component';
+import { MealService } from './meal.service';
+import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
+import { CommonModule } from '@angular/common';
+import { MaterialModule } from '../../shared/material/material.module';
 import {
   FormBuilder,
   FormControl,
@@ -6,19 +11,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subscription, tap } from 'rxjs';
 import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
-import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
-import {
-  ButtonAction,
-  DialogContentModel,
-} from '../../shared/components/dialog-generic/dialog-content.model';
 import { DialogGenericComponent } from '../../shared/components/dialog-generic/dialog-generic.component';
-import {
-  CodeModaleEnum,
-  DialogGenericService,
-} from '../../shared/components/dialog-generic/dialog-generic.service';
-import { MaterialModule } from '../../shared/material/material.module';
 import {
   Meal,
   MealProductInfoModel,
@@ -26,14 +20,21 @@ import {
   ProductInfosModel,
 } from '../../shared/model/product-attribute-displayed.model';
 import {
+  ButtonAction,
+  DialogContentModel,
+} from '../../shared/components/dialog-generic/dialog-content.model';
+import {
   ResponseProduct,
   ResponseProducts,
 } from '../../shared/model/product.model';
+import { Subscription, tap } from 'rxjs';
+import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
 import { MealProductApiService } from '../../shared/services/meal-product-api.service';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../shared/components/dialog-generic/dialog-generic.service';
 import { DateUtils } from '../../shared/utils/date.utils';
-import { SearchProductComponent } from '../product/search-product/search-product.component';
-import { MealService } from './meal.service';
-import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
 
 @Component({
   selector: 'app-meal',
@@ -45,6 +46,7 @@ import { TableProductMealComponent } from './table-product-meal/table-product-me
     SearchProductComponent,
     CardResultGenericComponent,
     DialogGenericComponent,
+    CommonModule,
   ],
   templateUrl: './meal.component.html',
   styleUrl: './meal.component.scss',
@@ -125,9 +127,12 @@ export class MealComponent implements OnInit, OnDestroy {
   initForm(): void {
     this.mealProductForm = this.formBuilder.group({
       [this.DATE_MEAL_INPUT]: [new Date(), [Validators.required]],
-      [this.QUANTITY_FORM]: [0],
-      [this.MEAL_FORM]: [new Meal()],
-      [this.PRODUCT_INFO_FORM]: [this.productInfoModelSelected],
+      [this.QUANTITY_FORM]: ['', [Validators.required]],
+      [this.MEAL_FORM]: new FormControl('', [Validators.required]),
+      [this.PRODUCT_INFO_FORM]: [
+        this.productInfoModelSelected,
+        [Validators.required],
+      ],
     });
   }
 
@@ -141,49 +146,65 @@ export class MealComponent implements OnInit, OnDestroy {
 
   onSelectMeal(meal: any) {
     this.mealSelected = meal.value;
+    this.productInfoControl.markAsTouched();
   }
 
   onDateChange(event: any) {
     this.mealService.dateSelectedBs.next(DateUtils.formatDate(event.value));
   }
 
+  checkIfFormValid(): boolean {
+    let date = this.dateControl;
+    let quantity = this.quantityControl;
+    let meal = this.mealSelected;
+
+    if (date) {
+    }
+    return true;
+  }
+
   addMealProductToResult(): void {
-    let date = DateUtils.formatDate(
-      this.mealProductForm?.get(this.DATE_MEAL_INPUT)!.value
-    );
-    let quantity = this.mealProductForm?.get(this.QUANTITY_FORM)!.value;
+    let date = DateUtils.formatDate(this.dateControl.value);
+    let quantity = this.quantityControl!.value;
     let meal = this.mealSelected;
 
     const mealProductParam: MealProductParam = {
-      barcodeProduct: this.productInfoModelSelected!.id,
-      nameProduct: this.productInfoModelSelected!.label,
+      barcodeProduct: this.productInfoModelSelected?.id,
+      nameProduct: this.productInfoModelSelected?.label,
       imageProduct: this.productInfoModelSelected?.image,
       nutriscore: this.productInfoModelSelected?.nutriscore,
       quantity: Number.parseFloat(quantity),
-      mealType: meal!.id,
+      mealType: meal?.id,
       date: date,
     };
 
-    if (this.isProductExistInList(mealProductParam)) {
-      this.popInService.openDialog(
-        CodeModaleEnum.INFORMATION,
-        this.dialogParamData
-      );
-    } else {
-      this.subscription.add(
-        this.mealProductApiService
-          .addMealProduct(mealProductParam)
-          .pipe(
-            tap((mealProductInfo) => {
-              this.mealProduct = mealProductInfo;
-              this.mealProduct.imageProduct =
-                this.productInfoModelSelected?.image;
-              this.mealProduct.nutriscore =
-                this.productInfoModelSelected?.nutriscore;
-            })
-          )
-          .subscribe()
-      );
+    this.mealProductForm.markAllAsTouched();
+    if (
+      this.mealSelected &&
+      this.quantityControl.valid &&
+      this.productInfoModelSelected
+    ) {
+      if (this.isProductExistInList(mealProductParam)) {
+        this.popInService.openDialog(
+          CodeModaleEnum.INFORMATION,
+          this.dialogParamData
+        );
+      } else {
+        this.subscription.add(
+          this.mealProductApiService
+            .addMealProduct(mealProductParam)
+            .pipe(
+              tap((mealProductInfo) => {
+                this.mealProduct = mealProductInfo;
+                this.mealProduct.imageProduct =
+                  this.productInfoModelSelected?.image;
+                this.mealProduct.nutriscore =
+                  this.productInfoModelSelected?.nutriscore;
+              })
+            )
+            .subscribe()
+        );
+      }
     }
   }
 

@@ -37,61 +37,72 @@
       ></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-    <mat-card
-      class="fields"
-      style="
-        max-height: 3.5rem;
-        min-width: 33%;
-        max-width: 33%;
-        margin-bottom: 1.8rem;
-      "
-    >
-      @if(productInfoModelSelected!.id !== undefined){
-      <mat-card-actions class="mat-card-actions">
-        <img
-          mat-card-image
-          src="{{ productInfoModelSelected?.image }}"
-          style="max-height: 2.25rem; display: flex; margin-top: 1.25rem"
-        />
-        <div style="margin-top: 1.25rem; padding: 1rem">
-          {{ productInfoModelSelected?.label }}
-        </div>
-        <img
-          mat-card-image
-          class="product-score"
-          src="{{ productInfoModelSelected?.nutriscore }}"
-          style="height: 4rem; padding-top: 1rem"
-        />
-      </mat-card-actions>
-      } @else {
-      <p>Veuillez selectionner un aliment dans la liste</p>
+    <div style="width: 33%">
+      <mat-card
+        class="fields"
+        [ngClass]="!productInfoModelSelected?.id ? 'product-mandatory' : ''"
+        style="
+          max-height: 3.5rem;
+          min-width: 100%;
+          max-width: 33%;
+          margin-bottom: 1.8rem;
+        "
+      >
+        @if(productInfoModelSelected!.id !== undefined){
+        <mat-card-actions class="mat-card-actions">
+          <img
+            mat-card-image
+            src="{{ productInfoModelSelected?.image }}"
+            style="max-height: 2.25rem; display: flex; margin-top: 1.25rem"
+          />
+          <div style="margin-top: 1.25rem; padding: 1rem">
+            {{ productInfoModelSelected?.label }}
+          </div>
+          <img
+            mat-card-image
+            class="product-score"
+            src="{{ productInfoModelSelected?.nutriscore }}"
+            style="height: 4rem; padding-top: 1rem"
+          />
+        </mat-card-actions>
+        } @else {
+        <p>Veuillez selectionner un aliment dans la liste *</p>
+        }
+      </mat-card>
+      @if(!productInfoModelSelected?.id){
+      <p style="font-size: 12px; color: #d92828; margin-top: -1.5rem">
+        &nbsp;&nbsp;&nbsp;&nbsp;Champ obligatoire
+      </p>
       }
-    </mat-card>
-    <mat-form-field
-      class="fields"
-      appearance="outline"
-      [formControlName]="QUANTITY_FORM"
-      ngDefaultControl
-    >
+    </div>
+    <mat-form-field class="fields" appearance="outline">
       <mat-label>Quantité (g)</mat-label>
-      <input matInput placeholder="Ex. 100" />
+      <input
+        matInput
+        type="number"
+        [formControlName]="QUANTITY_FORM"
+        placeholder="Ex. 100"
+        required
+      />
+      @if(quantityControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
     </mat-form-field>
-    <mat-form-field
-      class="fields"
-      appearance="outline"
-      [formControlName]="MEAL_FORM"
-      ngDefaultControl
-    >
+    <mat-form-field class="fields" appearance="outline">
       <mat-label>Repas</mat-label>
       <mat-select
+        [formControlName]="MEAL_FORM"
         [compareWith]="compareCategoryObjects"
         (selectionChange)="onSelectMeal($event)"
+        required
       >
-        <mat-option [value]="null"></mat-option>
         @for (meal of meals; track $index) {
         <mat-option [value]="meal">{{ meal.label }}</mat-option>
         }
       </mat-select>
+      @if(!mealSelected){
+      <mat-error>Champ obligatoire</mat-error>
+      }
     </mat-form-field>
     <div class="fields" style="margin-bottom: 2rem">
       <button
