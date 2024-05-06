@@ -1,9 +1,40 @@
-import { Component } from '@angular/core';
-import { RapidSearchProductComponent } from './rapid-search-product/rapid-search-product.component';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SearchProductComponent } from '../product/search-product/search-product.component';
 import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
 import { CommonModule } from '@angular/common';
+import { MaterialModule } from '../../shared/material/material.module';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
+import { DialogGenericComponent } from '../../shared/components/dialog-generic/dialog-generic.component';
+import {
+  Meal,
+  MealProductInfoModel,
+  MealProductParam,
+  ProductInfosModel,
+} from '../../shared/model/product-attribute-displayed.model';
+import {
+  ButtonAction,
+  DialogContentModel,
+} from '../../shared/components/dialog-generic/dialog-content.model';
+import {
+  ResponseProduct,
+  ResponseProducts,
+} from '../../shared/model/product.model';
+import { Subscription, tap } from 'rxjs';
+import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
+import { MealProductApiService } from '../../shared/services/meal-product-api.service';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../shared/components/dialog-generic/dialog-generic.service';
+import { DateUtils } from '../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-meal',
@@ -149,8 +180,8 @@ export class MealComponent implements OnInit, OnDestroy {
 
     this.mealProductForm.markAllAsTouched();
     if (
-      this.mealSelected ||
-      this.quantityControl.valid ||
+      this.mealSelected &&
+      this.quantityControl.valid &&
       this.productInfoModelSelected
     ) {
       if (this.isProductExistInList(mealProductParam)) {
