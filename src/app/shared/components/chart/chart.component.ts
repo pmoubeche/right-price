@@ -1,11 +1,15 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Inject,
   Input,
   NgZone,
   OnChanges,
+  PLATFORM_ID,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import type {
@@ -18,11 +22,11 @@ import type {
 
 @Component({
   selector: 'app-chart',
-  template: `<canvas
-    #ref
-    [attr.height]="height"
-    [attr.width]="width"
-  ></canvas>`,
+  template: `
+    @if(this.isBrowser){
+    <canvas #ref [attr.height]="height" [attr.width]="width"></canvas>
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [':host { display: block }'],
   standalone: true,
@@ -40,7 +44,11 @@ export class ChartComponent implements AfterViewInit, OnChanges {
   @Input() updateMode?: UpdateMode;
   chartInstance!: Chart;
 
-  constructor(private zone: NgZone) {}
+  public isBrowser?: boolean;
+
+  constructor(private zone: NgZone, @Inject(PLATFORM_ID) platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngAfterViewInit() {
     this.renderChart();

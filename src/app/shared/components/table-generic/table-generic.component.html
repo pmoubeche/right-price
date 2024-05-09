@@ -73,13 +73,13 @@
           <mat-form-field
             style="padding: 0.5rem; font-size: 12px; max-width: 5rem"
             appearance="outline"
-            [formControlName]="EDITABLE_FIELD"
-            ngDefaultControl
           >
             <mat-label>{{ column.label }}</mat-label>
             <input
               matInput
               [value]="element[column.columDef!]"
+              [formControlName]="EDITABLE_FIELD"
+              ngDefaultControl
               style="height: 0.75rem"
             />
           </mat-form-field>

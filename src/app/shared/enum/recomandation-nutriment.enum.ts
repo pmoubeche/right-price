@@ -29,3 +29,12 @@ export const MicroNutrimentsConst = {
   SODIUM: { label: 'Sodium', value: 800, unit: 'mg' },
   CHOLESTEROL: { label: 'Cholesterol', value: 300, unit: 'mg' },
 };
+
+export const NutrimentsManConst = {
+  CALORIES: { label: 'Calories', value: 2500, unit: 'kcal' },
+  LIPIDES: { label: 'Lipides', value: 84, unit: 'g' },
+  GLUCIDES: { label: 'Glucides', value: 312, unit: 'g' },
+  PROTEINES: { label: 'Protéines', value: 124, unit: 'g' },
+  FIBERS: { label: 'Fibres', value: 30, unit: 'g' },
+  SALT: { label: 'Sel', value: 5, unit: 'g' },
+};

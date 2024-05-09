@@ -664,7 +664,7 @@ export interface NutrientLevels {
   sugars?: string;
 }
 
-export interface Nutriments {
+export class Nutriments {
   carbohydrates?: number;
   carbohydrates_100g?: number;
   carbohydrates_serving?: number;

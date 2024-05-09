@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartData, ChartOptions } from 'chart.js';
 import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
-import { ChartsImports } from '../../../shared/components/chart/chart-imports';
+import { ChartUtils } from '../../../shared/components/chart/chart.utils';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../../shared/material/material.module';
@@ -188,7 +188,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    ChartsImports.setChartImports();
+    ChartUtils.setChartImports();
   }
 
   ngAfterViewInit(): void {
@@ -311,7 +311,8 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
           fill: true,
           backgroundColor: ['#7fc8c9'],
           borderColor: ['#056560'],
-          borderWidth: 1,
+          borderWidth: 2,
+          borderRadius: 5,
         },
         {
           label: 'Pourcentage AJR (100%)',
@@ -320,8 +321,9 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
             .map((val) => (val < 0 ? 0 : val)),
           fill: true,
           backgroundColor: ['#f1f1f1'],
-          borderColor: ['#f1f1f1'],
-          borderWidth: 1,
+          borderColor: ['#9e9e9e'],
+          borderWidth: 2,
+          borderRadius: 5,
         },
       ],
     };
