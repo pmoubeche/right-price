@@ -12,7 +12,15 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Observable, Subscription, finalize, tap } from 'rxjs';
+import {
+  EMPTY,
+  Observable,
+  Subscription,
+  catchError,
+  finalize,
+  of,
+  tap,
+} from 'rxjs';
 import { MaterialModule } from '../../../shared/material/material.module';
 import {
   Product,
@@ -22,6 +30,7 @@ import {
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
 export enum ChipParamSearch {
   BARCODE = 'Barcode',
@@ -184,6 +193,12 @@ export class SearchProductComponent implements OnInit, OnDestroy {
           this.httpProducts = response;
           this.eventHttpProductsChange.emit(this.httpProducts);
           this.tableGenericService.loadingBs.next(true);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === HttpStatusCode.BadGateway) {
+            return of(EMPTY);
+          }
+          return of(EMPTY);
         }),
         finalize(() => {
           this.tableGenericService.loadingBs.next(false);

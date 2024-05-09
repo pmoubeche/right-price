@@ -1,4 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { SearchProductComponent } from '../product/search-product/search-product.component';
 import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
@@ -35,6 +43,7 @@ import {
   DialogGenericService,
 } from '../../shared/components/dialog-generic/dialog-generic.service';
 import { DateUtils } from '../../shared/utils/date.utils';
+import { ChartMealProductComponent } from './chart-meal-product/chart-meal-product.component';
 
 @Component({
   selector: 'app-meal',
@@ -42,6 +51,7 @@ import { DateUtils } from '../../shared/utils/date.utils';
   imports: [
     MaterialModule,
     TableProductMealComponent,
+    ChartMealProductComponent,
     ReactiveFormsModule,
     SearchProductComponent,
     CardResultGenericComponent,
@@ -56,6 +66,36 @@ export class MealComponent implements OnInit, OnDestroy {
   readonly QUANTITY_FORM = 'quantity';
   readonly MEAL_FORM = 'meal';
   readonly PRODUCT_INFO_FORM = 'productInfo';
+
+  private _mealProductsBreakfast!: MealProductInfoModel[];
+
+  set mealProductsBreakfast(mealProductsBreakfast: MealProductInfoModel[]) {
+    this._mealProductsBreakfast = mealProductsBreakfast;
+  }
+
+  get mealProductsBreakfast() {
+    return this._mealProductsBreakfast;
+  }
+
+  private _mealProductsLunch!: MealProductInfoModel[];
+
+  set mealProductsLunch(mealProductsLunch: MealProductInfoModel[]) {
+    this._mealProductsLunch = mealProductsLunch;
+  }
+
+  get mealProductsLunch() {
+    return this._mealProductsLunch;
+  }
+
+  private _mealProductsDinner!: MealProductInfoModel[];
+
+  set mealProductsDinner(mealProductsDinner: MealProductInfoModel[]) {
+    this._mealProductsDinner = mealProductsDinner;
+  }
+
+  get mealProductsDinner() {
+    return this._mealProductsDinner;
+  }
 
   public meals: Meal[] = [
     { id: 'breakfast', label: "P'tit déj" },
@@ -88,6 +128,8 @@ export class MealComponent implements OnInit, OnDestroy {
   public mealProduct: MealProductInfoModel = new MealProductInfoModel();
 
   public productInfoModelSelected?: ProductInfosModel;
+
+  allMealsProduct: MealProductInfoModel[] = [];
 
   get quantityControl(): FormControl {
     return this.mealProductForm?.get(this.QUANTITY_FORM) as FormControl;
@@ -153,14 +195,16 @@ export class MealComponent implements OnInit, OnDestroy {
     this.mealService.dateSelectedBs.next(DateUtils.formatDate(event.value));
   }
 
-  checkIfFormValid(): boolean {
-    let date = this.dateControl;
-    let quantity = this.quantityControl;
-    let meal = this.mealSelected;
+  onMealProductsBreakfastChange(mealProducts: MealProductInfoModel[]): void {
+    this.mealProductsBreakfast = mealProducts;
+  }
 
-    if (date) {
-    }
-    return true;
+  onMealProductsLunchChange(mealProducts: MealProductInfoModel[]): void {
+    this.mealProductsLunch = mealProducts;
+  }
+
+  onMealProductsDinnerChange(mealProducts: MealProductInfoModel[]): void {
+    this.mealProductsDinner = mealProducts;
   }
 
   addMealProductToResult(): void {
@@ -209,7 +253,7 @@ export class MealComponent implements OnInit, OnDestroy {
   }
 
   isProductExistInList(mealProductParam: MealProductParam): boolean {
-    const allMealsProduct: MealProductInfoModel[] = [
+    const allMealsProduct = [
       ...this.tableProductMealComponent.mealProductsBreakfast,
       ...this.tableProductMealComponent.mealProductsLunch,
       ...this.tableProductMealComponent.mealProductsDinner,
@@ -221,12 +265,6 @@ export class MealComponent implements OnInit, OnDestroy {
     )?.idProduct
       ? true
       : false;
-  }
-
-  private resetForm() {
-    this.quantityControl.reset();
-    this.mealControl.reset();
-    this.productInfoControl.reset();
   }
 
   compareCategoryObjects(object1: any, object2: any) {

@@ -118,7 +118,21 @@
   </form>
 </mat-expansion-panel>
 <br />
-<app-table-product-meal
-  #tableProductMealComponent
-  [mealProduct]="mealProduct"
-></app-table-product-meal>
+
+<div style="display: flex; justify-content: space-evenly; align-items: stretch">
+  <app-table-product-meal
+    style="width: 50%; padding-right: 1rem"
+    #tableProductMealComponent
+    [mealProduct]="mealProduct"
+    (eventMealProductsBreakfast)="onMealProductsBreakfastChange($event)"
+    (eventMealProductsLunch)="onMealProductsLunchChange($event)"
+    (eventMealProductsDinner)="onMealProductsDinnerChange($event)"
+  ></app-table-product-meal>
+
+  <app-chart-meal-product
+    style="width: 50%; padding-right: 1rem"
+    [mealProductsBreakfast]="mealProductsBreakfast"
+    [mealProductsLunch]="mealProductsLunch"
+    [mealProductsDinner]="mealProductsDinner"
+  ></app-chart-meal-product>
+</div>

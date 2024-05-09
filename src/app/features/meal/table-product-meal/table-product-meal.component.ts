@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
@@ -29,7 +36,8 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
   @Input() set mealProduct(mealProductInfoModel: MealProductInfoModel) {
     if (mealProductInfoModel.mealId !== undefined) {
       this._mealProduct = mealProductInfoModel;
-      this.addProductToRightList(mealProductInfoModel);
+      this.initDataMealsOnInitAndDateChange();
+      // this.addProductToRightList(mealProductInfoModel);
     }
   }
 
@@ -44,6 +52,14 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
   public mealProductsLunch: MealProductInfoModel[] = [];
 
   public mealProductsDinner: MealProductInfoModel[] = [];
+
+  @Output() eventMealProductsBreakfast = new EventEmitter<
+    MealProductInfoModel[]
+  >();
+  @Output() eventMealProductsLunch = new EventEmitter<MealProductInfoModel[]>();
+  @Output() eventMealProductsDinner = new EventEmitter<
+    MealProductInfoModel[]
+  >();
 
   columnParamsMeal: TableColumnParamModel[] = [
     {
@@ -110,12 +126,17 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
           switchMap((selectedDate) =>
             this.mealProductApiService.getMealProducts(selectedDate).pipe(
               tap((mealProductInfosList) => {
-                this.cleanDatasOnInit();
+                this.resetDatasOnChange();
                 if (mealProductInfosList.length > 0) {
                   mealProductInfosList.forEach((productInfo) => {
                     this.addProductToRightList(productInfo);
                     productInfo.isEditable = false;
                   });
+                  this.eventMealProductsBreakfast.emit(
+                    this.mealProductsBreakfast
+                  );
+                  this.eventMealProductsLunch.emit(this.mealProductsLunch);
+                  this.eventMealProductsDinner.emit(this.mealProductsDinner);
                 }
               })
             )
@@ -125,7 +146,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
     );
   }
 
-  cleanDatasOnInit() {
+  resetDatasOnChange() {
     this.mealProductsBreakfast = [];
     this.mealProductsLunch = [];
     this.mealProductsDinner = [];

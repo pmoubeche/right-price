@@ -100,7 +100,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   initForm(): void {
     this.editForm = this.formBuilder.group({
-      [this.EDITABLE_FIELD]: [new FormControl(this.editModifyValue?.value)],
+      [this.EDITABLE_FIELD]: [this.editModifyValue?.value],
     });
   }
 

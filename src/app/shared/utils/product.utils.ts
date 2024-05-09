@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NutrimentInfoModel } from '../../features/product/detail-product/detail-product.component';
-import { MicroNutrimentsConst } from '../enum/micro-nutriment.enum';
+import { MicroNutrimentsConst } from '../enum/recomandation-nutriment.enum';
 import {
   EcoscoreGrade,
   NovagroupGrade,
@@ -445,6 +445,27 @@ export class ProductUtils {
       ['Glucides', nutriment['carbohydrates_100g']!],
       ['Protéines', nutriment['proteins_100g']!],
       ['Restes', leftoversProp],
+    ]);
+  }
+
+  static setNutrimentChartPieMap(nutriment: Nutriments): Map<string, number> {
+    if (Object.keys(nutriment).length > 0) {
+      return new Map<string, number>([
+        ['Calories', nutriment['energy-kcal_100g']!],
+        ['Lipides', nutriment['fat_100g']!],
+        ['Glucides', nutriment['carbohydrates_100g']!],
+        ['Protéines', nutriment['proteins_100g']!],
+        ['Fibres', nutriment['fiber_100g']!],
+        ['Sel', nutriment['salt_100g']!],
+      ]);
+    }
+    return new Map<string, number>([
+      ['Energie', 0],
+      ['Lipides', 0],
+      ['Glucides', 0],
+      ['Protéines', 0],
+      ['Fibres', 0],
+      ['Sel', 0],
     ]);
   }
 

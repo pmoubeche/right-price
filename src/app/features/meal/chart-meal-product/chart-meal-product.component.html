@@ -1,0 +1,17 @@
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header> Apports journlier </mat-expansion-panel-header>
+  <!-- <app-chart
+    type="bar"
+    [data]="dailyRecommanderIncomeChartBarData!"
+    [options]="optionsBar"
+    [height]="200"
+  ></app-chart> -->
+  @for(chartData of dailyRecommanderIncomeChartsBarData; track $index){
+  <app-chart
+    type="bar"
+    [data]="chartData!"
+    [options]="optionsBar"
+    [height]="50"
+  ></app-chart>
+  }
+</mat-expansion-panel>

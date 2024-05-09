@@ -40,4 +40,25 @@ export class OpenFoodFactsApiService {
       `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchTerm}&page=${page}&fields=id,product_name,image_small_url,nutriscore_grade,ecoscore_grade,nova_group&page_size=${pageSize}&search_simple=1&action=process&json=1.json`
     ) as Observable<ResponseProducts>;
   }
+
+  findProductsByBarcodes(
+    barcodes: string[],
+    page = 1,
+    pageSize = barcodes.length
+  ): Observable<ResponseProducts> {
+    let stringBarcodes: string = '';
+    if (barcodes.length > 0) {
+      if (barcodes.length === 1) {
+        stringBarcodes = barcodes[0];
+      } else {
+        barcodes.forEach((barcode) => {
+          stringBarcodes += `${barcode},`;
+        });
+        stringBarcodes = stringBarcodes.slice(0, -1);
+      }
+    }
+    return this.httpClient.get(
+      `https://world.openfoodfacts.org/api/v0/search?code=${stringBarcodes}&page=${page}&fields=id,product_name,image_small_url,nutriscore_grade,ecoscore_grade,nova_group,nutriments,nutriments_estimated&page_size=${pageSize}`
+    ) as Observable<ResponseProducts>;
+  }
 }
