@@ -3,7 +3,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Subscription, tap } from 'rxjs';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
-import { ChartService } from '../../../shared/components/chart/chart.service';
 import { ChartUtils } from '../../../shared/components/chart/chart.utils';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { MealProductInfoModel } from '../../../shared/model/product-attribute-displayed.model';
@@ -130,15 +129,11 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly openFoodFactApiService: OpenFoodFactsApiService,
-    private readonly chartService: ChartService,
     private readonly roundNumberPipe: RoundNumberDecimalPipe
   ) {}
 
   ngOnInit(): void {
     ChartUtils.setChartImports();
-    this.chartService.isDisplayedLegend$.subscribe(
-      (value) => (this.isDisplayedLegend = value)
-    );
   }
 
   private findProductsAndSetNutrimentsMeal(
@@ -164,12 +159,12 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
           .pipe(
             tap((httpProducts: ResponseProducts) => {
               if (httpProducts.products?.length! > 0) {
-                // httpProducts.products?.forEach((product) => {
-                //   product!.nutriments =
-                //     ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(
-                //       product!
-                //     );
-                // });
+                httpProducts.products?.forEach((product) => {
+                  product!.nutriments =
+                    ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(
+                      product!
+                    );
+                });
 
                 nutrimentList.forEach((nutAttr) => {
                   let attr = nutAttr as keyof typeof Nutriments;
@@ -283,7 +278,8 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         backgroundColor: ['#7fc8c9'],
         borderColor: ['#056560'],
         borderWidth: 2,
-        borderRadius: 5,
+        // borderRadius: 15,
+        borderSkipped: false,
       };
 
       const dataSetLunch: ChartDataset = {
@@ -293,7 +289,8 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         backgroundColor: ['#4c7ed0'],
         borderColor: ['#21428d'],
         borderWidth: 2,
-        borderRadius: 5,
+        // borderRadius: 15,
+        borderSkipped: false,
       };
 
       const dataSetDinner: ChartDataset = {
@@ -303,7 +300,8 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         backgroundColor: ['#ffc30f'],
         borderColor: ['#ec6000'],
         borderWidth: 2,
-        borderRadius: 5,
+        // borderRadius: 15,
+        borderSkipped: false,
       };
 
       const dataSetFiller: ChartDataset = {
@@ -320,7 +318,8 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         backgroundColor: ['#f1f1f1'],
         borderColor: ['#9e9e9e'],
         borderWidth: 2,
-        borderRadius: 5,
+        // borderRadius: 15,
+        borderSkipped: false,
       };
 
       const chartData: ChartData = {

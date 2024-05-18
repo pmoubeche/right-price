@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
 
 @Injectable({
@@ -15,6 +15,8 @@ export class CardResultGenericService {
   public loadingBs = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingBs.asObservable();
 
+  public isErrorBs = new BehaviorSubject<boolean>(false);
+
   public selectItemBs = new BehaviorSubject<ProductInfosModel>(
     new ProductInfosModel()
   );
@@ -27,5 +29,13 @@ export class CardResultGenericService {
 
   onSelectItem(product: ProductInfosModel) {
     this.selectItemBs.next(product);
+  }
+
+  getIsError(): Observable<boolean> {
+    return this.isErrorBs.asObservable();
+  }
+
+  getIsLoading(): Observable<boolean> {
+    return this.loadingBs.asObservable();
   }
 }

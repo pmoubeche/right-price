@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import {
   Component,
   EventEmitter,
@@ -21,16 +22,14 @@ import {
   of,
   tap,
 } from 'rxjs';
+import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
+import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
 import {
-  Product,
   ResponseProduct,
   ResponseProducts,
 } from '../../../shared/model/product.model';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
-import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
-import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
 export enum ChipParamSearch {
   BARCODE = 'Barcode',
@@ -76,6 +75,7 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.cardResultService.isErrorBs.next(false);
     this.setForm();
     this.switchPage();
     this.selectFromCardList();
@@ -144,9 +144,6 @@ export class SearchProductComponent implements OnInit, OnDestroy {
             this.httpProduct = response;
             this.eventHttpProductChange.emit(this.httpProduct);
           })
-          // catchError(() => {
-          //   return of()
-          // })
         )
         .subscribe()
     );
@@ -187,17 +184,17 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
   setProductsFromApi(apiEndpoint: Observable<ResponseProducts>): void {
+    this.cardResultService.isErrorBs.next(false);
     apiEndpoint
       .pipe(
         tap((response: ResponseProducts) => {
+          this.cardResultService.isErrorBs.next(false);
+          this.tableGenericService.loadingBs.next(true);
           this.httpProducts = response;
           this.eventHttpProductsChange.emit(this.httpProducts);
-          this.tableGenericService.loadingBs.next(true);
         }),
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === HttpStatusCode.BadGateway) {
-            return of(EMPTY);
-          }
+        catchError(() => {
+          this.cardResultService.isErrorBs.next(true);
           return of(EMPTY);
         }),
         finalize(() => {

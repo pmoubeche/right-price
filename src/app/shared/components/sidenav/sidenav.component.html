@@ -26,6 +26,15 @@
           <span>Repas</span>
         </div>
       </mat-list-item>
+      <mat-list-item
+        [routerLink]="['/compare']"
+        routerLinkActive="router-link-active"
+      >
+        <div style="display: inline-flex; padding: 1rem 1rem 1rem 1rem">
+          <mat-icon> compare_arrows</mat-icon>
+          <span>Comparer</span>
+        </div>
+      </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
   <app-sidenav-content></app-sidenav-content>

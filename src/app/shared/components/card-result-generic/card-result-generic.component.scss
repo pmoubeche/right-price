@@ -9,7 +9,7 @@
 }
 
 .mat-card-actions {
-  display: flex;
+    display: flex;
     justify-content: space-between;
     padding-bottom: 2rem;
 }
@@ -25,9 +25,16 @@
   padding: 1.5rem 1.5rem 1.5rem;
 }
 
-.card-wrapper {
+.card-wrapper-line {
   display: grid;
   grid-template-columns: repeat(var(--nb), 1fr);
+}
+
+.card-wrapper-table {
+  display: flex;
+  grid-template-columns: repeat(var(--nb), 1fr);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .card-link:hover {

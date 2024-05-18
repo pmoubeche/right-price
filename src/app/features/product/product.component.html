@@ -1,11 +1,14 @@
 <br />
-<app-search-product
-  (eventHttpProductsChange)="onHttpProductsChange($event)"
-  (eventHttpProductChange)="onHttpProductChange($event)"
-></app-search-product>
-<br />
-<app-list-product [httpProducts]="httpProducts"></app-list-product>
-@if(httpProduct.product){
+<mat-expansion-panel [expanded]="true" style="max-width: 99%">
+  <mat-expansion-panel-header> Recherche</mat-expansion-panel-header>
+
+  <app-search-product
+    (eventHttpProductsChange)="onHttpProductsChange($event)"
+    (eventHttpProductChange)="onHttpProductChange($event)"
+  ></app-search-product>
+
+  <br />
+  <app-list-product [httpProducts]="httpProducts"></app-list-product>
+</mat-expansion-panel>
 <br />
 <app-detail-product [httpProduct]="httpProduct"></app-detail-product>
-}
