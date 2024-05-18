@@ -1,20 +1,40 @@
+@if(isError$ | async){
+<div style="display: grid; justify-items: center">
+  <img
+    style="opacity: 70%"
+    src="../../../../assets/svg/flat-design-no-data-illustration_23-2150527130.avif"
+  />
+  <p>
+    Oops ! Il y a eu un soucis lors de la récupération des données ... Ca
+    devrait revenir plus tard ...
+  </p>
+</div>
+} @else {
 <div class="mat-elevation-z8" style="display: grid; justify-content: center">
-  <div class="card-wrapper" style="--nb: {{ countProductPerLine }}">
+  <div
+    [ngClass]="isLineDisposal ? 'card-wrapper-line' : 'card-wrapper-table'"
+    style="--nb: {{ countProductPerLine }}"
+    cdkDropList
+    [cdkDropListData]="productsAttributesToDisplay"
+    (cdkDropListDropped)="drop($event)"
+  >
     @for (productInfoModel of productsAttributesToDisplay; track $index) {
     <mat-card
       [ngClass]="isSelectableCard ? 'card-link' : ''"
       style="
-        min-width: 90%;
-        min-height: 90%;
-        max-width: 90%;
-        max-height: 90%;
         display: flex;
         justify-content: space-between;
+        width: 240px;
+        height: 380px;
+        margin: 0.5rem;
       "
       (click)="onSelectItem(productInfoModel)"
+      cdkDrag
     >
-      <mat-card-header>
-        <mat-card-title>{{ productInfoModel?.label! }}</mat-card-title>
+      <mat-card-header style="display: flex; padding: 1rem">
+        <mat-card-title style="font-size: 14px">{{
+          productInfoModel?.label!
+        }}</mat-card-title>
       </mat-card-header>
       <div class="product-image">
         <img
@@ -58,3 +78,4 @@
   </mat-paginator>
   }
 </div>
+}

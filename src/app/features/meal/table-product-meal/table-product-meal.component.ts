@@ -7,9 +7,11 @@ import {
   Output,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
+import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { MealProductInfoModel } from '../../../shared/model/product-attribute-displayed.model';
 import {
@@ -37,7 +39,6 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
     if (mealProductInfoModel.mealId !== undefined) {
       this._mealProduct = mealProductInfoModel;
       this.initDataMealsOnInitAndDateChange();
-      // this.addProductToRightList(mealProductInfoModel);
     }
   }
 
@@ -88,7 +89,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
     },
     {
       id: '4',
-      label: 'Quantité',
+      label: 'Quantité (g)',
       columDef: 'quantity',
       type: ColumnTypeParamEnum.NUMBER,
       colWidth: '6rem',
@@ -112,7 +113,9 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly mealProductApiService: MealProductApiService,
-    private readonly mealService: MealService
+    private readonly mealService: MealService,
+    private readonly tableGenericService: TableGenericService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -132,12 +135,12 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
                     this.addProductToRightList(productInfo);
                     productInfo.isEditable = false;
                   });
-                  this.eventMealProductsBreakfast.emit(
-                    this.mealProductsBreakfast
-                  );
-                  this.eventMealProductsLunch.emit(this.mealProductsLunch);
-                  this.eventMealProductsDinner.emit(this.mealProductsDinner);
                 }
+                this.eventMealProductsBreakfast.emit(
+                  this.mealProductsBreakfast
+                );
+                this.eventMealProductsLunch.emit(this.mealProductsLunch);
+                this.eventMealProductsDinner.emit(this.mealProductsDinner);
               })
             )
           )
@@ -249,6 +252,11 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
+  }
+
+  onSelectLine(line: MealProductInfoModel): void {
+    this.tableGenericService.onSelectItem(line.idProduct!);
+    this.router.navigate([`/product`]);
   }
 
   ngOnDestroy(): void {

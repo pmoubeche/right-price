@@ -14,6 +14,9 @@ import {
 import { PercentFormatPipe } from '../../../shared/pipes/percent-format.pipe';
 import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-first-letter-format.pipe';
 import { ProductUtils } from '../../../shared/utils/product.utils';
+import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
+import { Subscription, switchMap, tap } from 'rxjs';
+import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 
 export class IngredientInfoModel {
   id?: string;
@@ -167,6 +170,11 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
 
   chartOptions: ChartOptions = {
     responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+    },
   };
 
   optionsBar: ChartOptions = {
@@ -182,13 +190,31 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     },
   };
 
+  subscription = new Subscription();
+
   constructor(
     private readonly formatPercentPipe: PercentFormatPipe,
-    private readonly uppercaseFirstLetter: UppercaseFirstLetterFormatPipe
+    private readonly uppercaseFirstLetter: UppercaseFirstLetterFormatPipe,
+    private readonly openFoodFactApiService: OpenFoodFactsApiService,
+    private readonly tableGenericService: TableGenericService
   ) {}
 
   ngOnInit(): void {
     ChartUtils.setChartImports();
+
+    this.subscription.add(
+      this.tableGenericService.selectItem$
+        .pipe(
+          switchMap((itemId) =>
+            this.openFoodFactApiService.findProductByBarCode(itemId).pipe(
+              tap((httpProduct) => {
+                this.httpProduct = httpProduct;
+              })
+            )
+          )
+        )
+        .subscribe()
+    );
   }
 
   ngAfterViewInit(): void {
@@ -253,8 +279,8 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
       datasets: [
         {
           data: Array.from(nutrimentChartPieMap.values()),
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F0EBE3'],
-          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F0EBE3'],
+          backgroundColor: ['#7fc8c9', '#36A2EB', '#FFCE56', '#F0EBE3'],
+          hoverBackgroundColor: ['#7fc8c9', '#36A2EB', '#FFCE56', '#F0EBE3'],
         },
       ],
     };

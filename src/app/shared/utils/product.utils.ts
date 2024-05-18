@@ -13,6 +13,8 @@ import {
 } from '../enum/svg-urls.enum';
 import { Nutriments, Product } from '../model/product.model';
 import { RoundNumberDecimalPipe } from '../pipes/round-number-decimal.pipe';
+import { PercentFormatPipe } from '../pipes/percent-format.pipe';
+import { PercentCompareModel } from '../../features/compare-products/compare-products.component';
 
 export class ProductUtils {
   public static readonly UNIT_GRAMME = 'g';
@@ -22,7 +24,10 @@ export class ProductUtils {
   public static readonly UNIT_KJ = 'kJ';
   public static readonly UNIT_KCAL = 'kcal';
 
-  constructor(private readonly roundNumberPipe: RoundNumberDecimalPipe) {}
+  constructor(
+    private readonly roundNumberPipe: RoundNumberDecimalPipe,
+    private readonly percentPipe: PercentFormatPipe
+  ) {}
 
   static getUrlNutriscore(grade: string): string {
     switch (grade) {
@@ -429,6 +434,40 @@ export class ProductUtils {
         nutriment: 'Saccharose',
         value: this.convertMasseUnit(nutriment['saccharose_100g']!),
       },
+    ];
+  }
+
+  static compareNutrimentsPercentage(
+    nutrimentsA: NutrimentInfoModel[],
+    nutrimentsB: NutrimentInfoModel[]
+  ): PercentCompareModel[] {
+    if (nutrimentsA.length > 0 && nutrimentsB.length > 0) {
+      let percentages: PercentCompareModel[] = [];
+      nutrimentsA.forEach((nut, index) => {
+        const valueNutA = Number.parseFloat(nut.value!.replace(/[^0-9]/g, ''));
+        const valueNutB = Number.parseFloat(
+          nutrimentsB[index].value!.replace(/[^0-9]/g, '')
+        );
+        const percentValue = valueNutA! / valueNutB! - 1;
+
+        const percent = {
+          id: index.toString(),
+          percent: PercentFormatPipe.transform(percentValue, 100),
+        };
+        percentages.push(percent);
+      });
+      return percentages;
+    }
+    return [
+      { id: '0', percent: '0%' },
+      { id: '1', percent: '0%' },
+      { id: '2', percent: '0%' },
+      { id: '3', percent: '0%' },
+      { id: '4', percent: '0%' },
+      { id: '5', percent: '0%' },
+      { id: '6', percent: '0%' },
+      { id: '7', percent: '0%' },
+      { id: '8', percent: '0%' },
     ];
   }
 

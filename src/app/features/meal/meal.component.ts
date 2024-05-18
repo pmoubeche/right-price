@@ -1,17 +1,5 @@
-import {
-  AfterContentInit,
-  AfterViewInit,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { SearchProductComponent } from '../product/search-product/search-product.component';
-import { MealService } from './meal.service';
-import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '../../shared/material/material.module';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -19,8 +7,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subscription, tap } from 'rxjs';
 import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
+import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
+import {
+  ButtonAction,
+  DialogContentModel,
+} from '../../shared/components/dialog-generic/dialog-content.model';
 import { DialogGenericComponent } from '../../shared/components/dialog-generic/dialog-generic.component';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../shared/components/dialog-generic/dialog-generic.service';
+import { MaterialModule } from '../../shared/material/material.module';
 import {
   Meal,
   MealProductInfoModel,
@@ -28,22 +27,15 @@ import {
   ProductInfosModel,
 } from '../../shared/model/product-attribute-displayed.model';
 import {
-  ButtonAction,
-  DialogContentModel,
-} from '../../shared/components/dialog-generic/dialog-content.model';
-import {
   ResponseProduct,
   ResponseProducts,
 } from '../../shared/model/product.model';
-import { Subscription, tap } from 'rxjs';
-import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
 import { MealProductApiService } from '../../shared/services/meal-product-api.service';
-import {
-  CodeModaleEnum,
-  DialogGenericService,
-} from '../../shared/components/dialog-generic/dialog-generic.service';
 import { DateUtils } from '../../shared/utils/date.utils';
+import { SearchProductComponent } from '../product/search-product/search-product.component';
 import { ChartMealProductComponent } from './chart-meal-product/chart-meal-product.component';
+import { MealService } from './meal.service';
+import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
 
 @Component({
   selector: 'app-meal',
@@ -145,6 +137,8 @@ export class MealComponent implements OnInit, OnDestroy {
   get dateControl(): FormControl {
     return this.mealProductForm?.get(this.DATE_MEAL_INPUT) as FormControl;
   }
+
+  selectedDate?: string;
 
   subscription = new Subscription();
 

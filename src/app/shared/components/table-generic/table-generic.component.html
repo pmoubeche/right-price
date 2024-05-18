@@ -1,12 +1,4 @@
-<div
-  class="mat-elevation-z8"
-  style="
-    max-width: 98%;
-    display: grid;
-    justify-content: center;
-    margin-left: -2rem;
-  "
->
+<div class="mat-elevation-z8" style="max-width: 100%">
   @if (paginatedDataSource.dataSource && this.loading === false) {
   <table
     mat-table
@@ -46,7 +38,11 @@
         } @else if(column.type! === columnTypeEnum.PERCENT) {
         {{ element[column.columDef!] | percentFormat : 100 }}
         } @else if (column.type! === columnTypeEnum.ACTIONS) {
-        <button mat-icon-button [matMenuTriggerFor]="menu">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          (click)="onClickMoreActions($event)"
+        >
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
@@ -81,11 +77,12 @@
               [formControlName]="EDITABLE_FIELD"
               ngDefaultControl
               style="height: 0.75rem"
+              (click)="$event.stopPropagation()"
             />
           </mat-form-field>
           <button
             mat-button
-            (click)="onValidateUpdateField(element)"
+            (click)="onValidateUpdateField(element, $event)"
             style="height: 3rem; margin-top: -1.5rem"
           >
             <mat-icon color="accent">check</mat-icon>

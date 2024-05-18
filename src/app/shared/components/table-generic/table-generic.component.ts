@@ -9,8 +9,15 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
+import { of } from 'rxjs';
 import { PaginatedDataSource } from '../../common/paginated-datasource';
 import { MaterialModule } from '../../material/material.module';
 import {
@@ -19,14 +26,7 @@ import {
 } from '../../model/table-column-param.model';
 import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { TableGenericService } from './table-generic.service';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { of } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 export class UpdateData {
   element: any;
@@ -42,6 +42,7 @@ export class UpdateData {
     PercentFormatPipe,
     ReactiveFormsModule,
     FormsModule,
+    RouterLink,
   ],
   templateUrl: './table-generic.component.html',
   styleUrl: './table-generic.component.scss',
@@ -72,6 +73,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   @Output() onDeleteItem = new EventEmitter<T>();
   @Output() onValidateUpdateItem = new EventEmitter<UpdateData>();
+  @Output() eventSelectLine = new EventEmitter<T>();
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -124,7 +126,12 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   }
 
   onSelectItem(row: any): void {
-    this.tableGenericService.onSelectItem(row.id);
+    this.eventSelectLine.next(row);
+    this.tableGenericService.onSelectItem(row.idProduct);
+  }
+
+  onClickMoreActions(event: any) {
+    event.stopPropagation();
   }
 
   onEditField(line: any, columns: any): void {
@@ -143,7 +150,8 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     line.isEditable$ = of(line.isEditable);
   }
 
-  onValidateUpdateField(line: T): void {
+  onValidateUpdateField(line: T, event: any): void {
+    event.stopPropagation();
     const data: UpdateData = {
       element: line,
       formInputValue: this.editForm?.get(this.EDITABLE_FIELD)!.value,

@@ -9,16 +9,21 @@ import {
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MaterialModule } from '../../material/material.module';
-import {
-  Meal,
-  MealProductInfoModel,
-  ProductInfosModel,
-} from '../../model/product-attribute-displayed.model';
-import { ResponseProducts } from '../../model/product.model';
+import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
+import { ResponseProduct, ResponseProducts } from '../../model/product.model';
 import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { UppercaseFirstLetterFormatPipe } from '../../pipes/uppercase-first-letter-format.pipe';
 import { ProductUtils } from '../../utils/product.utils';
 import { CardResultGenericService } from './card-result-generic.service';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDropList,
+  copyArrayItem,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import { DragAndDropService } from '../../services/drag-and-drop.service';
 
 @Component({
   selector: 'app-card-result-generic',
@@ -28,20 +33,18 @@ import { CardResultGenericService } from './card-result-generic.service';
     CommonModule,
     PercentFormatPipe,
     UppercaseFirstLetterFormatPipe,
+    CdkDropList,
+    CdkDrag,
   ],
   templateUrl: './card-result-generic.component.html',
   styleUrl: './card-result-generic.component.scss',
 })
 export class CardResultGenericComponent implements OnInit {
-  public meals: Meal[] = [
-    { id: 'breakfast', label: "P'tit déj" },
-    { id: 'lunch', label: 'Déjeuner' },
-    { id: 'dinner', label: 'Dinner' },
-  ];
+  public isError$ = this.cardResultGenericService.getIsError();
+  public isLoading$ = this.cardResultGenericService.getIsLoading();
 
-  public mealSelected: Meal = new Meal();
-
-  countProductPerLine = 6;
+  @Input() isLineDisposal = false;
+  @Input() countProductPerLine = 6;
   productsAttributesToDisplay: ProductInfosModel[] = [];
 
   private _httpProducts!: ResponseProducts;
@@ -58,7 +61,6 @@ export class CardResultGenericComponent implements OnInit {
   }
 
   public isSelectedCard?: boolean;
-  selectedProductInfo?: ProductInfosModel;
 
   @Input() isPaginated = true;
   @Input() isClickable = false;
@@ -73,15 +75,13 @@ export class CardResultGenericComponent implements OnInit {
 
   constructor(
     private readonly cardResultGenericService: CardResultGenericService,
+    private readonly dragAndDropService: DragAndDropService,
     private readonly uppercaseFristLetterPipe: UppercaseFirstLetterFormatPipe
   ) {}
 
   ngOnInit(): void {
     this.cardResultGenericService.onPageIndexChange$.subscribe(
       (bs) => (this.pageIndex = bs.pageIndex)
-    );
-    this.cardResultGenericService.loading$.subscribe(
-      (loading) => (this.loading = loading)
     );
   }
 
@@ -92,6 +92,10 @@ export class CardResultGenericComponent implements OnInit {
 
   onSelectItem(productInfo?: ProductInfosModel): void {
     this.cardResultGenericService.onSelectItem(productInfo!);
+  }
+
+  drop(event: CdkDragDrop<ProductInfosModel[]>) {
+    this.dragAndDropService.dropCard(event);
   }
 
   setProductsInfoFromResponseProducts(): void {

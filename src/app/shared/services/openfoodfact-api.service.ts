@@ -37,7 +37,7 @@ export class OpenFoodFactsApiService {
     pageSize = 24
   ): Observable<ResponseProducts> {
     return this.httpClient.get(
-      `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchTerm}&page=${page}&fields=id,product_name,image_small_url,nutriscore_grade,ecoscore_grade,nova_group&page_size=${pageSize}&search_simple=1&action=process&json=1.json`
+      `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchTerm}&page=${page}&fields=id,product_name,image_small_url,nutriscore_grade,ecoscore_grade,nova_group,nutriments,nutriments_estimated&page_size=${pageSize}&search_simple=1&action=process&json=1.json`
     ) as Observable<ResponseProducts>;
   }
 
