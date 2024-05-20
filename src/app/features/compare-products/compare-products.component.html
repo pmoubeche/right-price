@@ -8,7 +8,9 @@
           [pageSize]="10"
         ></app-search-product>
       </div>
-      <section style="max-width: 80%; display: flex; overflow: auto">
+      <section
+        style="max-width: 80%; min-width: 80%; display: flex; overflow: auto"
+      >
         <app-card-result-generic
           [httpProducts]="httpProducts"
           [isLineDisposal]="true"
@@ -38,23 +40,36 @@
             productInfoModel) {
             <div class="example-box" cdkDrag>
               <mat-card
-                style="display: flex; width: 240px; height: 380px"
+                style="display: flex; width: 190px; height: 310px"
                 cdkDrag
                 [cdkDragData]="productInfoModel"
               >
-                <mat-card-header style="display: flex; padding: 1rem">
+                <mat-card-header
+                  style="
+                    display: flex;
+                    padding: 1rem 1rem 0.5rem 1rem;
+                    height: 25%;
+                  "
+                >
                   <mat-card-title style="font-size: 14px">{{
                     productInfoModel?.label!
                   }}</mat-card-title>
                 </mat-card-header>
-                <div class="product-image">
+                <mat-card-content
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    max-height: 60%;
+                  "
+                >
                   <img
                     mat-card-image
                     src="{{ productInfoModel?.image }}"
                     style="height: 90%; width: auto"
                   />
-                </div>
-                <mat-card-actions class="mat-card-actions">
+                </mat-card-content>
+
+                <mat-card-footer class="mat-card-footer">
                   <img
                     mat-card-image
                     class="product-score"
@@ -70,7 +85,7 @@
                     class="product-score"
                     src="{{ productInfoModel?.novagroup }}"
                   />
-                </mat-card-actions>
+                </mat-card-footer>
               </mat-card>
             </div>
             }
@@ -92,7 +107,7 @@
         <div style="display: flex; justify-content: center">
           <mat-card
             class="compare"
-            style="display: flex; width: 240px; height: 380px"
+            style="display: flex; width: 190px; height: 310px"
           >
           </mat-card>
         </div>
@@ -102,6 +117,8 @@
             [columns]="columnParamsCompare"
             [paginatedDataSource]="compareDataSources"
             [isPaginated]="false"
+            [isRowCentered]="true"
+            [rowHeight]="'3.25rem'"
           ></app-table-generic>
         </mat-card-actions>
       </mat-card>
@@ -121,23 +138,35 @@
             productInfoModel) {
             <div class="example-box" cdkDrag>
               <mat-card
-                style="display: flex; width: 240px; height: 380px"
+                style="display: flex; width: 190px; height: 310px"
                 cdkDrag
                 [cdkDragData]="productInfoModel"
               >
-                <mat-card-header style="display: flex; padding: 1rem">
+                <mat-card-header
+                  style="
+                    display: flex;
+                    padding: 1rem 1rem 0.5rem 1rem;
+                    height: 25%;
+                  "
+                >
                   <mat-card-title style="font-size: 14px">{{
                     productInfoModel?.label!
                   }}</mat-card-title>
                 </mat-card-header>
-                <div class="product-image">
+                <mat-card-content
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    max-height: 60%;
+                  "
+                >
                   <img
                     mat-card-image
                     src="{{ productInfoModel?.image }}"
                     style="height: 90%; width: auto"
                   />
-                </div>
-                <mat-card-actions class="mat-card-actions">
+                </mat-card-content>
+                <mat-card-footer class="mat-card-footer">
                   <img
                     mat-card-image
                     class="product-score"
@@ -153,7 +182,7 @@
                     class="product-score"
                     src="{{ productInfoModel?.novagroup }}"
                   />
-                </mat-card-actions>
+                </mat-card-footer>
               </mat-card>
             </div>
             }

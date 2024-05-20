@@ -13,7 +13,6 @@ export class CardResultGenericService {
   public onPageIndexChange$ = this.onPageIndexChangeBs.asObservable();
 
   public loadingBs = new BehaviorSubject<boolean>(false);
-  public loading$ = this.loadingBs.asObservable();
 
   public isErrorBs = new BehaviorSubject<boolean>(false);
 

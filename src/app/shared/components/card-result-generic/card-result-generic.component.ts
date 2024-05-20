@@ -1,29 +1,16 @@
+import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MaterialModule } from '../../material/material.module';
 import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
-import { ResponseProduct, ResponseProducts } from '../../model/product.model';
+import { ResponseProducts } from '../../model/product.model';
 import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { UppercaseFirstLetterFormatPipe } from '../../pipes/uppercase-first-letter-format.pipe';
+import { DragAndDropService } from '../../services/drag-and-drop.service';
 import { ProductUtils } from '../../utils/product.utils';
 import { CardResultGenericService } from './card-result-generic.service';
-import {
-  CdkDrag,
-  CdkDragDrop,
-  CdkDropList,
-  copyArrayItem,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { DragAndDropService } from '../../services/drag-and-drop.service';
+import { TrimStringPipe } from '../../pipes/trim-string.pipe';
 
 @Component({
   selector: 'app-card-result-generic',
@@ -33,6 +20,7 @@ import { DragAndDropService } from '../../services/drag-and-drop.service';
     CommonModule,
     PercentFormatPipe,
     UppercaseFirstLetterFormatPipe,
+    TrimStringPipe,
     CdkDropList,
     CdkDrag,
   ],

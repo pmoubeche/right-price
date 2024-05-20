@@ -1,11 +1,20 @@
 <mat-expansion-panel [expanded]="true">
   <mat-expansion-panel-header> Apports journlier </mat-expansion-panel-header>
-  <!-- <app-chart
-    type="bar"
-    [data]="dailyRecommanderIncomeChartBarData!"
-    [options]="optionsBar"
-    [height]="200"
-  ></app-chart> -->
+  Femme&nbsp;<mat-slide-toggle
+    color="primary"
+    [(ngModel)]="isMaleReco"
+    (change)="
+      setNutrimentsChartsBarsData(
+        nutrimentsBreakfast,
+        nutrimentsLunch,
+        nutrimentsDinner
+      )
+    "
+  >
+    Homme
+  </mat-slide-toggle>
+  <br />
+  <br />
   @for(chartData of dailyRecommanderIncomeChartsBarData; track $index){
   <app-chart
     type="bar"

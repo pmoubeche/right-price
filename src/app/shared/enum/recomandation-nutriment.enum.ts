@@ -38,3 +38,36 @@ export const NutrimentsManConst = {
   FIBERS: { label: 'Fibres', value: 30, unit: 'g' },
   SALT: { label: 'Sel', value: 5, unit: 'g' },
 };
+
+export const NutrimentsWomanConst = {
+  CALORIES: {
+    label: NutrimentsManConst.CALORIES.label,
+    value: NutrimentsManConst.CALORIES.value * 0.8,
+    unit: NutrimentsManConst.CALORIES.unit,
+  },
+  LIPIDES: {
+    label: NutrimentsManConst.LIPIDES.label,
+    value: NutrimentsManConst.LIPIDES.value * 0.8,
+    unit: NutrimentsManConst.LIPIDES.unit,
+  },
+  GLUCIDES: {
+    label: NutrimentsManConst.GLUCIDES.label,
+    value: NutrimentsManConst.GLUCIDES.value * 0.8,
+    unit: NutrimentsManConst.GLUCIDES.unit,
+  },
+  PROTEINES: {
+    label: NutrimentsManConst.PROTEINES.label,
+    value: NutrimentsManConst.PROTEINES.value * 0.8,
+    unit: NutrimentsManConst.PROTEINES.unit,
+  },
+  FIBERS: {
+    label: NutrimentsManConst.FIBERS.label,
+    value: NutrimentsManConst.FIBERS.value * 0.8,
+    unit: NutrimentsManConst.FIBERS.unit,
+  },
+  SALT: {
+    label: NutrimentsManConst.SALT.label,
+    value: NutrimentsManConst.SALT.value * 0.8,
+    unit: NutrimentsManConst.SALT.unit,
+  },
+};

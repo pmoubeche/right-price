@@ -28,6 +28,7 @@ export class NutrimentInfoModel {
   id?: string;
   nutriment?: string;
   value?: string;
+  valueNumber?: number;
   ajr?: string;
   percentAjr_100g?: number;
 }
@@ -268,8 +269,10 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
   }
 
   setMacroNutrimentsChartPieData(): void {
-    this.product!.nutriments =
-      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
+    if (this.product) {
+      this.product!.nutriments =
+        ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(this.product!);
+    }
     let nutrimentChartPieMap = ProductUtils.setMacroNutrimentChartPieMap(
       this.product?.nutriments!
     );

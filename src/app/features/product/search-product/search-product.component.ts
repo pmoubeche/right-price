@@ -1,4 +1,3 @@
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import {
   Component,
   EventEmitter,
@@ -32,10 +31,10 @@ import {
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 
 export enum ChipParamSearch {
-  BARCODE = 'Barcode',
-  BRANDS = 'Brands',
-  CATEGORY = 'Category',
-  TERM = 'Term',
+  BARCODE = 'Code barre',
+  BRANDS = 'Marque',
+  CATEGORY = 'Categorie',
+  TERM = 'Terme',
 }
 
 @Component({
@@ -79,6 +78,7 @@ export class SearchProductComponent implements OnInit, OnDestroy {
     this.setForm();
     this.switchPage();
     this.selectFromCardList();
+    this.search(this.pageIndex, this.pageSize);
   }
 
   private selectFromCardList() {
@@ -185,20 +185,17 @@ export class SearchProductComponent implements OnInit, OnDestroy {
 
   setProductsFromApi(apiEndpoint: Observable<ResponseProducts>): void {
     this.cardResultService.isErrorBs.next(false);
+    this.cardResultService.loadingBs.next(true);
     apiEndpoint
       .pipe(
         tap((response: ResponseProducts) => {
-          this.cardResultService.isErrorBs.next(false);
-          this.tableGenericService.loadingBs.next(true);
           this.httpProducts = response;
           this.eventHttpProductsChange.emit(this.httpProducts);
+          this.cardResultService.loadingBs.next(false);
         }),
         catchError(() => {
           this.cardResultService.isErrorBs.next(true);
           return of(EMPTY);
-        }),
-        finalize(() => {
-          this.tableGenericService.loadingBs.next(false);
         })
       )
       .subscribe();

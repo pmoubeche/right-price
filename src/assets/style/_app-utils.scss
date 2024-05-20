@@ -1,5 +1,5 @@
-@use 'app-palettes' as palettes;
-@use 'sass:map';
+@use "app-palettes" as palettes;
+@use "sass:map";
 
 /// Fonction de récupération de la couleur principale
 @function get-couleur-principale() {
@@ -48,7 +48,7 @@
 
 /// Fonction de récupération de la couleur de texte sombre pour emphase haute
 @function get-couleur-texte-sombre-emphase-haute() {
-  @return  palettes.$sombre-emphase-haute;
+  @return palettes.$sombre-emphase-haute;
 }
 
 /// Fonction de récupération de la couleur de texte sombre pour emphase moyenne
@@ -82,12 +82,22 @@
   @return map.get(palettes.$palette-principale, 300);
 }
 
+@function get-couleur-arriere-plan-switch-secondaire() {
+  @return map.get(palettes.$palette-secondaire, 300);
+}
+
 /// Mixin utilisée pour définir de manière dynamique une configuration flex
 /// @param $direction la direction du contenu (ligne ou colonne)
 /// @param $j-content alignement horizontal du contenu
 /// @param $a-items alignement vertical du contenu
 /// @param $gap l'espacement entre les éléments du contenu
-@mixin flex($direction:null, $j-content:null, $a-items:null, $gap:null, $f-wrap:null) {
+@mixin flex(
+  $direction: null,
+  $j-content: null,
+  $a-items: null,
+  $gap: null,
+  $f-wrap: null
+) {
   display: flex;
 
   @if $direction != null {

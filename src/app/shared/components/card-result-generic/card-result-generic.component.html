@@ -9,6 +9,17 @@
     devrait revenir plus tard ...
   </p>
 </div>
+} @else { @if(isLoading$ | async){
+<div class="mat-elevation-z8" style="display: grid; justify-content: center">
+  <mat-spinner
+    style="
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+  ></mat-spinner>
+</div>
 } @else {
 <div class="mat-elevation-z8" style="display: grid; justify-content: center">
   <div
@@ -24,26 +35,30 @@
       style="
         display: flex;
         justify-content: space-between;
-        width: 240px;
-        height: 380px;
+        width: 190px;
+        height: 310px;
         margin: 0.5rem;
       "
       (click)="onSelectItem(productInfoModel)"
       cdkDrag
     >
-      <mat-card-header style="display: flex; padding: 1rem">
+      <mat-card-header
+        style="display: flex; padding: 1rem 1rem 0.5rem 1rem; height: 25%"
+      >
         <mat-card-title style="font-size: 14px">{{
-          productInfoModel?.label!
+          productInfoModel?.label! | trimString : 60
         }}</mat-card-title>
       </mat-card-header>
-      <div class="product-image">
+      <mat-card-content
+        style="display: flex; justify-content: center; max-height: 60%"
+      >
         <img
           mat-card-image
           src="{{ productInfoModel?.image }}"
-          style="height: 90%; width: auto"
+          style="max-width: 90%; padding: 0.5rem"
         />
-      </div>
-      <mat-card-actions class="mat-card-actions">
+      </mat-card-content>
+      <mat-card-footer class="mat-card-footer">
         <img
           mat-card-image
           class="product-score"
@@ -59,7 +74,7 @@
           class="product-score"
           src="{{ productInfoModel?.novagroup }}"
         />
-      </mat-card-actions>
+      </mat-card-footer>
     </mat-card>
     }
   </div>
@@ -78,4 +93,4 @@
   </mat-paginator>
   }
 </div>
-}
+} }

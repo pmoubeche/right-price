@@ -24,6 +24,11 @@ export class PercentCompareModel {
   percent?: string;
 }
 
+export class PercentCompareModelNumber {
+  id?: string;
+  percent?: number;
+}
+
 @Component({
   selector: 'app-compare-products',
   standalone: true,
@@ -49,12 +54,12 @@ export class CompareProductsComponent implements OnInit {
     this.macroNutrimentInfoA = this.setInfoFromResponseProduct(productA);
     this.macroNutrimentsDataSourcesA.dataSource =
       new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfoA);
-    this.percentCompare = ProductUtils.compareNutrimentsPercentage(
+    this.percentCompare = ProductUtils.compareNutrimentsPercentageWithoutPipe(
       this.macroNutrimentInfoA,
       this.macroNutrimentInfoB!
     );
     this.compareDataSources.dataSource =
-      new MatTableDataSource<PercentCompareModel>(this.percentCompare);
+      new MatTableDataSource<PercentCompareModelNumber>(this.percentCompare);
   }
 
   get productA() {
@@ -68,12 +73,12 @@ export class CompareProductsComponent implements OnInit {
     this.macroNutrimentInfoB = this.setInfoFromResponseProduct(productB);
     this.macroNutrimentsDataSourcesB.dataSource =
       new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfoB);
-    this.percentCompare = ProductUtils.compareNutrimentsPercentage(
+    this.percentCompare = ProductUtils.compareNutrimentsPercentageWithoutPipe(
       this.macroNutrimentInfoA!,
       this.macroNutrimentInfoB!
     );
     this.compareDataSources.dataSource =
-      new MatTableDataSource<PercentCompareModel>(this.percentCompare);
+      new MatTableDataSource<PercentCompareModelNumber>(this.percentCompare);
   }
 
   get productB() {
@@ -82,11 +87,11 @@ export class CompareProductsComponent implements OnInit {
 
   public macroNutrimentInfoA?: NutrimentInfoModel[] = [];
   public macroNutrimentInfoB?: NutrimentInfoModel[] = [];
-  public percentCompare?: PercentCompareModel[] = [];
+  public percentCompare?: PercentCompareModelNumber[] = [];
 
   macroNutrimentsDataSourcesA = new PaginatedDataSource<NutrimentInfoModel>();
   macroNutrimentsDataSourcesB = new PaginatedDataSource<NutrimentInfoModel>();
-  compareDataSources = new PaginatedDataSource<PercentCompareModel>();
+  compareDataSources = new PaginatedDataSource<PercentCompareModelNumber>();
 
   httpProducts!: ResponseProducts;
   public productInfoModelsA = <ProductInfosModel[]>[];
@@ -112,7 +117,8 @@ export class CompareProductsComponent implements OnInit {
       id: '1',
       label: 'Pourcentage Produit A / Produit B',
       columDef: 'percent',
-      type: ColumnTypeParamEnum.STRING,
+      colWidth: '100%',
+      type: ColumnTypeParamEnum.PERCENT,
     },
   ];
 
@@ -144,10 +150,6 @@ export class CompareProductsComponent implements OnInit {
   }
 
   setInfoFromResponseProduct(product: Product): NutrimentInfoModel[] {
-    if (product) {
-      product.nutriments =
-        ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(product);
-    }
     return ProductUtils.setMacroNutrimentsTable(product.nutriments!);
   }
 }
