@@ -25,7 +25,11 @@
         *matCellDef="let element"
         [ngStyle]="{
           'min-width': column.colWidth,
-          padding: column.padding ? column.padding : ''
+          padding: column.padding ? column.padding : '',
+          display: isRowCentered ? 'flex' : '',
+          'justify-content': isRowCentered ? 'center' : '',
+          'align-items': isRowCentered ? 'center' : '',
+          height: rowHeight
         }"
       >
         @if(column.type! === columnTypeEnum.IMAGE){
@@ -107,7 +111,9 @@
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
-      [ngStyle]="{ height: rowHeight }"
+      [ngStyle]="{ height: rowHeight,
+      
+      }"
     ></tr>
     }
   </table>

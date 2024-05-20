@@ -68,6 +68,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   displayedColumns: (string | undefined)[] = [];
   @Input() paginatedDataSource = new PaginatedDataSource<T>();
   @Input() rowHeight?: string;
+  @Input() isRowCentered = false;
   @Input() isPaginated = true;
   @Input() isClickable = false;
 

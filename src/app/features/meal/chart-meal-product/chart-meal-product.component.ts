@@ -14,6 +14,7 @@ import {
 import { RoundNumberDecimalPipe } from '../../../shared/pipes/round-number-decimal.pipe';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { ProductUtils } from '../../../shared/utils/product.utils';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-chart-meal-product',
@@ -23,12 +24,14 @@ import { ProductUtils } from '../../../shared/utils/product.utils';
     MaterialModule,
     CommonModule,
     RoundNumberDecimalPipe,
+    FormsModule,
   ],
   templateUrl: './chart-meal-product.component.html',
   styleUrl: './chart-meal-product.component.scss',
 })
 export class ChartMealProductComponent implements OnInit, OnDestroy {
   private _mealProductsBreakfast!: MealProductInfoModel[];
+  public isMaleReco = true;
 
   @Input() set mealProductsBreakfast(
     mealProductsBreakfast: MealProductInfoModel[]
@@ -262,13 +265,13 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
   ): void {
     this.dailyRecommanderIncomeChartsBarData = [];
     let nutrimentChartMapBreakfast =
-      ProductUtils.setNutrimentChartPieMap(nutrimentBreakfast);
+      ProductUtils.setNutrimentChartBarMap(nutrimentBreakfast);
 
     let nutrimentChartMapLunch =
-      ProductUtils.setNutrimentChartPieMap(nutrimentLunch);
+      ProductUtils.setNutrimentChartBarMap(nutrimentLunch);
 
     let nutrimentChartMapDinner =
-      ProductUtils.setNutrimentChartPieMap(nutrimentDinner);
+      ProductUtils.setNutrimentChartBarMap(nutrimentDinner);
 
     nutrimentChartMapBreakfast.forEach((value: number, key: string) => {
       const dataSetBreakfast: ChartDataset = {
@@ -308,6 +311,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         label: 'AJR',
         data: [
           ChartUtils.setValueFiller(
+            this.isMaleReco,
             key,
             dataSetBreakfast,
             dataSetLunch,

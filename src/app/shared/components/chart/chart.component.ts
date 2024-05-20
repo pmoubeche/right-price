@@ -32,7 +32,7 @@ import type {
   standalone: true,
 })
 export class ChartComponent implements AfterViewInit, OnChanges {
-  @ViewChild('ref') ref!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('ref') ref?: ElementRef<HTMLCanvasElement>;
   @Input() type!: ChartType;
   @Input() data!: ChartData;
   @Input() options!: ChartOptions;
@@ -75,16 +75,18 @@ export class ChartComponent implements AfterViewInit, OnChanges {
   }
 
   renderChart() {
-    const node = this.ref.nativeElement;
+    const node = this.ref?.nativeElement;
 
     this.zone.runOutsideAngular(async () => {
       const { Chart } = await import('chart.js');
-      this.chartInstance = new Chart(node, {
-        type: this.type,
-        data: this.data,
-        options: this.options,
-        plugins: this.plugins,
-      });
+      if (node !== undefined) {
+        this.chartInstance = new Chart(node, {
+          type: this.type,
+          data: this.data,
+          options: this.options,
+          plugins: this.plugins,
+        });
+      }
     });
   }
 }

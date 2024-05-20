@@ -1,4 +1,6 @@
-@use 'app-utils' as utils;
+@use "app-utils" as utils;
+@use "app-palettes" as palettes;
+@use "sass:map";
 
 /// Mixin utilisée pour surcharger le thème des sliders d'Angular Material
 @mixin theme($pfr-theme) {
@@ -13,14 +15,7 @@
     // On force la couleur noire du switch non sélectionné
     .mdc-switch--unselected {
       .mdc-switch__shadow {
-        background: utils.get-couleur-texte-sombre-emphase-moyenne();
-      }
-    }
-
-    // On force la couleur primaire extra light de la track
-    .mdc-switch:enabled {
-      .mdc-switch__track::after {
-        background: utils.get-couleur-arriere-plan-switch() !important;
+        background: utils.get-couleur-secondaire();
       }
     }
 

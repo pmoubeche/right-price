@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NutrimentInfoModel } from '../../features/product/detail-product/detail-product.component';
-import { MicroNutrimentsConst } from '../enum/recomandation-nutriment.enum';
+import {
+  MicroNutrimentsConst,
+  NutrimentsManConst,
+} from '../enum/recomandation-nutriment.enum';
 import {
   EcoscoreGrade,
   NovagroupGrade,
@@ -14,7 +17,10 @@ import {
 import { Nutriments, Product } from '../model/product.model';
 import { RoundNumberDecimalPipe } from '../pipes/round-number-decimal.pipe';
 import { PercentFormatPipe } from '../pipes/percent-format.pipe';
-import { PercentCompareModel } from '../../features/compare-products/compare-products.component';
+import {
+  PercentCompareModel,
+  PercentCompareModelNumber,
+} from '../../features/compare-products/compare-products.component';
 
 export class ProductUtils {
   public static readonly UNIT_GRAMME = 'g';
@@ -91,6 +97,10 @@ export class ProductUtils {
           nutriment['energy-kj_100g']!,
           2
         ).toString()} ${this.UNIT_KJ}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['energy-kj_100g']!,
+          2
+        ),
       },
       {
         id: '1',
@@ -99,6 +109,10 @@ export class ProductUtils {
           nutriment['energy-kcal_100g']!,
           2
         ).toString()} ${this.UNIT_KCAL}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['energy-kcal_100g']!,
+          2
+        ),
       },
       {
         id: '2',
@@ -107,6 +121,10 @@ export class ProductUtils {
           nutriment['fat_100g']!,
           2
         ).toString()} ${this.UNIT_GRAMME}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['fat_100g']!,
+          2
+        ),
       },
       {
         id: '3',
@@ -115,6 +133,10 @@ export class ProductUtils {
           nutriment['saturated-fat_100g']!,
           2
         ).toString()} ${this.UNIT_GRAMME}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['saturated-fat_100g']!,
+          2
+        ),
       },
       {
         id: '4',
@@ -123,6 +145,10 @@ export class ProductUtils {
           nutriment['carbohydrates_100g']!,
           2
         ).toString()} ${this.UNIT_GRAMME}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['carbohydrates_100g']!,
+          2
+        ),
       },
       {
         id: '5',
@@ -131,6 +157,10 @@ export class ProductUtils {
           nutriment['sugars_100g']!,
           2
         ).toString()} ${this.UNIT_GRAMME}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['sugars_100g']!,
+          2
+        ),
       },
       {
         id: '6',
@@ -139,6 +169,10 @@ export class ProductUtils {
           nutriment['fiber_100g']!,
           2
         ).toString()} ${this.UNIT_GRAMME}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['fiber_100g']!,
+          2
+        ),
       },
       {
         id: '7',
@@ -147,6 +181,10 @@ export class ProductUtils {
           nutriment['proteins_100g']!,
           2
         ).toString()} ${this.UNIT_GRAMME}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['proteins_100g']!,
+          2
+        ),
       },
       {
         id: '8',
@@ -155,6 +193,10 @@ export class ProductUtils {
           nutriment['salt_100g']!,
           2
         ).toString()} ${this.UNIT_GRAMME}`,
+        valueNumber: RoundNumberDecimalPipe.transform(
+          nutriment['salt_100g']!,
+          2
+        ),
       },
     ];
   }
@@ -471,40 +513,113 @@ export class ProductUtils {
     ];
   }
 
+  static compareNutrimentsPercentageWithoutPipe(
+    nutrimentsA: NutrimentInfoModel[],
+    nutrimentsB: NutrimentInfoModel[]
+  ): PercentCompareModelNumber[] {
+    if (nutrimentsA.length > 0 && nutrimentsB.length > 0) {
+      let percentages: PercentCompareModelNumber[] = [];
+      nutrimentsA.forEach((nut, index) => {
+        const valueNutA = nut.valueNumber;
+        const valueNutB = nutrimentsB[index].valueNumber;
+        const percentValue = valueNutA! / valueNutB! - 1;
+
+        const percent = {
+          id: index.toString(),
+          percent: percentValue,
+        };
+        percentages.push(percent);
+      });
+      return percentages;
+    }
+    return [
+      { id: '0', percent: 0 },
+      { id: '1', percent: 0 },
+      { id: '2', percent: 0 },
+      { id: '3', percent: 0 },
+      { id: '4', percent: 0 },
+      { id: '5', percent: 0 },
+      { id: '6', percent: 0 },
+      { id: '7', percent: 0 },
+      { id: '8', percent: 0 },
+    ];
+  }
+
   static setMacroNutrimentChartPieMap(
     nutriment: Nutriments
   ): Map<string, number> {
-    const leftoversProp =
-      100 -
-      (nutriment['fat_100g']! +
-        nutriment['carbohydrates_100g']! +
-        nutriment['proteins_100g']!);
-    return new Map<string, number>([
-      ['Matières grasses', nutriment['fat_100g']!],
-      ['Glucides', nutriment['carbohydrates_100g']!],
-      ['Protéines', nutriment['proteins_100g']!],
-      ['Restes', leftoversProp],
-    ]);
-  }
-
-  static setNutrimentChartPieMap(nutriment: Nutriments): Map<string, number> {
-    if (Object.keys(nutriment).length > 0) {
+    if (nutriment) {
+      const leftoversProp =
+        100 -
+        (nutriment['fat_100g']! +
+          nutriment['carbohydrates_100g']! +
+          nutriment['proteins_100g']!);
       return new Map<string, number>([
-        ['Calories', nutriment['energy-kcal_100g']!],
-        ['Lipides', nutriment['fat_100g']!],
-        ['Glucides', nutriment['carbohydrates_100g']!],
-        ['Protéines', nutriment['proteins_100g']!],
-        ['Fibres', nutriment['fiber_100g']!],
-        ['Sel', nutriment['salt_100g']!],
+        [NutrimentsManConst.LIPIDES.label, nutriment['fat_100g']!],
+        [NutrimentsManConst.GLUCIDES.label, nutriment['carbohydrates_100g']!],
+        [NutrimentsManConst.PROTEINES.label, nutriment['proteins_100g']!],
+        ['Restes', leftoversProp],
       ]);
     }
     return new Map<string, number>([
-      ['Energie', 0],
-      ['Lipides', 0],
-      ['Glucides', 0],
-      ['Protéines', 0],
-      ['Fibres', 0],
-      ['Sel', 0],
+      [NutrimentsManConst.LIPIDES.label, 0],
+      [NutrimentsManConst.GLUCIDES.label, 0],
+      [NutrimentsManConst.PROTEINES.label, 0],
+      ['Restes', 0],
+    ]);
+  }
+
+  static setNutrimentChartBarMap(nutriment: Nutriments): Map<string, number> {
+    if (Object.keys(nutriment).length > 0) {
+      return new Map<string, number>([
+        [
+          `${NutrimentsManConst.CALORIES.label} (${NutrimentsManConst.CALORIES.unit})`,
+          nutriment['energy-kcal_100g']!,
+        ],
+        [
+          `${NutrimentsManConst.LIPIDES.label} (${NutrimentsManConst.LIPIDES.unit})`,
+          nutriment['fat_100g']!,
+        ],
+        [
+          `${NutrimentsManConst.GLUCIDES.label} (${NutrimentsManConst.GLUCIDES.unit})`,
+          nutriment['carbohydrates_100g']!,
+        ],
+        [
+          `${NutrimentsManConst.PROTEINES.label} (${NutrimentsManConst.PROTEINES.unit})`,
+          nutriment['proteins_100g']!,
+        ],
+        [
+          `${NutrimentsManConst.FIBERS.label} (${NutrimentsManConst.FIBERS.unit})`,
+          nutriment['fiber_100g']!,
+        ],
+        [
+          `${NutrimentsManConst.SALT.label} (${NutrimentsManConst.SALT.unit})`,
+          nutriment['salt_100g']!,
+        ],
+      ]);
+    }
+    return new Map<string, number>([
+      [
+        `${NutrimentsManConst.CALORIES.label} (${NutrimentsManConst.CALORIES.unit})`,
+        0,
+      ],
+      [
+        `${NutrimentsManConst.LIPIDES.label} (${NutrimentsManConst.LIPIDES.unit})`,
+        0,
+      ],
+      [
+        `${NutrimentsManConst.GLUCIDES.label} (${NutrimentsManConst.GLUCIDES.unit})`,
+        0,
+      ],
+      [
+        `${NutrimentsManConst.PROTEINES.label} (${NutrimentsManConst.PROTEINES.unit})`,
+        0,
+      ],
+      [
+        `${NutrimentsManConst.FIBERS.label} (${NutrimentsManConst.FIBERS.unit})`,
+        0,
+      ],
+      [`${NutrimentsManConst.SALT.label} (${NutrimentsManConst.SALT.unit})`, 0],
     ]);
   }
 
@@ -666,7 +781,7 @@ export class ProductUtils {
   static setNutrimentsEstimatedIfNutrimentsUndefined(
     product: Product
   ): Nutriments {
-    return product.nutriments_estimated
+    return 'nutriments_estimated' in product
       ? product.nutriments_estimated!
       : product.nutriments!;
   }

@@ -18,7 +18,10 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
-import { NutrimentsManConst } from '../../enum/recomandation-nutriment.enum';
+import {
+  NutrimentsManConst,
+  NutrimentsWomanConst,
+} from '../../enum/recomandation-nutriment.enum';
 
 export class ChartUtils {
   static setChartImports(): void {
@@ -76,14 +79,20 @@ export class ChartUtils {
     return dataSetFiller;
   }
 
-  static setValueFiller(key: string, ...dataSets: ChartDataset[]): number {
-    const dailyRecos = Object.values(NutrimentsManConst);
+  static setValueFiller(
+    isMaleReco: boolean,
+    key: string,
+    ...dataSets: ChartDataset[]
+  ): number {
+    const dailyRecos = isMaleReco
+      ? Object.values(NutrimentsManConst)
+      : Object.values(NutrimentsWomanConst);
     let valueToAdd = 0;
 
     const datasFromDataSets = dataSets.map((dataSet) => dataSet.data);
 
     valueToAdd =
-      dailyRecos.find((ajr) => ajr.label === key)!.value -
+      dailyRecos.find((ajr) => `${ajr.label} (${ajr.unit})` === key)!.value -
       datasFromDataSets
         .map((data: any) => data[0])
         .reduce((sum, current) => sum + current, 0);
