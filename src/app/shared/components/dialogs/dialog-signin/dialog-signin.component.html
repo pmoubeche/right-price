@@ -1,0 +1,98 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="mat-typography">
+  <div style="display: flex; justify-content: center">
+    <app-login-google></app-login-google>
+  </div>
+  <div style="display: grid; justify-content: center">
+    <button mat-button class="emailButton" (click)="onSigninWithEmailButton()">
+      <span>Se connecter avec email</span>
+      <mat-icon>person</mat-icon>
+    </button>
+    <br />
+    @if(isDisplaySigninForm){
+    <div style="display: grid">
+      <form
+        [formGroup]="signinForm!"
+        style="display: grid; justify-content: center"
+      >
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            [formControlName]="EMAIL_INPUT"
+            placeholder="Ex. aa@bb.com"
+            required
+          />
+          @if(emailControl.invalid){
+          <mat-error>Champ obligatoire</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Mot de passe</mat-label>
+          <input
+            matInput
+            [type]="isPasswordHidden ? 'password' : 'text'"
+            [formControlName]="PASSWORD_INPUT"
+            required
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="isPasswordHidden = !isPasswordHidden"
+            [attr.aria-pressed]="!isPasswordHidden"
+          >
+            <mat-icon>{{
+              isPasswordHidden ? "visibility" : "visibility_off"
+            }}</mat-icon>
+          </button>
+          @if(passwordControl.invalid){
+          <mat-error>Champ obligatoire</mat-error>
+          }
+        </mat-form-field>
+      </form>
+      @if(isEmailPasswordIncorrect){
+      <p>Nom d'utilitsateur ou mot de passe incorrect</p>
+      }
+      <button
+        mat-flat-button
+        color="accent"
+        style="border-radius: 20px"
+        (click)="signIn()"
+      >
+        <span>Se connecter</span>
+      </button>
+      <br />
+      <a href="">Mot de passe oublié</a>
+    </div>
+    }
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  @for(button of data.buttons; track $index){ @if(button.isIntialyFocused) {
+  <button
+    mat-button
+    [color]="button.color"
+    (click)="(button.action)"
+    cdkFocusInitial
+  >
+    <mat-label>{{ button.label }}</mat-label>
+    <mat-icon> {{ button.icon }}</mat-icon>
+  </button>
+  } @else if (button.isCloseButton) {
+  <button mat-button color="danger" mat-dialog-close cdkFocusInitial>
+    <mat-label>{{ button.label }}</mat-label>
+    <mat-icon>close</mat-icon>
+  </button>
+  } @else {
+  <button
+    mat-button
+    [color]="button.color"
+    [mat-dialog-close]="button.isCloseButton"
+    (click)="(button.action)"
+  >
+    <mat-label>{{ button.label }}</mat-label>
+    <mat-icon> {{ button.icon }}</mat-icon>
+  </button>
+  } }
+</mat-dialog-actions>
