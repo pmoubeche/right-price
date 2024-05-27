@@ -1,11 +1,22 @@
 <div class="example-button-container">
-  <button mat-fab color="accent" [matMenuTriggerFor]="menu">
-    @if(user$ | async){
+  @if(user$ | async; as user){ @if(user.googlePicture){
+  <div style="cursor: pointer">
+    <ngx-avatars
+      src="{{ user.googlePicture }}"
+      [matMenuTriggerFor]="menu"
+      [round]="true"
+    ></ngx-avatars>
+  </div>
+  } @else {
+  <button mat-fab color="danger" [matMenuTriggerFor]="menu">
     <mat-icon>sentiment_very_satisfied</mat-icon>
-    } @else {
-    <mat-icon>person</mat-icon>
-    }
   </button>
+  } } @else {
+  <button mat-fab color="accent" [matMenuTriggerFor]="menu">
+    <mat-icon>person</mat-icon>
+  </button>
+  }
+
   <mat-menu #menu="matMenu">
     @if (user$ | async) {
     <button mat-menu-item>
@@ -19,16 +30,3 @@
     }
   </mat-menu>
 </div>
-
-<!-- <ngx-avatars googleId="1508319875" [matMenuTriggerFor]="menu">
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item>
-      <mat-icon>person</mat-icon>
-      <span>Se Connecter</span>
-    </button>
-    <button mat-menu-item disabled>
-      <mat-icon>person_add</mat-icon>
-      <span>Creer un compte</span>
-    </button>
-  </mat-menu>
-</ngx-avatars> -->

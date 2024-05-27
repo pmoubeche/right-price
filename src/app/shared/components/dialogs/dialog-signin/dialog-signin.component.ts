@@ -21,6 +21,7 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
+import { UserResponse } from '../../../model/user-reponse.model';
 
 @Component({
   selector: 'app-dialog-signin',
@@ -84,7 +85,7 @@ export class DialogSigninComponent implements OnInit {
     if (this.signinForm?.valid) {
       this.subscription.add(
         this.authService
-          .login({
+          .loginWithEmail({
             email: this.emailControl.value,
             password: this.passwordControl.value,
           })
@@ -101,6 +102,12 @@ export class DialogSigninComponent implements OnInit {
           .subscribe()
       );
     }
+  }
+
+  public loginAndClosePopUp(res: UserResponse): void {
+    this.userService.logIn(res);
+    this.snackbarService.show('Vous êtes connécté');
+    this.dialogGenericService.close(CodeModaleEnum.SINGIN);
   }
 
   ngOnDestroy(): void {

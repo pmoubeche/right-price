@@ -1,7 +1,10 @@
 <h2 mat-dialog-title>{{ data.title }}</h2>
 <mat-dialog-content class="mat-typography">
   <div style="display: flex; justify-content: center">
-    <app-login-google></app-login-google>
+    <app-login-google
+      [isSignin]="true"
+      (eventLogin)="loginAndClosePopUp($event)"
+    ></app-login-google>
   </div>
   <div style="display: grid; justify-content: center">
     <button mat-button class="emailButton" (click)="onSigninWithEmailButton()">

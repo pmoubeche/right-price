@@ -1,5 +1,17 @@
-import { AfterViewInit, Component } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
+import { Subscription, tap } from 'rxjs';
+import { UserGoogleRequest } from '../../../model/user-google-request.model';
+import { UserResponse } from '../../../model/user-reponse.model';
+import { AuthService } from '../../../services/auth.service';
+import { AuthGoogleRequest } from '../../../model/auth-google-request.model';
 
 declare var google: any;
 
@@ -10,11 +22,15 @@ declare var google: any;
   templateUrl: './login-google.component.html',
   styleUrl: './login-google.component.scss',
 })
-export class LoginGoogleComponent implements AfterViewInit {
-  isSignin = false;
-  isSignup = false;
+export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
+  @Input() isSignup: boolean = false;
+  @Input() isSignin: boolean = false;
 
-  constructor() {}
+  @Output() eventLogin = new EventEmitter<UserResponse>();
+
+  subscription = new Subscription();
+
+  constructor(private readonly authService: AuthService) {}
 
   ngAfterViewInit(): void {
     this.initializeGoogleSignIn();
@@ -26,7 +42,7 @@ export class LoginGoogleComponent implements AfterViewInit {
         google.accounts.id.initialize({
           client_id:
             '742366415553-74nr7e8mmoj23oqepblq9nhqk49rvtth.apps.googleusercontent.com',
-          callback: this.handleCredentialResponse,
+          callback: this.handleCredentialResponse.bind(this),
         });
         google.accounts.id.renderButton(
           document.getElementById('google-signin-button'),
@@ -46,6 +62,54 @@ export class LoginGoogleComponent implements AfterViewInit {
   }
 
   handleCredentialResponse(response: any) {
-    const token = jwtDecode(response.credential);
+    const token: any = jwtDecode(response.credential);
+    if (this.isSignup) {
+      const userReq: UserGoogleRequest = {
+        idGoogle: token.sub,
+        familyName: token.family_name,
+        givenName: token.given_name,
+        email: token.email,
+        username: token.name,
+        emailVerified: token.email_verified,
+        sessionExpiration: token.exp,
+      };
+
+      this.subscription.add(
+        this.authService
+          .registerWithGoogle(userReq)
+          .pipe(
+            tap((userRes) => {
+              userRes.googleId = token.sub;
+              userRes.googlePicture = token.picture;
+              this.eventLogin.next(userRes);
+            })
+          )
+          .subscribe()
+      );
+    }
+
+    if (this.isSignin) {
+      const userReq: AuthGoogleRequest = {
+        idGoogle: token.sub,
+        email: token.email,
+      };
+
+      this.subscription.add(
+        this.authService
+          .loginWithGoogle(userReq)
+          .pipe(
+            tap((userRes) => {
+              userRes.googleId = token.sub;
+              userRes.googlePicture = token.picture;
+              this.eventLogin.next(userRes);
+            })
+          )
+          .subscribe()
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
