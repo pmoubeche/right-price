@@ -4,12 +4,16 @@ import {
   MatDialogConfig,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { DialogGenericComponent } from './dialog-generic.component';
+import { DialogGenericComponent } from './dialog-generic/dialog-generic.component';
 import { DialogContentModel } from './dialog-content.model';
 import { ComponentType } from '@angular/cdk/portal';
+import { DialogSigninComponent } from './dialog-signin/dialog-signin.component';
+import { DialogSignupComponent } from './dialog-signup/dialog-signup.component';
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
+  SINGIN = 'signin',
+  SIGNUP = 'signup',
 }
 
 export interface ConfigModaleModel {
@@ -27,6 +31,18 @@ export class DialogGenericService {
     {
       code: CodeModaleEnum.INFORMATION,
       composant: DialogGenericComponent,
+      width: '650px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.SINGIN,
+      composant: DialogSigninComponent,
+      width: '650px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.SIGNUP,
+      composant: DialogSignupComponent,
       width: '650px',
       isUniqueModale: true,
     },
@@ -58,5 +74,15 @@ export class DialogGenericService {
     };
 
     return this.matDialog.open(configModale.composant, configMatDialog);
+  }
+
+  close(codeModale: CodeModaleEnum, valeur?: unknown): void {
+    const dialogsForCode = this.matDialog.openDialogs.filter((dialog) =>
+      dialog.id.includes(codeModale)
+    );
+
+    if (dialogsForCode.length > 0) {
+      dialogsForCode.forEach((dialog) => dialog.close(valeur));
+    }
   }
 }

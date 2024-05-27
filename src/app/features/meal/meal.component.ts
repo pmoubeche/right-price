@@ -13,12 +13,12 @@ import { CardResultGenericService } from '../../shared/components/card-result-ge
 import {
   ButtonAction,
   DialogContentModel,
-} from '../../shared/components/dialog-generic/dialog-content.model';
-import { DialogGenericComponent } from '../../shared/components/dialog-generic/dialog-generic.component';
+} from '../../shared/components/dialogs/dialog-content.model';
+import { DialogGenericComponent } from '../../shared/components/dialogs/dialog-generic/dialog-generic.component';
 import {
   CodeModaleEnum,
   DialogGenericService,
-} from '../../shared/components/dialog-generic/dialog-generic.service';
+} from '../../shared/components/dialogs/dialog-generic.service';
 import { MaterialModule } from '../../shared/material/material.module';
 import {
   Meal,

@@ -1,8 +1,13 @@
 <mat-toolbar color="accent" style="position: sticky !important">
-  <button mat-icon-button class="example-icon" (click)="onClick()">
+  <button
+    mat-flat-button
+    color="accent"
+    style="border-radius: 20px"
+    (click)="onClick()"
+  >
     <mat-icon>home</mat-icon>
+    <span>DataFood</span>
   </button>
-  <span>DataFood</span>
   <span class="example-spacer"></span>
   <button mat-icon-button>
     <mat-icon>favorite</mat-icon>
@@ -10,5 +15,5 @@
   <button mat-icon-button>
     <mat-icon>share</mat-icon>
   </button>
-  <app-login-google></app-login-google>
+  <app-profile></app-profile>
 </mat-toolbar>

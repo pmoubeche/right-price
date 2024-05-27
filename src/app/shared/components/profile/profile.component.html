@@ -1,0 +1,34 @@
+<div class="example-button-container">
+  <button mat-fab color="accent" [matMenuTriggerFor]="menu">
+    @if(user$ | async){
+    <mat-icon>sentiment_very_satisfied</mat-icon>
+    } @else {
+    <mat-icon>person</mat-icon>
+    }
+  </button>
+  <mat-menu #menu="matMenu">
+    @if (user$ | async) {
+    <button mat-menu-item>
+      <label>Parametres</label>
+      <mat-icon>settings</mat-icon>
+    </button>
+    <button mat-menu-item (click)="logOut()">Se Deconnecter</button>
+    } @else {
+    <button mat-menu-item (click)="signIn()">Se Connecter</button>
+    <button mat-menu-item (click)="signUp()">Creer un compte</button>
+    }
+  </mat-menu>
+</div>
+
+<!-- <ngx-avatars googleId="1508319875" [matMenuTriggerFor]="menu">
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>person</mat-icon>
+      <span>Se Connecter</span>
+    </button>
+    <button mat-menu-item disabled>
+      <mat-icon>person_add</mat-icon>
+      <span>Creer un compte</span>
+    </button>
+  </mat-menu>
+</ngx-avatars> -->

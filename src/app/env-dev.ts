@@ -10,5 +10,8 @@ export const environment = {
     GET_MEAL_PRODUCTS_URL: `${API_SERVER_URL}/product/get`,
     DELETE_MEAL_PRODUCTS_URL: `${API_SERVER_URL}/product/delete`,
     UPDATE_MEAL_PRODUCTS_URL: `${API_SERVER_URL}/product/update`,
+    AUTH_SIGNIN: `${API_SERVER_URL}/auth/login`,
+    AUTH_SIGNUP: `${API_SERVER_URL}/auth/register`,
+    GET_USER_BY_EMAIL: `${API_SERVER_URL}/user/email`,
   },
 };
