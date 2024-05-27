@@ -20,6 +20,7 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
+import { UserResponse } from '../../../model/user-reponse.model';
 
 @Component({
   selector: 'app-dialog-signup',
@@ -55,8 +56,8 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
-    private readonly dialogGenericService: DialogGenericService,
     private readonly authService: AuthService,
+    private readonly dialogGenericService: DialogGenericService,
     private readonly snackbarService: SnackbarService,
     private readonly userService: UserService,
     private readonly formBuilder: FormBuilder
@@ -88,17 +89,21 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
     if (this.signupForm?.valid) {
       this.subscription.add(
         this.authService
-          .register(userRequest)
+          .registerWithEmail(userRequest)
           .pipe(
             tap((res) => {
-              this.userService.logIn(res);
-              this.snackbarService.show('Utilisateur créé avec succes');
-              this.dialogGenericService.close(CodeModaleEnum.SIGNUP);
+              this.loginAndClosePopUp(res);
             })
           )
           .subscribe()
       );
     }
+  }
+
+  public loginAndClosePopUp(res: UserResponse): void {
+    this.userService.logIn(res);
+    this.snackbarService.show('Utilisateur créé avec succes');
+    this.dialogGenericService.close(CodeModaleEnum.SIGNUP);
   }
 
   ngOnDestroy(): void {
