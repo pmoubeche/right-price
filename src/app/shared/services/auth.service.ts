@@ -27,10 +27,7 @@ export class AuthService {
   loginWithEmail(credentials: AuthRequest): Observable<UserResponse> {
     return this.http.post(
       environment.API.AUTH_SIGNIN_EMAIL,
-      {
-        email: credentials.email,
-        password: credentials.password,
-      },
+      credentials,
       httpOptions
     );
   }
@@ -38,40 +35,19 @@ export class AuthService {
   loginWithGoogle(credentials: AuthGoogleRequest): Observable<UserResponse> {
     return this.http.post(
       environment.API.AUTH_SIGNIN_GOOGLE,
-      {
-        email: credentials.email,
-        idGoogle: credentials.idGoogle,
-      },
+      credentials,
       httpOptions
     );
   }
 
   registerWithEmail(user: UserRequest): Observable<UserResponse> {
-    return this.http.post(
-      environment.API.AUTH_SIGNUP_EMAIL,
-      {
-        username: user.username,
-        email: user.email,
-        password: user.password,
-        roles: [{ name: 'GUEST_0d7fe874-06e6-4b78-9aec-f1c927801118' }],
-      },
-      httpOptions
-    );
+    return this.http.post(environment.API.AUTH_SIGNUP_EMAIL, user, httpOptions);
   }
 
   registerWithGoogle(user: UserGoogleRequest): Observable<UserResponse> {
     return this.http.post(
       environment.API.AUTH_SIGNUP_GOOGLE,
-      {
-        idGoogle: user.idGoogle,
-        familyName: user.familyName,
-        givenName: user.givenName,
-        emailverified: user.emailVerified,
-        sessionExpiration: user.sessionExpiration,
-        username: user.username,
-        email: user.email,
-        roles: [{ name: 'GUEST_0d7fe874-06e6-4b78-9aec-f1c927801118' }],
-      },
+      user,
       httpOptions
     );
   }

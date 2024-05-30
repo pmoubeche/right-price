@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AvatarModule } from 'ngx-avatars';
 import { MaterialModule } from '../../material/material.module';
 import { ContextService } from '../../services/context.service';
@@ -20,7 +20,13 @@ import {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [MaterialModule, AvatarModule, CommonModule, HttpClientModule],
+  imports: [
+    MaterialModule,
+    AvatarModule,
+    CommonModule,
+    HttpClientModule,
+    RouterLink,
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
@@ -29,11 +35,9 @@ export class ProfileComponent {
 
   constructor(
     private readonly popInService: DialogGenericService,
-    private readonly tokenService: TokenStorageService,
     private readonly userService: UserService,
     private readonly contextService: ContextService,
-    private readonly snackbarService: SnackbarService,
-    private readonly router: Router
+    private readonly snackbarService: SnackbarService
   ) {}
 
   private buttonsDialog: ButtonAction[] = [

@@ -20,7 +20,8 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.contextService.getCurrentUser().subscribe((user) => {
       this.isAuthorizedMealAccess =
-        user?.roles?.includes(RoleAdmin)! || user?.roles?.includes(RoleTier1)!;
+        user?.roles?.map((role) => role.id)[0] === RoleAdmin.id ||
+        user?.roles?.map((role) => role.id)[0] === RoleTier1.id;
     });
   }
 }

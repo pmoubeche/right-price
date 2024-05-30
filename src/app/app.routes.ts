@@ -5,6 +5,8 @@ import { MealComponent } from './features/meal/meal.component';
 import { ProductComponent } from './features/product/product.component';
 import { requireAnyRole } from './shared/guard/role.guard';
 import { RoleAdmin, RoleTier1 } from './shared/constants/role.constant';
+import { SettingsComponent } from './features/settings/settings.component';
+import { ProfilEditComponent } from './features/settings/profil-edit/profil-edit.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +25,14 @@ export const routes: Routes = [
   {
     path: 'compare',
     component: CompareProductsComponent,
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
+  },
+  {
+    path: 'settings/profile',
+    component: ProfilEditComponent,
   },
   {
     path: '',

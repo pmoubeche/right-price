@@ -6,8 +6,14 @@
       (eventLogin)="loginAndClosePopUp($event)"
     ></app-login-google>
   </div>
+  <br />
   <div style="display: grid; justify-content: center">
-    <button mat-button class="emailButton" (click)="onSigninWithEmailButton()">
+    <button
+      mat-button
+      class="emailButton"
+      style="width: 15.5rem"
+      (click)="onSigninWithEmailButton()"
+    >
       <span>Se connecter avec email</span>
       <mat-icon>person</mat-icon>
     </button>

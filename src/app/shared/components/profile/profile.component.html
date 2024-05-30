@@ -19,11 +19,14 @@
 
   <mat-menu #menu="matMenu">
     @if (user$ | async) {
-    <button mat-menu-item>
+    <button mat-menu-item [routerLink]="'/settings'">
       <label>Parametres</label>
       <mat-icon>settings</mat-icon>
     </button>
-    <button mat-menu-item (click)="logOut()">Se Deconnecter</button>
+    <button mat-menu-item (click)="logOut()">
+      <label>Se Deconnecter</label>
+      <mat-icon>cancel</mat-icon>
+    </button>
     } @else {
     <button mat-menu-item (click)="signIn()">Se Connecter</button>
     <button mat-menu-item (click)="signUp()">Creer un compte</button>

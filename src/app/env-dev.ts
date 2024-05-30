@@ -15,5 +15,6 @@ export const environment = {
     AUTH_SIGNIN_GOOGLE: `${API_SERVER_URL}/auth/google-login`,
     AUTH_SIGNUP_GOOGLE: `${API_SERVER_URL}/auth/google-register`,
     GET_USER_BY_EMAIL: `${API_SERVER_URL}/user/email`,
+    USER: `${API_SERVER_URL}/user`,
   },
 };
