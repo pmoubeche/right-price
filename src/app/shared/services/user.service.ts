@@ -7,6 +7,7 @@ import { TokenStorageService } from './token-storage.service';
 import { ContextService } from './context.service';
 import { Router } from '@angular/router';
 import { SnackbarService } from './snackbar.service';
+import { User } from '../model/user.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -29,6 +30,14 @@ export class UserService {
       environment.API.GET_USER_BY_EMAIL + `/${email}`,
       httpOptions
     );
+  }
+
+  getUserById(id: string): Observable<User> {
+    return this.http.get(environment.API.USER + `/${id}`, httpOptions);
+  }
+
+  updateUser(user: User): Observable<User> {
+    return this.http.put(environment.API.USER, user, httpOptions);
   }
 
   logIn(userResponse: UserResponse): void {

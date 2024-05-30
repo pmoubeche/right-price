@@ -1,0 +1,100 @@
+<br />
+<mat-expansion-panel [expanded]="true" style="max-width: 99%">
+  <mat-expansion-panel-header
+    >Réinitialiser le mot de passe</mat-expansion-panel-header
+  >
+  <form
+    [formGroup]="passwordChangeForm!"
+    style="display: grid; justify-items: start"
+  >
+    <mat-form-field class="fields" appearance="outline">
+      <mat-label>Mot de passe actuel</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        [formControlName]="PREVIOUS_PASSWORD_FIELD"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="showPassword($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      @if(previousPasswordControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline">
+      <mat-label>Nouveau mot de passe</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        [formControlName]="NEW_PASSWORD_FIELD"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="showPassword($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      @if(newPasswordControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline">
+      <mat-label>Confirmer mot de passe</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        [formControlName]="CONFIRM_PASSWORD_FIELD"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="showPassword($event)"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      @if(confirmPasswordControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+    <button mat-fab extended color="accent">Modifier mot de passe</button>
+  </form>
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <mat-form-field appearance="outline" class="fields">
+    <mat-label>Date de création du compte</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [formControlName]="DATE_CREATION"
+      [value]="user.dateCreation"
+      ngDefaultControl
+      [disabled]="true"
+    />
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <button mat-fab extended color="warn">Supprimer le compte</button>
+</mat-expansion-panel>

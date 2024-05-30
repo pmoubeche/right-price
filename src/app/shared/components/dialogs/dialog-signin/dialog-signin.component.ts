@@ -106,7 +106,6 @@ export class DialogSigninComponent implements OnInit {
 
   public loginAndClosePopUp(res: UserResponse): void {
     this.userService.logIn(res);
-    this.snackbarService.show('Vous êtes connécté');
     this.dialogGenericService.close(CodeModaleEnum.SINGIN);
   }
 

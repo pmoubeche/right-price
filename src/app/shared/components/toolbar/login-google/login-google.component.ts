@@ -12,6 +12,7 @@ import { UserGoogleRequest } from '../../../model/user-google-request.model';
 import { UserResponse } from '../../../model/user-reponse.model';
 import { AuthService } from '../../../services/auth.service';
 import { AuthGoogleRequest } from '../../../model/auth-google-request.model';
+import { RoleGuest } from '../../../constants/role.constant';
 
 declare var google: any;
 
@@ -72,6 +73,7 @@ export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
         username: token.name,
         emailVerified: token.email_verified,
         sessionExpiration: token.exp,
+        roles: [RoleGuest],
       };
 
       this.subscription.add(
