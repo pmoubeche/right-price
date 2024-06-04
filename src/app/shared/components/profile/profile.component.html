@@ -1,16 +1,13 @@
-<div class="example-button-container">
-  @if(user$ | async; as user){ @if(user.googlePicture){
+<div>
+  @if(user$ | async; as user){ @if(user.image){
   <div style="cursor: pointer">
     <ngx-avatars
-      src="{{ user.googlePicture }}"
+      src="{{ user.image }}"
       [matMenuTriggerFor]="menu"
+      [borderColor]="'#f1f1f1'"
       [round]="true"
     ></ngx-avatars>
   </div>
-  } @else {
-  <button mat-fab color="danger" [matMenuTriggerFor]="menu">
-    <mat-icon>sentiment_very_satisfied</mat-icon>
-  </button>
   } } @else {
   <button mat-fab color="accent" [matMenuTriggerFor]="menu">
     <mat-icon>person</mat-icon>
@@ -22,6 +19,10 @@
     <button mat-menu-item [routerLink]="'/settings'">
       <label>Parametres</label>
       <mat-icon>settings</mat-icon>
+    </button>
+    <button mat-menu-item [routerLink]="'/administration'">
+      <label>Administration</label>
+      <mat-icon>people</mat-icon>
     </button>
     <button mat-menu-item (click)="logOut()">
       <label>Se Deconnecter</label>

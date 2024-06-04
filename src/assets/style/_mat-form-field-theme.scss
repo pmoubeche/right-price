@@ -1,4 +1,4 @@
-@use 'app-utils' as utils;
+@use "app-utils" as utils;
 
 /// Mixin utilisée pour surcharger le thème des champs de formulaire d'Angular Material
 @mixin theme($theme) {
@@ -53,10 +53,16 @@
       }
     }
 
+    .mdc-text-field--outlined {
+      --mdc-outlined-text-field-container-shape: 28px !important;
+    }
+
     /*
      * Ajoute un espace devant l'astérisque des champs obligatoires
      */
-    .mdc-floating-label--required:not(.mdc-floating-label--hide-required-marker)::after {
+    .mdc-floating-label--required:not(
+        .mdc-floating-label--hide-required-marker
+      )::after {
       content: " *" !important;
     }
   }

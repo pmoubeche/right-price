@@ -6,7 +6,7 @@
     <br />
     <div style="display: grid; justify-items: center">
       @if(user.image){
-      <img [src]="user.image" />
+      <img [src]="user.image" style="height: 10rem; border-radius: 5rem" />
       } @else {
       <button
         mat-fab
@@ -17,6 +17,14 @@
         <mat-icon style="height: 5rem; width: 5rem">person</mat-icon>
       </button>
       }
+      <button
+        mat-mini-fab
+        color="accent"
+        style="margin-left: 6rem; margin-top: -2rem"
+        (click)="openPopInAvatar()"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
       <br />
       <span>{{ user.username }}</span>
     </div>

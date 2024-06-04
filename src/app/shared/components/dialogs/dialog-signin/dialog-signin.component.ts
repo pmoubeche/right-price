@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -21,7 +27,7 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { UserResponse } from '../../../model/user-reponse.model';
+import { UserResponse } from '../../../model/payload/response/user-reponse.model';
 
 @Component({
   selector: 'app-dialog-signin',
@@ -35,7 +41,7 @@ import { UserResponse } from '../../../model/user-reponse.model';
   templateUrl: './dialog-signin.component.html',
   styleUrl: './dialog-signin.component.scss',
 })
-export class DialogSigninComponent implements OnInit {
+export class DialogSigninComponent implements OnInit, OnDestroy {
   readonly EMAIL_INPUT = 'email';
   readonly PASSWORD_INPUT = 'password';
 
@@ -59,8 +65,6 @@ export class DialogSigninComponent implements OnInit {
     private readonly dialogGenericService: DialogGenericService,
     private readonly authService: AuthService,
     private readonly userService: UserService,
-    private readonly contextService: ContextService,
-    private readonly tokenStorageService: TokenStorageService,
     private readonly snackbarService: SnackbarService,
     private readonly formBuilder: FormBuilder
   ) {}
@@ -91,8 +95,7 @@ export class DialogSigninComponent implements OnInit {
           })
           .pipe(
             tap((loggedUser) => {
-              this.userService.logIn(loggedUser);
-              this.dialogGenericService.close(CodeModaleEnum.SINGIN);
+              this.loginAndClosePopUp(loggedUser);
             }),
             catchError(() => {
               this.isEmailPasswordIncorrect = true;
@@ -106,6 +109,7 @@ export class DialogSigninComponent implements OnInit {
 
   public loginAndClosePopUp(res: UserResponse): void {
     this.userService.logIn(res);
+    this.snackbarService.show('Vous etes connecté');
     this.dialogGenericService.close(CodeModaleEnum.SINGIN);
   }
 

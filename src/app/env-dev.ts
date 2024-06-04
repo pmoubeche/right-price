@@ -16,5 +16,8 @@ export const environment = {
     AUTH_SIGNUP_GOOGLE: `${API_SERVER_URL}/auth/google-register`,
     GET_USER_BY_EMAIL: `${API_SERVER_URL}/user/email`,
     USER: `${API_SERVER_URL}/user`,
+    USERS: `${API_SERVER_URL}/users`,
+    MODIFY_PASSWORD: `${API_SERVER_URL}/user/update-password`,
+    DELETE_ACCOUNT: `${API_SERVER_URL}/user/delete-account`,
   },
 };

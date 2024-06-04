@@ -10,7 +10,7 @@ import {
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription, tap } from 'rxjs';
 import { MaterialModule } from '../../../material/material.module';
-import { UserRequest } from '../../../model/user-request';
+import { UserRequest } from '../../../model/payload/request/user-request';
 import { AuthService } from '../../../services/auth.service';
 import { SnackbarService } from '../../../services/snackbar.service';
 import { UserService } from '../../../services/user.service';
@@ -20,7 +20,7 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { UserResponse } from '../../../model/user-reponse.model';
+import { UserResponse } from '../../../model/payload/response/user-reponse.model';
 
 @Component({
   selector: 'app-dialog-signup',
@@ -84,6 +84,7 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
       email: this.emailControl.value,
       username: this.usernameControl.value,
       password: this.passwordControl.value,
+      image: 'assets/svg/avatars/boy.png',
     };
 
     if (this.signupForm?.valid) {

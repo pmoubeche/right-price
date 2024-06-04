@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 .example-form {
-    width: 100%;
-  }
-  
-  .example-full-width {
-    width: 100%;
-  }
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 28px;
+}

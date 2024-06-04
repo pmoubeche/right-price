@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { PaginatedDataSource } from '../../shared/common/paginated-datasource';
+import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
 import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
 import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../shared/material/material.module';

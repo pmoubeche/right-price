@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
-import { UserResponse } from '../model/user-reponse.model';
+import { UserResponse } from '../model/payload/response/user-reponse.model';
 import { SnackbarService } from './snackbar.service';
 
 const TOKEN_KEY = 'auth-token';

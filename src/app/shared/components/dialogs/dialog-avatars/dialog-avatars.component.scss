@@ -1,0 +1,8 @@
+@use "app-utils" as utils;
+
+.avatar-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-width: 2px;
+  border-color: utils.get-couleur-secondaire();
+  cursor: pointer;
+}

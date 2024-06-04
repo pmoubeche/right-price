@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartData, ChartOptions } from 'chart.js';
-import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
+import { PaginatedDataSource } from '../../../shared/common/paginated/paginated-datasource';
 import { ChartUtils } from '../../../shared/components/chart/chart.utils';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';

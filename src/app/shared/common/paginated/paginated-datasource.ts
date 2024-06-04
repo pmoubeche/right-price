@@ -1,9 +1,8 @@
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject } from 'rxjs';
 
 export class PaginatedDataSource<T> {
-  count?: number;
-  page?: number;
+  length?: number;
+  pageIndex?: number;
   pageCount?: number;
   pageSize?: number;
   dataSource = new MatTableDataSource<T>();

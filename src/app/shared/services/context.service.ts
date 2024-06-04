@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { UserResponse } from '../model/user-reponse.model';
+import { UserResponse } from '../model/payload/response/user-reponse.model';
 
 @Injectable({ providedIn: 'root' })
 export class ContextService {
@@ -11,6 +11,10 @@ export class ContextService {
   }
 
   setCurrentUser(user: UserResponse | null): void {
+    this.currentUser$.next(user);
+  }
+
+  updateCurrentUser(user: UserResponse | null): void {
     this.currentUser$.next(user);
   }
 

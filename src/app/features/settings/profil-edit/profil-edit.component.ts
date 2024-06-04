@@ -12,6 +12,12 @@ import {
 } from '@angular/forms';
 import { Subscription, tap } from 'rxjs';
 import { UserService } from '../../../shared/services/user.service';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../../shared/components/dialogs/dialog-generic.service';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
+import { UserResponse } from '../../../shared/model/payload/response/user-reponse.model';
 
 export enum GenderEnum {
   MALE = 'male',
@@ -30,6 +36,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
   readonly USERNAME_FIELD = 'username';
   readonly EMAIL_FIELD = 'email';
   readonly NAME_FIELD = 'name';
+  readonly IMAGE_FIELD = 'image';
   readonly FIRSTNAME_FIELD = 'firstname';
   readonly HEIGHT_FIELD = 'height';
   readonly WEIGHT_FIELD = 'weight';
@@ -41,11 +48,12 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
     { id: GenderEnum.NON_BINARY, label: 'Non Binaire' },
   ];
 
-  currentUserId?: string;
+  currentUser?: UserResponse | null;
 
   @Input() set user(user: User) {
     if (user) {
       this._user = user;
+      this.imageUrl = user.image;
       this.initForm();
     }
   }
@@ -56,6 +64,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
 
   private _user = new User();
   editProfilForm?: FormGroup;
+  imageUrl?: string;
 
   subscription = new Subscription();
 
@@ -75,6 +84,10 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
     return this.editProfilForm?.get(this.EMAIL_FIELD) as FormControl;
   }
 
+  get imageControl(): FormControl {
+    return this.editProfilForm?.get(this.IMAGE_FIELD) as FormControl;
+  }
+
   get heightControl(): FormControl {
     return this.editProfilForm?.get(this.HEIGHT_FIELD) as FormControl;
   }
@@ -90,12 +103,14 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
   constructor(
     private readonly userService: UserService,
     private readonly contextService: ContextService,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly dialogService: DialogGenericService,
+    private readonly snackBarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
+    this.initForm();
     this.getCurrentUserId();
-    // this.initForm();
   }
 
   private getCurrentUserId() {
@@ -104,7 +119,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
         .getCurrentUser()
         .pipe(
           tap((currentUser) => {
-            this.currentUserId = currentUser?.id;
+            this.currentUser = currentUser;
           })
         )
         .subscribe()
@@ -125,11 +140,12 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
 
   public updateUser(): void {
     const userParam: User = {
-      id: this.currentUserId,
+      id: this.currentUser?.id,
       username: this.usernameControl.value,
       firstname: this.firstnameControl.value,
       name: this.nameControl.value,
       email: this.emailControl.value,
+      image: this.imageUrl,
       height: this.heightControl.value,
       weight: this.wieghtControl.value,
       gender: this.genderControl.value,
@@ -139,8 +155,26 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
       this.userService
         .updateUser(userParam)
         .pipe(
-          tap((userUpdated) => {
-            this.user = userUpdated;
+          tap((userRes) => {
+            this.user = userRes;
+            this.userService.logIn(userRes);
+            this.snackBarService.show('Profil modifié avec succès');
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  openPopInAvatar() {
+    const dialogRef = this.dialogService.openDialog(CodeModaleEnum.AVATAR);
+
+    this.subscription.add(
+      dialogRef
+        .afterClosed()
+        .pipe(
+          tap((res) => {
+            this.user.image = res;
+            this.imageUrl = res;
           })
         )
         .subscribe()

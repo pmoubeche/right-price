@@ -39,8 +39,40 @@
             [ngStyle]="{ height: rowHeight }"
           />
         </div>
+        } @else if(column.type! === columnTypeEnum.AVATAR){
+        <div>
+          <img
+            class="row-with-avatar"
+            src="{{ element[column.columDef!] }}"
+            [ngStyle]="{ height: rowHeight }"
+          />
+        </div>
+        } @else if(column.type! === columnTypeEnum.BOOLEAN){
+        <div>
+          <mat-checkbox
+            [checked]="element[column.columDef!]"
+            disabled
+          ></mat-checkbox>
+        </div>
+        } @else if(column.type! === columnTypeEnum.CHIPS){
+        <div>
+          <mat-chip-set>
+            @for(option of element[column.columDef!]; track $index){
+            <mat-chip disabled>{{ option }}</mat-chip>
+            }
+          </mat-chip-set>
+        </div>
         } @else if(column.type! === columnTypeEnum.PERCENT) {
         {{ element[column.columDef!] | percentFormat : 100 }}
+        } @else if(column.type! === columnTypeEnum.STRING) {
+        <div
+          [ngStyle]="{ height: rowHeight }"
+          style="display: flex; align-items: center"
+        >
+          {{ element[column.columDef!] }}
+        </div>
+        } @else if(column.type! === columnTypeEnum.DATE) {
+        {{ element[column.columDef!] | formatDate }}
         } @else if (column.type! === columnTypeEnum.ACTIONS) {
         <button
           mat-icon-button
@@ -120,10 +152,10 @@
 
   @if(isPaginated){
   <mat-paginator
-    [length]="paginatedDataSource.count"
-    [pageIndex]="paginatedDataSource.page"
+    [length]="paginatedDataSource.length"
+    [pageIndex]="paginatedDataSource.pageIndex"
     [pageSize]="paginatedDataSource.pageSize"
-    [pageSizeOptions]="[24]"
+    [pageSizeOptions]="pageSizeOptions"
     (page)="onPageChange($event)"
     showFirstLastButtons
     aria-label="Select page"

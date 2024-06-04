@@ -1,5 +1,5 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from '../../../shared/model/user.model';
 import {
   FormBuilder,
   FormControl,
@@ -7,9 +7,16 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap, tap } from 'rxjs';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../../shared/components/dialogs/dialog-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
-import { CommonModule } from '@angular/common';
+import { User } from '../../../shared/model/user.model';
+import { ContextService } from '../../../shared/services/context.service';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
+import { UserService } from '../../../shared/services/user.service';
 
 @Component({
   selector: 'app-account-edit',
@@ -19,7 +26,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './account-edit.component.scss',
 })
 export class AccountEditComponent implements OnInit {
-  readonly PREVIOUS_PASSWORD_FIELD = 'previousPassword';
   readonly NEW_PASSWORD_FIELD = 'newPassword';
   readonly CONFIRM_PASSWORD_FIELD = 'confirmPassword';
   readonly DATE_CREATION = 'dateCreation';
@@ -42,12 +48,6 @@ export class AccountEditComponent implements OnInit {
 
   subscription = new Subscription();
 
-  get previousPasswordControl(): FormControl {
-    return this.passwordChangeForm?.get(
-      this.PREVIOUS_PASSWORD_FIELD
-    ) as FormControl;
-  }
-
   get newPasswordControl(): FormControl {
     return this.passwordChangeForm?.get(this.NEW_PASSWORD_FIELD) as FormControl;
   }
@@ -64,23 +64,82 @@ export class AccountEditComponent implements OnInit {
 
   hidePassword = true;
 
-  constructor(private readonly formBuilder: FormBuilder) {}
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly snackbarService: SnackbarService,
+    private readonly userService: UserService,
+    private readonly contextService: ContextService,
+    private readonly dialogService: DialogGenericService
+  ) {}
 
   ngOnInit(): void {
-    // this.initForm();
+    this.initForm();
   }
 
   private initForm() {
     this.passwordChangeForm = this.formBuilder.group({
-      [this.PREVIOUS_PASSWORD_FIELD]: [''],
       [this.NEW_PASSWORD_FIELD]: [''],
       [this.CONFIRM_PASSWORD_FIELD]: [''],
-      [this.DATE_CREATION]: [new Date()],
+      [this.DATE_CREATION]: [{ value: this.user.dateCreation, disabled: true }],
     });
   }
 
   showPassword(event: MouseEvent) {
     this.hidePassword = !this.hidePassword;
     event.stopPropagation();
+  }
+
+  modifyPassword(): void {
+    if (this.newPasswordControl.value !== this.confirmPasswordControl.value) {
+      this.snackbarService.show(
+        'Les mots de passes renseignés ne sont pas égaux'
+      );
+    } else {
+      this.subscription.add(
+        this.contextService
+          .getCurrentUser()
+          .pipe(
+            switchMap((userRes) =>
+              this.userService
+                .updatePassword({
+                  password: this.confirmPasswordControl.value,
+                  userId: userRes?.id,
+                })
+                .pipe(
+                  tap(() => {
+                    this.newPasswordControl.reset();
+                    this.confirmPasswordControl.reset();
+                    this.snackbarService.show(
+                      'Mot de passe modifié avec succes'
+                    );
+                  })
+                )
+            )
+          )
+          .subscribe()
+      );
+    }
+  }
+
+  openPopInDeleteAccount(): void {
+    this.dialogService.openDialog(CodeModaleEnum.DELETE_ACCOUNT);
+  }
+
+  deleteAccount(): void {
+    this.subscription.add(
+      this.contextService
+        .getCurrentUser()
+        .pipe(
+          switchMap((userRes) =>
+            this.userService.deleteAccount(userRes?.id!).pipe(
+              tap(() => {
+                this.dialogService.close(CodeModaleEnum.DELETE_ACCOUNT);
+                this.snackbarService.show('Votre compte a été supprimé !');
+              })
+            )
+          )
+        )
+        .subscribe()
+    );
   }
 }

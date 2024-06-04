@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AvatarModule } from 'ngx-avatars';
 import { MaterialModule } from '../../material/material.module';
 import { ContextService } from '../../services/context.service';
 import { SnackbarService } from '../../services/snackbar.service';
-import { TokenStorageService } from '../../services/token-storage.service';
 import { UserService } from '../../services/user.service';
 import {
   ButtonAction,

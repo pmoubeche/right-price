@@ -12,17 +12,8 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import {
-  EMPTY,
-  Observable,
-  Subscription,
-  catchError,
-  finalize,
-  of,
-  tap,
-} from 'rxjs';
+import { EMPTY, Observable, Subscription, catchError, of, tap } from 'rxjs';
 import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
-import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
 import {
   ResponseProduct,
@@ -69,7 +60,6 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly openFoodFactApiService: OpenFoodFactsApiService,
-    private readonly tableGenericService: TableGenericService,
     private readonly cardResultService: CardResultGenericService
   ) {}
 
