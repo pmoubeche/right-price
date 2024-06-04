@@ -9,7 +9,7 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subscription, switchMap, tap } from 'rxjs';
-import { PaginatedDataSource } from '../../../shared/common/paginated-datasource';
+import { PaginatedDataSource } from '../../../shared/common/paginated/paginated-datasource';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
 import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';

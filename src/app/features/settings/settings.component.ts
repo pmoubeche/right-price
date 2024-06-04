@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MaterialModule } from '../../shared/material/material.module';
-import { ProfilEditComponent } from './profil-edit/profil-edit.component';
-import { UserService } from '../../shared/services/user.service';
-import { User } from '../../shared/model/user.model';
 import { Subscription, switchMap, tap } from 'rxjs';
+import { MaterialModule } from '../../shared/material/material.module';
+import { User } from '../../shared/model/user.model';
 import { ContextService } from '../../shared/services/context.service';
+import { UserService } from '../../shared/services/user.service';
 import { AccountEditComponent } from './account-edit/account-edit.component';
+import { ProfilEditComponent } from './profil-edit/profil-edit.component';
 
 @Component({
   selector: 'app-settings',

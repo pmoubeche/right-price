@@ -4,16 +4,20 @@ import {
   MatDialogConfig,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { DialogGenericComponent } from './dialog-generic/dialog-generic.component';
+import { DialogInfoComponent } from './dialog-info/dialog-info.component';
 import { DialogContentModel } from './dialog-content.model';
 import { ComponentType } from '@angular/cdk/portal';
 import { DialogSigninComponent } from './dialog-signin/dialog-signin.component';
 import { DialogSignupComponent } from './dialog-signup/dialog-signup.component';
+import { DialogDeleteAccountComponent } from './dialog-delete-account/dialog-delete-account.component';
+import { DialogAvatarComponent } from './dialog-avatars/dialog-avatars.component';
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
   SINGIN = 'signin',
   SIGNUP = 'signup',
+  DELETE_ACCOUNT = 'deleteAccount',
+  AVATAR = 'avatar',
 }
 
 export interface ConfigModaleModel {
@@ -30,7 +34,7 @@ export class DialogGenericService {
   private readonly CONFIGS_MODALES: ConfigModaleModel[] = [
     {
       code: CodeModaleEnum.INFORMATION,
-      composant: DialogGenericComponent,
+      composant: DialogInfoComponent,
       width: '650px',
       isUniqueModale: true,
     },
@@ -44,6 +48,18 @@ export class DialogGenericService {
       code: CodeModaleEnum.SIGNUP,
       composant: DialogSignupComponent,
       width: '650px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.DELETE_ACCOUNT,
+      composant: DialogDeleteAccountComponent,
+      width: '650px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.AVATAR,
+      composant: DialogAvatarComponent,
+      width: '1050px',
       isUniqueModale: true,
     },
   ];

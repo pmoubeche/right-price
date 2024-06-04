@@ -2,12 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../env-dev';
-import { AuthRequest } from '../model/auth-request.model';
-import { UserResponse } from '../model/user-reponse.model';
+import { AuthRequest } from '../model/payload/request/auth-request.model';
+import { UserResponse } from '../model/payload/response/user-reponse.model';
 
-import { UserRequest } from '../model/user-request';
-import { UserGoogleRequest } from '../model/user-google-request.model';
-import { AuthGoogleRequest } from '../model/auth-google-request.model';
+import { UserRequest } from '../model/payload/request/user-request';
+import { UserGoogleRequest } from '../model/payload/request/user-google-request.model';
+import { AuthGoogleRequest } from '../model/payload/request/auth-google-request.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

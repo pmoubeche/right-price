@@ -7,6 +7,7 @@ import { requireAnyRole } from './shared/guard/role.guard';
 import { RoleAdmin, RoleTier1 } from './shared/constants/role.constant';
 import { SettingsComponent } from './features/settings/settings.component';
 import { ProfilEditComponent } from './features/settings/profil-edit/profil-edit.component';
+import { UserAdminstrationComponent } from './features/user-adminstration/user-adminstration.component';
 
 export const routes: Routes = [
   {
@@ -31,8 +32,8 @@ export const routes: Routes = [
     component: SettingsComponent,
   },
   {
-    path: 'settings/profile',
-    component: ProfilEditComponent,
+    path: 'administration',
+    component: UserAdminstrationComponent,
   },
   {
     path: '',

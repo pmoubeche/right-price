@@ -21,7 +21,10 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!this.tokenService.isTokenExpired()) {
+    if (
+      this.tokenService.getAccessToken() !== null &&
+      !this.tokenService.isTokenExpired()
+    ) {
       this.contextService.setCurrentUser(this.tokenService.getUser());
     }
   }

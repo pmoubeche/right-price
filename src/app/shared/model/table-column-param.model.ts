@@ -13,7 +13,10 @@ export class TableColumnParamModel {
 
 export enum ColumnTypeParamEnum {
   STRING = 'string',
+  AVATAR = 'avatar',
   NUMBER = 'number',
+  BOOLEAN = 'boolean',
+  CHIPS = 'chips',
   IMAGE = 'image',
   DATE = 'date',
   PERCENT = 'percent',

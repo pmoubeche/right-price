@@ -8,10 +8,13 @@ export class User {
   firstname?: string;
   image?: string;
   roles?: RoleModel[];
+  rolesStringList?: string[];
   height?: number;
   weight?: number;
   gender?: string;
   dateCreation?: Date;
+  isActive?: boolean;
+  origin?: string;
 }
 
 export class Gender {

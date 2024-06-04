@@ -14,7 +14,7 @@ import {
   ButtonAction,
   DialogContentModel,
 } from '../../shared/components/dialogs/dialog-content.model';
-import { DialogGenericComponent } from '../../shared/components/dialogs/dialog-generic/dialog-generic.component';
+import { DialogInfoComponent } from '../../shared/components/dialogs/dialog-info/dialog-info.component';
 import {
   CodeModaleEnum,
   DialogGenericService,
@@ -47,7 +47,7 @@ import { TableProductMealComponent } from './table-product-meal/table-product-me
     ReactiveFormsModule,
     SearchProductComponent,
     CardResultGenericComponent,
-    DialogGenericComponent,
+    DialogInfoComponent,
     CommonModule,
   ],
   templateUrl: './meal.component.html',
