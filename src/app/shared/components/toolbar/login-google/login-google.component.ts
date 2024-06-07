@@ -8,11 +8,11 @@ import {
 } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { Subscription, tap } from 'rxjs';
+import { RoleGuest } from '../../../constants/role.constant';
+import { AuthGoogleRequest } from '../../../model/payload/request/auth-google-request.model';
 import { UserGoogleRequest } from '../../../model/payload/request/user-google-request.model';
 import { UserResponse } from '../../../model/payload/response/user-reponse.model';
 import { AuthService } from '../../../services/auth.service';
-import { AuthGoogleRequest } from '../../../model/payload/request/auth-google-request.model';
-import { RoleGuest } from '../../../constants/role.constant';
 
 declare var google: any;
 

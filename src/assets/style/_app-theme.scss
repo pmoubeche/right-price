@@ -1,17 +1,18 @@
-@use 'sass:map';
+@use "sass:map";
 
-@use '@angular/material' as material;
+@use "@angular/material" as material;
 
-@use 'app-palettes' as palettes;
+@use "app-palettes" as palettes;
 
-@use 'mat-dialog-theme' as mat-dialog;
-@use 'mat-form-field-theme' as mat-form-field;
-@use 'mat-icon-theme' as mat-icon;
-@use 'mat-paginator-theme' as mat-paginator;
-@use 'mat-slide-toggle-theme' as mat-slide-toggle;
-@use 'mat-snackbar-theme' as mat-snackbar;
-@use 'mat-radio-button-theme' as mat-radio-button;
-@use 'mat-select-theme' as mat-select;
+@use "mat-dialog-theme" as mat-dialog;
+@use "mat-form-field-theme" as mat-form-field;
+@use "mat-icon-theme" as mat-icon;
+@use "mat-paginator-theme" as mat-paginator;
+@use "mat-slide-toggle-theme" as mat-slide-toggle;
+@use "mat-snackbar-theme" as mat-snackbar;
+@use "mat-radio-button-theme" as mat-radio-button;
+@use "mat-select-theme" as mat-select;
+@use "mat-expansion-panel-theme" as mat-expansion-panel;
 
 /// Mixin qui permet d'appliquer le thème de l'application
 @mixin theme() {
@@ -174,4 +175,5 @@
   @include mat-snackbar.theme($theme);
   @include mat-radio-button.theme($theme);
   @include mat-select.theme($theme);
+  @include mat-expansion-panel.theme($theme);
 }

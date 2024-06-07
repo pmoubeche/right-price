@@ -108,11 +108,6 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
 
   optionsBar: ChartOptions = {
     indexAxis: 'y',
-    elements: {
-      bar: {
-        borderWidth: 2,
-      },
-    },
     responsive: true,
     scales: {
       x: {
@@ -279,9 +274,12 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         data: [value],
         fill: true,
         backgroundColor: ['#7fc8c9'],
-        borderColor: ['#056560'],
-        borderWidth: 2,
-        // borderRadius: 15,
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
         borderSkipped: false,
       };
 
@@ -290,9 +288,12 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         data: [nutrimentChartMapLunch.get(key)!],
         fill: true,
         backgroundColor: ['#4c7ed0'],
-        borderColor: ['#21428d'],
-        borderWidth: 2,
-        // borderRadius: 15,
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
         borderSkipped: false,
       };
 
@@ -301,9 +302,12 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         data: [nutrimentChartMapDinner.get(key)!],
         fill: true,
         backgroundColor: ['#ffc30f'],
-        borderColor: ['#ec6000'],
-        borderWidth: 2,
-        // borderRadius: 15,
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
         borderSkipped: false,
       };
 
@@ -320,9 +324,12 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         ],
         fill: true,
         backgroundColor: ['#f1f1f1'],
-        borderColor: ['#9e9e9e'],
-        borderWidth: 2,
-        // borderRadius: 15,
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
         borderSkipped: false,
       };
 

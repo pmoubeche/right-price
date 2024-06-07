@@ -13,7 +13,7 @@ import {
   DialogGenericService,
 } from '../../../shared/components/dialogs/dialog-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
-import { User } from '../../../shared/model/user.model';
+import { UserModel } from '../../../shared/model/user.model';
 import { ContextService } from '../../../shared/services/context.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { UserService } from '../../../shared/services/user.service';
@@ -32,7 +32,7 @@ export class AccountEditComponent implements OnInit {
 
   currentUserId?: string;
 
-  @Input() set user(user: User) {
+  @Input() set user(user: UserModel) {
     if (user) {
       this._user = user;
       this.initForm();
@@ -43,7 +43,7 @@ export class AccountEditComponent implements OnInit {
     return this._user!;
   }
 
-  private _user = new User();
+  private _user = new UserModel();
   passwordChangeForm!: FormGroup;
 
   subscription = new Subscription();
@@ -122,7 +122,21 @@ export class AccountEditComponent implements OnInit {
   }
 
   openPopInDeleteAccount(): void {
-    this.dialogService.openDialog(CodeModaleEnum.DELETE_ACCOUNT);
+    const dialRef = this.dialogService.openDialog(
+      CodeModaleEnum.DELETE_ACCOUNT
+    );
+
+    this.subscription.add(
+      dialRef
+        .afterClosed()
+        .pipe(
+          tap(() => {
+            this.userService.logOut();
+            this.snackbarService.show('Votre compte a été supprimé !');
+          })
+        )
+        .subscribe()
+    );
   }
 
   deleteAccount(): void {
@@ -133,8 +147,10 @@ export class AccountEditComponent implements OnInit {
           switchMap((userRes) =>
             this.userService.deleteAccount(userRes?.id!).pipe(
               tap(() => {
-                this.dialogService.close(CodeModaleEnum.DELETE_ACCOUNT);
-                this.snackbarService.show('Votre compte a été supprimé !');
+                this.dialogService.close(
+                  CodeModaleEnum.DELETE_ACCOUNT,
+                  userRes
+                );
               })
             )
           )

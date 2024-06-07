@@ -1,4 +1,7 @@
-<mat-expansion-panel [expanded]="isExpandedBreakfast">
+<mat-expansion-panel
+  class="meal-breakfast-panel"
+  [expanded]="isExpandedBreakfast"
+>
   <mat-expansion-panel-header>
     <mat-panel-title> Petit déjeuner </mat-panel-title>
   </mat-expansion-panel-header>
@@ -14,7 +17,7 @@
   ></app-table-generic>
 </mat-expansion-panel>
 <br />
-<mat-expansion-panel [expanded]="isExpandedLunch">
+<mat-expansion-panel class="meal-lunch-panel" [expanded]="isExpandedLunch">
   <mat-expansion-panel-header>
     <mat-panel-title> Déjeuner </mat-panel-title>
   </mat-expansion-panel-header>
@@ -30,7 +33,7 @@
   ></app-table-generic>
 </mat-expansion-panel>
 <br />
-<mat-expansion-panel [expanded]="isExpandedDinner">
+<mat-expansion-panel class="meal-dinner-panel" [expanded]="isExpandedDinner">
   <mat-expansion-panel-header>
     <mat-panel-title> Diner </mat-panel-title>
   </mat-expansion-panel-header>

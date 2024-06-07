@@ -3,11 +3,11 @@ import { CompareProductsComponent } from './features/compare-products/compare-pr
 import { HomeComponent } from './features/home/home.component';
 import { MealComponent } from './features/meal/meal.component';
 import { ProductComponent } from './features/product/product.component';
-import { requireAnyRole } from './shared/guard/role.guard';
-import { RoleAdmin, RoleTier1 } from './shared/constants/role.constant';
 import { SettingsComponent } from './features/settings/settings.component';
-import { ProfilEditComponent } from './features/settings/profil-edit/profil-edit.component';
 import { UserAdminstrationComponent } from './features/user-adminstration/user-adminstration.component';
+import { RoleAdmin, RoleTier1 } from './shared/constants/role.constant';
+import { requireAnyRole } from './shared/guard/role.guard';
+import { UserEditComponent } from './features/user-adminstration/user-edit/user-edit.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +34,12 @@ export const routes: Routes = [
   {
     path: 'administration',
     component: UserAdminstrationComponent,
+    canActivate: [requireAnyRole(RoleAdmin)],
+  },
+  {
+    path: 'user-edit/:id',
+    component: UserEditComponent,
+    canActivate: [requireAnyRole(RoleAdmin)],
   },
   {
     path: '',

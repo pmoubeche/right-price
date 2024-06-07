@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Page, PageRequest } from '../page';
 import { UserService } from '../../../services/user.service';
-import { User } from '../../../model/user.model';
+import { UserModel } from '../../../model/user.model';
 import { UserFilterModel } from '../../../model/payload/request/user-filter.model';
 import { GetUsersModelResponse } from '../response/get-users-model-response.model';
 
@@ -14,9 +14,9 @@ export class SearchUserService {
   constructor(private readonly userService: UserService) {}
 
   page(
-    request: PageRequest<User>,
+    request: PageRequest<UserModel>,
     userFilterModel: UserFilterModel
-  ): Observable<Page<User>> {
+  ): Observable<Page<UserModel>> {
     return this.userService
       .getUsers(
         request.page,
