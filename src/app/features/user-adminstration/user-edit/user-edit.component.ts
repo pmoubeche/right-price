@@ -1,0 +1,278 @@
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription, tap } from 'rxjs';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../../shared/components/dialogs/dialog-generic.service';
+import {
+  RoleAdmin,
+  RoleGuest,
+  RoleTier1,
+  RoleTier2,
+} from '../../../shared/constants/role.constant';
+import { MaterialModule } from '../../../shared/material/material.module';
+import { RoleModel } from '../../../shared/model/role.model';
+import { Gender, UserAdminModel } from '../../../shared/model/user.model';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
+import { UserService } from '../../../shared/services/user.service';
+import { GenderEnum } from '../../settings/profil-edit/profil-edit.component';
+
+@Component({
+  selector: 'app-user-edit',
+  standalone: true,
+  imports: [MaterialModule, CommonModule, ReactiveFormsModule, FormsModule],
+
+  templateUrl: './user-edit.component.html',
+  styleUrl: './user-edit.component.scss',
+})
+export class UserEditComponent {
+  readonly USERNAME_FIELD = 'username';
+  readonly EMAIL_FIELD = 'email';
+  readonly NAME_FIELD = 'name';
+  readonly IMAGE_FIELD = 'image';
+  readonly FIRSTNAME_FIELD = 'firstname';
+  readonly HEIGHT_FIELD = 'height';
+  readonly WEIGHT_FIELD = 'weight';
+  readonly GENDER_FIELD = 'gender';
+  readonly ID_FIELD = 'id';
+  readonly PASSWORD_FIELD = 'password';
+  readonly ROLES_FIELD = 'roles';
+  readonly DATE_CREATION_FIELD = 'dateCreation';
+  readonly ORIGIN_FIELD = 'origin';
+  readonly GOOGLE_ID_FIELD = 'googleId';
+  readonly IS_EMAIL_VERIFIED_FIELD = 'emailVerified';
+  readonly IS_ACTIVE_FIELD = 'isActive';
+
+  genders: Gender[] = [
+    { id: GenderEnum.MALE, label: 'Homme' },
+    { id: GenderEnum.FEMALE, label: 'Femme' },
+    { id: GenderEnum.NON_BINARY, label: 'Non Binaire' },
+  ];
+
+  roles: RoleModel[] = [RoleGuest, RoleTier1, RoleTier2, RoleAdmin];
+
+  userId?: string;
+
+  public user = new UserAdminModel();
+  editProfilForm?: FormGroup;
+  imageUrl?: string;
+
+  subscription = new Subscription();
+
+  get usernameControl(): FormControl {
+    return this.editProfilForm?.get(this.USERNAME_FIELD) as FormControl;
+  }
+
+  get nameControl(): FormControl {
+    return this.editProfilForm?.get(this.NAME_FIELD) as FormControl;
+  }
+
+  get firstnameControl(): FormControl {
+    return this.editProfilForm?.get(this.FIRSTNAME_FIELD) as FormControl;
+  }
+
+  get emailControl(): FormControl {
+    return this.editProfilForm?.get(this.EMAIL_FIELD) as FormControl;
+  }
+
+  get heightControl(): FormControl {
+    return this.editProfilForm?.get(this.HEIGHT_FIELD) as FormControl;
+  }
+
+  get wieghtControl(): FormControl {
+    return this.editProfilForm?.get(this.WEIGHT_FIELD) as FormControl;
+  }
+
+  get genderControl(): FormControl {
+    return this.editProfilForm?.get(this.GENDER_FIELD) as FormControl;
+  }
+
+  get passwordControl(): FormControl {
+    return this.editProfilForm?.get(this.PASSWORD_FIELD) as FormControl;
+  }
+
+  get rolesControl(): FormControl {
+    return this.editProfilForm?.get(this.ROLES_FIELD) as FormControl;
+  }
+
+  get originControl(): FormControl {
+    return this.editProfilForm?.get(this.ORIGIN_FIELD) as FormControl;
+  }
+
+  get dateCreationControl(): FormControl {
+    return this.editProfilForm?.get(this.DATE_CREATION_FIELD) as FormControl;
+  }
+
+  get isActiveControl(): FormControl {
+    return this.editProfilForm?.get(this.IS_ACTIVE_FIELD) as FormControl;
+  }
+
+  get idControl(): FormControl {
+    return this.editProfilForm?.get(this.ID_FIELD) as FormControl;
+  }
+
+  hidePassword = true;
+
+  selectedRolesNames: string[] = [];
+  selectedRolesCodes: string[] = [];
+
+  constructor(
+    private readonly userService: UserService,
+    private readonly formBuilder: FormBuilder,
+    private readonly dialogService: DialogGenericService,
+    private readonly snackBarService: SnackbarService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.userId = this.activatedRoute.snapshot.params['id'];
+    this.getUserFromRoute();
+  }
+
+  getUserFromRoute(): void {
+    this.subscription.add(
+      this.userService
+        .getUserAdminById(this.userId!)
+        .pipe(
+          tap((user) => {
+            this.user = user;
+            this.imageUrl = user.image;
+            this.selectedRolesNames = user.roles!.map((role) => role.name!);
+            this.selectedRolesCodes = user.roles!.map((role) => role.code!);
+            this.initForm();
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  private initForm() {
+    this.editProfilForm = this.formBuilder.group({
+      [this.USERNAME_FIELD]: [
+        this.user.username ? this.user.username : '',
+        [Validators.required],
+      ],
+      [this.EMAIL_FIELD]: [
+        this.user.email ? this.user.email : '',
+        [Validators.required],
+      ],
+      [this.NAME_FIELD]: [this.user.name ? this.user.name : ''],
+      [this.FIRSTNAME_FIELD]: [this.user.firstname ? this.user.firstname : ''],
+      [this.HEIGHT_FIELD]: [this.user.height ? this.user.height : ''],
+      [this.WEIGHT_FIELD]: [this.user.weight ? this.user.weight : ''],
+      [this.GENDER_FIELD]: [this.user.gender ? this.user.gender : ''],
+      [this.PASSWORD_FIELD]: [''],
+      [this.DATE_CREATION_FIELD]: [
+        this.user.dateCreation ? this.user.dateCreation : '',
+        [Validators.required],
+      ],
+      [this.ID_FIELD]: [
+        this.user.id ? { value: this.user.id, disabled: true } : '',
+      ],
+      [this.IS_ACTIVE_FIELD]: [this.user.isActive ? this.user.isActive : ''],
+      [this.ORIGIN_FIELD]: [this.user.origin ? this.user.origin : ''],
+      [this.ROLES_FIELD]: [this.selectedRolesNames, [Validators.required]],
+    });
+
+    this.editProfilForm.valueChanges.subscribe(() => {
+      this.selectedRolesCodes = this.roles
+        .filter((role) => this.selectedRolesNames.includes(role.name!))
+        .map((r) => r.code!);
+    });
+  }
+
+  showPassword(event: MouseEvent) {
+    this.hidePassword = !this.hidePassword;
+    event.stopPropagation();
+  }
+
+  public updateUserAdmin(): void {
+    const userParam: UserAdminModel = {
+      id: this.userId,
+      username: this.usernameControl.value,
+      firstname: this.firstnameControl.value,
+      name: this.nameControl.value,
+      email: this.emailControl.value,
+      image: this.imageUrl,
+      height: this.heightControl.value,
+      weight: this.wieghtControl.value,
+      gender: this.genderControl.value,
+      roles: this.roles.filter((role) =>
+        this.selectedRolesNames.includes(role.name!)
+      ),
+      dateCreation: this.dateCreationControl.value,
+      origin: this.originControl.value,
+      password: this.passwordControl.value,
+      isActive: this.isActiveControl.value,
+    };
+
+    this.subscription.add(
+      this.userService
+        .updateUserByAdmin(userParam)
+        .pipe(
+          tap((userRes) => {
+            this.user = userRes;
+            this.initForm();
+            this.snackBarService.show('Profil modifié avec succès');
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  openPopInAvatar() {
+    const dialogRef = this.dialogService.openDialog(CodeModaleEnum.AVATAR);
+
+    this.subscription.add(
+      dialogRef
+        .afterClosed()
+        .pipe(
+          tap((res) => {
+            this.user.image = res;
+            this.imageUrl = res;
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  isFormValid(): boolean {
+    return (
+      this.dateCreationControl.value &&
+      this.rolesControl.value.length &&
+      this.emailControl.value &&
+      this.usernameControl.value
+    );
+  }
+
+  compareCategoryObjects(object1: any, object2: any) {
+    return object1 && object2 && object1.id == object2.id;
+  }
+
+  comparerParName(objet1: any, objet2: any) {
+    return objet1?.name === objet2?.name;
+  }
+
+  backToAdminstration(): void {
+    this.router.navigate(['administration']);
+  }
+
+  reinitPreviousValue(): void {
+    this.getUserFromRoute();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+}

@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../material/material.module';
 import { SidenavContentComponent } from '../sidenav-content/sidenav-content.component';
 import { RouterLink } from '@angular/router';
 import { ContextService } from '../../services/context.service';
 import { RoleAdmin, RoleTier1 } from '../../constants/role.constant';
+import { MatSidenav } from '@angular/material/sidenav';
+import { SideNavService } from '../../services/sidenav.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -13,7 +15,12 @@ import { RoleAdmin, RoleTier1 } from '../../constants/role.constant';
   styleUrl: './sidenav.component.scss',
 })
 export class SidenavComponent implements OnInit {
-  constructor(private readonly contextService: ContextService) {}
+  @ViewChild('sidenav') public sidenav?: MatSidenav;
+
+  constructor(
+    private readonly contextService: ContextService,
+    private sideNavService: SideNavService
+  ) {}
 
   isAuthorizedMealAccess = false;
 
@@ -22,6 +29,9 @@ export class SidenavComponent implements OnInit {
       this.isAuthorizedMealAccess =
         user?.roles?.map((role) => role.id)[0] === RoleAdmin.id ||
         user?.roles?.map((role) => role.id)[0] === RoleTier1.id;
+    });
+    this.sideNavService.sideNavToggleSubject.subscribe(() => {
+      this.sidenav!.toggle();
     });
   }
 }

@@ -1,22 +1,17 @@
 <mat-sidenav-container class="app-container">
   <mat-sidenav
-    opened="true"
-    disableClose="true"
     #sidenav
+    opened="true"
     mode="side"
     class="app-sidenav"
     aria-label="Sidebar"
   >
-    <mat-nav-list
-      class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800"
-    >
+    <mat-nav-list>
       <mat-list-item
         [routerLink]="['/product']"
         routerLinkActive="router-link-active"
       >
-        <div
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
+        <div>
           <mat-icon> shopping_cart</mat-icon>
           <span>Aliment</span>
         </div>
@@ -26,9 +21,7 @@
         [routerLink]="['/compare']"
         routerLinkActive="router-link-active"
       >
-        <div
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
+        <div>
           <mat-icon> compare_arrows</mat-icon>
           <span>Comparer</span>
         </div>
@@ -38,9 +31,7 @@
         routerLinkActive="router-link-active"
         [disabled]="!isAuthorizedMealAccess"
       >
-        <div
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
+        <div>
           <mat-icon> local_dining</mat-icon>
           <span>Repas</span>
           @if(!isAuthorizedMealAccess){

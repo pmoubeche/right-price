@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -27,8 +27,10 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
-import { User } from '../../shared/model/user.model';
+import { UserModel } from '../../shared/model/user.model';
 import { DateUtils } from '../../shared/utils/date.utils';
+import { UserService } from '../../shared/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-adminstration',
@@ -43,7 +45,7 @@ import { DateUtils } from '../../shared/utils/date.utils';
   templateUrl: './user-adminstration.component.html',
   styleUrl: './user-adminstration.component.scss',
 })
-export class UserAdminstrationComponent implements OnInit {
+export class UserAdminstrationComponent implements OnInit, OnDestroy {
   readonly USERNAME_FIELD = 'username';
   readonly NAME_FIELD = 'name';
   readonly FIRSTNAME_FIELD = 'firstname';
@@ -140,13 +142,19 @@ export class UserAdminstrationComponent implements OnInit {
       label: 'Actif',
       type: ColumnTypeParamEnum.BOOLEAN,
     },
+    {
+      id: '10',
+      label: 'Actions',
+      columDef: ColumnTypeParamEnum.ACTIONS,
+      type: ColumnTypeParamEnum.ACTIONS,
+    },
   ];
 
-  usersPaginated = new PaginatedDataSource<User>();
+  usersPaginated = new PaginatedDataSource<UserModel>();
 
   filterForm?: FormGroup;
 
-  users: User[] = [];
+  users: UserModel[] = [];
 
   get usernameControl(): FormControl {
     return this.filterForm?.get(this.USERNAME_FIELD) as FormControl;
@@ -189,7 +197,9 @@ export class UserAdminstrationComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly tableGenericService: TableGenericService,
-    private readonly userSearchService: SearchUserService
+    private readonly userSearchService: SearchUserService,
+    private readonly userService: UserService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -244,12 +254,12 @@ export class UserAdminstrationComponent implements OnInit {
           ? ''
           : DateUtils.formatDate(this.dateCreationEndControl.value),
       origin: this.originControl.value,
-      isActive: this.statusControl.value,
+      isActive: this.statusControl.value === 'active' ? true : false,
     };
   }
 
   getUsers(userFilter: UserFilterModel, pageIndex = 0, pageSize = 10) {
-    const pageUserRequest: PageRequest<User> = {
+    const pageUserRequest: PageRequest<UserModel> = {
       page: pageIndex,
       size: pageSize,
       sort: { property: 'username', order: 'asc' },
@@ -264,7 +274,7 @@ export class UserAdminstrationComponent implements OnInit {
             this.usersPaginated.pageSize = getUsersResponse.number;
             this.usersPaginated.pageCount = getUsersResponse.size;
             this.usersPaginated.length = getUsersResponse.totalElements;
-            this.usersPaginated!.dataSource = new MatTableDataSource<User>(
+            this.usersPaginated!.dataSource = new MatTableDataSource<UserModel>(
               getUsersResponse.content
             );
             this.tableGenericService.loadingBs.next(false);
@@ -288,5 +298,30 @@ export class UserAdminstrationComponent implements OnInit {
 
   compareCategoryObjects(object1: any, object2: any) {
     return object1 && object2 && object1.id == object2.id;
+  }
+
+  reinitFilters(): void {
+    this.initForm();
+  }
+
+  deleteUser(event: any) {
+    this.subscription.add(
+      this.userService
+        .deleteAccount(event.id)
+        .pipe(
+          tap(() => {
+            this.getUsers(this.setUserFilterModelEmpty());
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  updateUser(event: any) {
+    this.router.navigate(['user-edit/', event.id]);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

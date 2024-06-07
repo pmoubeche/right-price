@@ -1,6 +1,4 @@
-<br />
-
-<mat-expansion-panel [expanded]="true" style="max-width: 99%">
+<mat-expansion-panel [expanded]="true">
   <mat-expansion-panel-header> Recherche</mat-expansion-panel-header>
   <div style="display: flex">
     <div style="width: 20%; display: flex; align-items: center">
@@ -21,7 +19,7 @@
   </div>
 </mat-expansion-panel>
 <br />
-<mat-expansion-panel [expanded]="true" style="max-width: 99%">
+<mat-expansion-panel [expanded]="true">
   <mat-expansion-panel-header> Jour :</mat-expansion-panel-header>
   <form
     [formGroup]="mealProductForm"
@@ -135,7 +133,7 @@
   ></app-table-product-meal>
 
   <app-chart-meal-product
-    style="width: 50%; padding-right: 1rem"
+    style="width: 50%"
     [mealProductsBreakfast]="mealProductsBreakfast"
     [mealProductsLunch]="mealProductsLunch"
     [mealProductsDinner]="mealProductsDinner"

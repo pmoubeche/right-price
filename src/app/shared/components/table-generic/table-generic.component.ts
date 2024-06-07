@@ -74,8 +74,10 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   @Input() isPaginated = true;
   @Input() isClickable = false;
   @Input() pageSizeOptions: number[] = [24];
+  @Input() isEditOnTable = true;
 
   @Output() onDeleteItem = new EventEmitter<T>();
+  @Output() onEditItem = new EventEmitter<T>();
   @Output() onValidateUpdateItem = new EventEmitter<UpdateData>();
   @Output() eventSelectLine = new EventEmitter<T>();
   @Output() eventPageSizeChange = new EventEmitter<number>();
@@ -144,7 +146,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     event.stopPropagation();
   }
 
-  onEditField(line: any, columns: any): void {
+  onEditFieldOnTable(line: any, columns: any): void {
     if (Array.isArray(columns)) {
       columns.forEach((column) => {
         if (column.isEditable) {
@@ -158,6 +160,10 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     this.initForm();
     line.isEditable = true;
     line.isEditable$ = of(line.isEditable);
+  }
+
+  onEdit(event: any) {
+    this.onEditItem.emit(event);
   }
 
   onValidateUpdateField(line: T, event: any): void {

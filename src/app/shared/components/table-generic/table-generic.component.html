@@ -82,10 +82,17 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="onEditField(element, columns)">
+          @if (isEditOnTable) {
+          <button mat-menu-item (click)="onEditFieldOnTable(element, columns)">
             <mat-icon color="primary">edit</mat-icon>
             <span>Modifier</span>
           </button>
+          } @else {
+          <button mat-menu-item (click)="onEdit(element)">
+            <mat-icon color="primary">edit</mat-icon>
+            <span>Modifier</span>
+          </button>
+          }
           <button mat-menu-item (click)="deleteElement(element)">
             <mat-icon color="warn">delete_forever</mat-icon>
             <span>Supprimer</span>

@@ -104,7 +104,7 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
   public loginAndClosePopUp(res: UserResponse): void {
     this.userService.logIn(res);
     this.snackbarService.show('Utilisateur créé avec succes');
-    this.dialogGenericService.close(CodeModaleEnum.SIGNUP);
+    this.dialogGenericService.close(CodeModaleEnum.SIGNUP, res);
   }
 
   ngOnDestroy(): void {

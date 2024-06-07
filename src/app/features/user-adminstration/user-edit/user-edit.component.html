@@ -1,0 +1,255 @@
+<div style="display: flex">
+  <mat-expansion-panel style="width: 25%; margin-right: 1rem" [expanded]="true">
+    <br />
+    <br />
+    <div style="display: grid; justify-items: center">
+      @if(user.image){
+      <img [src]="user.image" style="height: 10rem; border-radius: 5rem" />
+      } @else {
+      <button
+        mat-fab
+        color="accent"
+        [disabled]="true"
+        style="height: 10rem; width: 10rem"
+      >
+        <mat-icon style="height: 5rem; width: 5rem">person</mat-icon>
+      </button>
+      }
+      <button
+        mat-mini-fab
+        color="accent"
+        style="margin-left: 6rem; margin-top: -2rem"
+        (click)="openPopInAvatar()"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <br />
+      <br />
+      <span style="font-size: 24px; font-weight: bold">{{
+        user.username
+      }}</span>
+    </div>
+  </mat-expansion-panel>
+  <mat-divider [vertical]="true"></mat-divider>
+  <mat-expansion-panel
+    style="
+      width: 70%;
+      margin-left: 1rem;
+      align-items: start;
+      align-content: stretch;
+    "
+    [expanded]="true"
+  >
+    <br />
+    <form [formGroup]="editProfilForm!" style="display: flex">
+      <div style="display: grid; padding: 1rem; width: 50%">
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Id</mat-label>
+          <input
+            matInput
+            type="text"
+            [formControlName]="ID_FIELD"
+            [value]="user.id"
+            readonly
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Nom</mat-label>
+          <input
+            matInput
+            type="text"
+            [formControlName]="NAME_FIELD"
+            [value]="user.name"
+            ngDefaultControl
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Prenom</mat-label>
+          <input
+            matInput
+            type="text"
+            [formControlName]="FIRSTNAME_FIELD"
+            [value]="user.firstname"
+            ngDefaultControl
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Nom d'utilisateur</mat-label>
+          <input
+            matInput
+            type="text"
+            [formControlName]="USERNAME_FIELD"
+            [value]="user.username"
+            ngDefaultControl
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="text"
+            [formControlName]="EMAIL_FIELD"
+            [value]="user.email"
+            ngDefaultControl
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Mot de passe</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            [formControlName]="PASSWORD_FIELD"
+            ngDefaultControl
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="showPassword($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          @if(passwordControl.invalid){
+          <mat-error>Champ obligatoire</mat-error>
+          }
+        </mat-form-field>
+        <br />
+        <div style="display: grid">
+          <mat-form-field
+            style="margin-bottom: 0 !important"
+            appearance="outline"
+          >
+            <mat-label>Roles</mat-label>
+            <mat-select
+              [formControlName]="ROLES_FIELD"
+              [(value)]="selectedRolesNames"
+              multiple
+            >
+              @for (role of roles; track $index) {
+              <mat-option [value]="role.name">{{ role.code }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-chip-set>
+            @for (role of selectedRolesCodes; track $index) {
+            <mat-chip [value]="role">{{ role }}</mat-chip>
+            }
+          </mat-chip-set>
+        </div>
+        <br />
+      </div>
+      <mat-divider [vertical]="true"></mat-divider>
+      <div
+        style="
+          display: grid;
+          padding: 1rem;
+          width: 50%;
+          align-items: start;
+          align-content: stretch;
+        "
+      >
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Taille</mat-label>
+          <input
+            matInput
+            type="number"
+            [formControlName]="HEIGHT_FIELD"
+            [value]="user.height"
+            ngDefaultControl
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Poids</mat-label>
+          <input
+            matInput
+            type="number"
+            [formControlName]="WEIGHT_FIELD"
+            [value]="user.name"
+            ngDefaultControl
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Origine</mat-label>
+          <input
+            matInput
+            type="text"
+            [formControlName]="ORIGIN_FIELD"
+            [value]="user.origin"
+            ngDefaultControl
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="outline">
+          <mat-label>Genre</mat-label>
+          <mat-select
+            [formControlName]="GENDER_FIELD"
+            [compareWith]="compareCategoryObjects"
+            [(value)]="user.gender"
+          >
+            <mat-option [value]="null"></mat-option>
+            @for (gender of genders; track $index) {
+            <mat-option [value]="gender.id">{{ gender.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="outline" class="fields">
+          <mat-label>Date de création</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [formControlName]="DATE_CREATION_FIELD"
+            [value]="user.dateCreation"
+            ngDefaultControl
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <br />
+        <mat-checkbox
+          [formControlName]="IS_ACTIVE_FIELD"
+          [checked]="user.isActive"
+          >Actif</mat-checkbox
+        >
+      </div>
+    </form>
+    <br />
+    <div style="display: flex; justify-content: space-around">
+      <button
+        mat-mini-fab
+        extended
+        color="primary"
+        (click)="backToAdminstration()"
+      >
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <button
+        mat-fab
+        extended
+        color="accent"
+        (click)="updateUserAdmin()"
+        [disabled]="!isFormValid()"
+      >
+        <mat-icon>person</mat-icon>
+        Modifier
+      </button>
+      <button mat-fab extended color="primary" (click)="reinitPreviousValue()">
+        <mat-icon>settings_backup_restore</mat-icon>
+        Restaurer valeurs enregistrées
+      </button>
+    </div>
+  </mat-expansion-panel>
+</div>

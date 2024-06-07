@@ -15,15 +15,17 @@
   }
 
   <mat-menu #menu="matMenu">
-    @if (user$ | async) {
+    @if (user$ | async; as user) {
     <button mat-menu-item [routerLink]="'/settings'">
       <label>Parametres</label>
       <mat-icon>settings</mat-icon>
     </button>
+    @if (hasUserAdminRole(user.roles)) {
     <button mat-menu-item [routerLink]="'/administration'">
       <label>Administration</label>
       <mat-icon>people</mat-icon>
     </button>
+    }
     <button mat-menu-item (click)="logOut()">
       <label>Se Deconnecter</label>
       <mat-icon>cancel</mat-icon>

@@ -1,0 +1,19 @@
+@use "app-utils" as utils;
+
+.meal-breakfast-panel {
+  border-color: utils.get-couleur-secondaire();
+  border-width: medium;
+  border-style: solid;
+}
+
+.meal-lunch-panel {
+  border-color: utils.get-couleur-principale();
+  border-width: medium;
+  border-style: solid;
+}
+
+.meal-dinner-panel {
+  border-color: utils.get-couleur-tertiaire();
+  border-width: medium;
+  border-style: solid;
+}

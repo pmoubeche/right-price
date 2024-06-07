@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -16,10 +10,9 @@ import {
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EMPTY, Subscription, catchError, of, tap } from 'rxjs';
 import { MaterialModule } from '../../../material/material.module';
+import { UserResponse } from '../../../model/payload/response/user-reponse.model';
 import { AuthService } from '../../../services/auth.service';
-import { ContextService } from '../../../services/context.service';
 import { SnackbarService } from '../../../services/snackbar.service';
-import { TokenStorageService } from '../../../services/token-storage.service';
 import { UserService } from '../../../services/user.service';
 import { LoginGoogleComponent } from '../../toolbar/login-google/login-google.component';
 import { DialogContentModel } from '../dialog-content.model';
@@ -27,7 +20,6 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { UserResponse } from '../../../model/payload/response/user-reponse.model';
 
 @Component({
   selector: 'app-dialog-signin',
@@ -110,7 +102,7 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
   public loginAndClosePopUp(res: UserResponse): void {
     this.userService.logIn(res);
     this.snackbarService.show('Vous etes connecté');
-    this.dialogGenericService.close(CodeModaleEnum.SINGIN);
+    this.dialogGenericService.close(CodeModaleEnum.SINGIN, res);
   }
 
   ngOnDestroy(): void {

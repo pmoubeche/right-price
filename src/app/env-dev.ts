@@ -17,6 +17,7 @@ export const environment = {
     GET_USER_BY_EMAIL: `${API_SERVER_URL}/user/email`,
     USER: `${API_SERVER_URL}/user`,
     USERS: `${API_SERVER_URL}/users`,
+    USER_BY_ADMIN: `${API_SERVER_URL}/user-by-admin`,
     MODIFY_PASSWORD: `${API_SERVER_URL}/user/update-password`,
     DELETE_ACCOUNT: `${API_SERVER_URL}/user/delete-account`,
   },

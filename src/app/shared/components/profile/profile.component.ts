@@ -15,6 +15,10 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialogs/dialog-generic.service';
+import { Subscription, tap } from 'rxjs';
+import { UserResponse } from '../../model/payload/response/user-reponse.model';
+import { RoleAdmin } from '../../constants/role.constant';
+import { RoleModel } from '../../model/role.model';
 
 @Component({
   selector: 'app-profile',
@@ -31,6 +35,11 @@ import {
 })
 export class ProfileComponent {
   public user$ = this.contextService.getCurrentUser();
+
+  roleAdmin = RoleAdmin;
+
+  public userResponse?: UserResponse;
+  subscription = new Subscription();
 
   constructor(
     private readonly popInService: DialogGenericService,
@@ -59,21 +68,49 @@ export class ProfileComponent {
   };
 
   signIn() {
-    this.popInService.openDialog(
+    const dialRef = this.popInService.openDialog(
       CodeModaleEnum.SINGIN,
       this.dialogParamDataSignin
+    );
+
+    this.subscription.add(
+      dialRef
+        .afterClosed()
+        .pipe(
+          tap((userRes) => {
+            this.userService.logIn(userRes);
+            this.snackbarService.show('Vous etes connecté');
+          })
+        )
+        .subscribe()
     );
   }
 
   signUp() {
-    this.popInService.openDialog(
+    const dialRef = this.popInService.openDialog(
       CodeModaleEnum.SIGNUP,
       this.dialogParamDataSignup
+    );
+
+    this.subscription.add(
+      dialRef
+        .afterClosed()
+        .pipe(
+          tap((userRes) => {
+            this.userService.logIn(userRes);
+            this.snackbarService.show('Vous etes connecté');
+          })
+        )
+        .subscribe()
     );
   }
 
   logOut(): void {
     this.userService.logOut();
     this.snackbarService.show('Vous êtes déconnecté');
+  }
+
+  hasUserAdminRole(roles?: RoleModel[]): boolean {
+    return roles!.find((role) => role.id === RoleAdmin.id) ? true : false;
   }
 }

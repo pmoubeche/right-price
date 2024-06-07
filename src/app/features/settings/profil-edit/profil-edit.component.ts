@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { ContextService } from '../../../shared/services/context.service';
 import { CommonModule } from '@angular/common';
-import { Gender, User } from '../../../shared/model/user.model';
+import { Gender, UserModel } from '../../../shared/model/user.model';
 import {
   FormBuilder,
   FormControl,
@@ -50,7 +50,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
 
   currentUser?: UserResponse | null;
 
-  @Input() set user(user: User) {
+  @Input() set user(user: UserModel) {
     if (user) {
       this._user = user;
       this.imageUrl = user.image;
@@ -62,7 +62,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
     return this._user!;
   }
 
-  private _user = new User();
+  private _user = new UserModel();
   editProfilForm?: FormGroup;
   imageUrl?: string;
 
@@ -139,7 +139,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
   }
 
   public updateUser(): void {
-    const userParam: User = {
+    const userParam: UserModel = {
       id: this.currentUser?.id,
       username: this.usernameControl.value,
       firstname: this.firstnameControl.value,

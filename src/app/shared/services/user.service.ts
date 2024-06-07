@@ -6,12 +6,9 @@ import { environment } from '../../env-dev';
 import { PasswordUpdate } from '../model/payload/request/password-update.model';
 import { UserFilterModel } from '../model/payload/request/user-filter.model';
 import { UserResponse } from '../model/payload/response/user-reponse.model';
-import { User } from '../model/user.model';
+import { UserAdminModel, UserModel } from '../model/user.model';
 import { ContextService } from './context.service';
-import { SnackbarService } from './snackbar.service';
 import { TokenStorageService } from './token-storage.service';
-import { Page, PageRequest } from '../common/paginated/page';
-import { GetUsersModelResponse } from '../common/paginated/response/get-users-model-response.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -25,8 +22,7 @@ export class UserService {
     private http: HttpClient,
     private readonly router: Router,
     private readonly tokenService: TokenStorageService,
-    private readonly contextService: ContextService,
-    private readonly snackbarService: SnackbarService
+    private readonly contextService: ContextService
   ) {}
 
   private toHttpParam(obj: any): HttpParams {
@@ -44,8 +40,12 @@ export class UserService {
     );
   }
 
-  getUserById(id: string): Observable<User> {
+  getUserById(id: string): Observable<UserModel> {
     return this.http.get(environment.API.USER + `/${id}`, httpOptions);
+  }
+
+  getUserAdminById(id: string): Observable<UserAdminModel> {
+    return this.http.get(environment.API.USER_BY_ADMIN + `/${id}`, httpOptions);
   }
 
   getUsers(
@@ -72,8 +72,13 @@ export class UserService {
     });
   }
 
-  updateUser(user: UserResponse): Observable<User> {
+  updateUser(user: UserResponse): Observable<UserModel> {
     return this.http.put(environment.API.USER, user, httpOptions);
+  }
+
+  updateUserByAdmin(user: UserAdminModel): Observable<UserAdminModel> {
+    // const encodedUrl = environment.API.USER_BY_ADMIN.replace('-', '%2D');
+    return this.http.put(environment.API.USER_BY_ADMIN, user, httpOptions);
   }
 
   updatePassword(passwordUpdate: PasswordUpdate): Observable<void> {

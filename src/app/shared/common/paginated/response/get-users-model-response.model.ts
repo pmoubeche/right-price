@@ -1,7 +1,7 @@
-import { User } from '../../../model/user.model';
+import { UserModel } from '../../../model/user.model';
 
 export class GetUsersModelResponse {
-  users?: User[];
+  users?: UserModel[];
   size?: number;
   totalPage?: number;
   number?: number;
