@@ -573,6 +573,10 @@ export class ProductUtils {
     if (Object.keys(nutriment).length > 0) {
       return new Map<string, number>([
         [
+          `${NutrimentsManConst.ENERGY_KJ.label} (${NutrimentsManConst.ENERGY_KJ.unit})`,
+          nutriment['energy-kj_100g']!,
+        ],
+        [
           `${NutrimentsManConst.CALORIES.label} (${NutrimentsManConst.CALORIES.unit})`,
           nutriment['energy-kcal_100g']!,
         ],
@@ -581,8 +585,16 @@ export class ProductUtils {
           nutriment['fat_100g']!,
         ],
         [
+          `${NutrimentsManConst.SATURATED_FAT.label} (${NutrimentsManConst.SATURATED_FAT.unit})`,
+          nutriment['saturated-fat_100g']!,
+        ],
+        [
           `${NutrimentsManConst.GLUCIDES.label} (${NutrimentsManConst.GLUCIDES.unit})`,
           nutriment['carbohydrates_100g']!,
+        ],
+        [
+          `${NutrimentsManConst.SUGARS.label} (${NutrimentsManConst.SUGARS.unit})`,
+          nutriment['sugars_100g']!,
         ],
         [
           `${NutrimentsManConst.PROTEINES.label} (${NutrimentsManConst.PROTEINES.unit})`,

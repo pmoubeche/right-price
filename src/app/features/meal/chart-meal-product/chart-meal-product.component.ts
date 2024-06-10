@@ -140,10 +140,13 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
     mealType: 'breakfast' | 'lunch' | 'dinner'
   ) {
     const nutrimentList = [
+      'energy-kj_100g',
       'energy-kcal_100g',
       'carbohydrates_100g',
+      'sugars_100g',
       'proteins_100g',
       'fat_100g',
+      'saturated-fat_100g',
       'fiber_100g',
       'salt_100g',
     ];
@@ -201,10 +204,13 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
     value: number,
     mealType: 'breakfast' | 'lunch' | 'dinner'
   ): void {
+    nutriments['energy-kj_100g'] = value;
     nutriments['energy-kcal_100g'] = value;
     nutriments['carbohydrates_100g'] = value;
+    nutriments['sugars_100g'] = value;
     nutriments['proteins_100g'] = value;
     nutriments['fat_100g'] = value;
+    nutriments['saturated-fat_100g'] = value;
     nutriments['fiber_100g'] = value;
     nutriments['salt_100g'] = value;
 

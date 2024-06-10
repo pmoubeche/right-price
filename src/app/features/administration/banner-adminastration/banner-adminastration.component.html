@@ -1,0 +1,89 @@
+<div style="display: flex; justify-content: end">
+  <button
+    mat-fab
+    extended
+    color="accent"
+    style="display: flex; justify-content: end"
+    (click)="createBanner()"
+  >
+    <mat-icon>library_add</mat-icon>
+    Créer une bannière
+  </button>
+</div>
+<br />
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header>
+    Filtres de recherche de bannières
+  </mat-expansion-panel-header>
+  <form
+    [formGroup]="filterForm!"
+    style="display: flex; justify-content: space-evenly; flex-wrap: wrap"
+  >
+    <mat-form-field class="fields" appearance="outline">
+      <mat-label>Message</mat-label>
+      <input matInput type="text" [formControlName]="MESSAGE_FIELD" />
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline">
+      <mat-label>Plage de dates</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate [formControlName]="DATE_CREATION_START_FIELD" />
+        <input matEndDate [formControlName]="DATE_CREATION_END_FIELD" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline">
+      <mat-label>Statut</mat-label>
+      <mat-select
+        [formControlName]="TYPE_FIELD"
+        [compareWith]="compareCategoryObjects"
+        ngDefaultControl
+      >
+        @for (option of typesCodeLabels; track $index) {
+        <mat-option [value]="option.code">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline">
+      <mat-label>Statut</mat-label>
+      <mat-select
+        [formControlName]="STATUS_BANNER_FIELD"
+        [compareWith]="compareCategoryObjects"
+        ngDefaultControl
+      >
+        @for (option of statusCodeLabels; track $index) {
+        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button mat-fab extended color="accent" (click)="search()">
+      <mat-icon>search</mat-icon>
+      Rechercher
+    </button>
+    <button mat-fab extended color="primary" (click)="reinitFilters()">
+      <mat-icon>settings_backup_restore</mat-icon>
+      Reinitialiser les filtres
+    </button>
+  </form>
+</mat-expansion-panel>
+<br />
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header
+    >Resultats de la recherche</mat-expansion-panel-header
+  >
+  <app-table-generic
+    [isPaginated]="true"
+    [columns]="paramsColums"
+    [paginatedDataSource]="bannersPaginated!"
+    [isEditOnTable]="false"
+    [pageSizeOptions]="[10, 20, 50]"
+    (eventPageSizeChange)="changePageSize($event)"
+    (eventPageIndexChange)="changePageIndex($event)"
+    (onDeleteItem)="deleteBanner($event)"
+    (onEditItem)="updateBanner($event)"
+    [rowHeight]="'4rem'"
+  ></app-table-generic>
+</mat-expansion-panel>

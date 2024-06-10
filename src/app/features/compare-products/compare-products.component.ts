@@ -8,7 +8,11 @@ import { CardResultGenericComponent } from '../../shared/components/card-result-
 import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../shared/material/material.module';
 import { ProductInfosModel } from '../../shared/model/product-attribute-displayed.model';
-import { Product, ResponseProducts } from '../../shared/model/product.model';
+import {
+  Nutriments,
+  Product,
+  ResponseProducts,
+} from '../../shared/model/product.model';
 import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
@@ -18,6 +22,9 @@ import { DragAndDropService } from '../../shared/services/drag-and-drop.service'
 import { ProductUtils } from '../../shared/utils/product.utils';
 import { NutrimentInfoModel } from '../product/detail-product/detail-product.component';
 import { SearchProductComponent } from '../product/search-product/search-product.component';
+import { ChartComponent } from '../../shared/components/chart/chart.component';
+import { ChartUtils } from '../../shared/components/chart/chart.utils';
+import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 
 export class PercentCompareModel {
   id?: string;
@@ -42,6 +49,7 @@ export class PercentCompareModelNumber {
     CommonModule,
     CdkDropList,
     CdkDrag,
+    ChartComponent,
   ],
   templateUrl: './compare-products.component.html',
   styleUrl: './compare-products.component.scss',
@@ -60,6 +68,12 @@ export class CompareProductsComponent implements OnInit {
     );
     this.compareDataSources.dataSource =
       new MatTableDataSource<PercentCompareModelNumber>(this.percentCompare);
+    if (productA.id !== this.productB.id) {
+      this.setNutrimentsChartsBarsData(
+        productA.nutriments!,
+        this.productB.nutriments!
+      );
+    }
   }
 
   get productA() {
@@ -79,6 +93,12 @@ export class CompareProductsComponent implements OnInit {
     );
     this.compareDataSources.dataSource =
       new MatTableDataSource<PercentCompareModelNumber>(this.percentCompare);
+    if (productB.id !== this.productA.id) {
+      this.setNutrimentsChartsBarsData(
+        this.productA.nutriments!,
+        productB.nutriments!
+      );
+    }
   }
 
   get productB() {
@@ -87,7 +107,7 @@ export class CompareProductsComponent implements OnInit {
 
   public macroNutrimentInfoA?: NutrimentInfoModel[] = [];
   public macroNutrimentInfoB?: NutrimentInfoModel[] = [];
-  public percentCompare?: PercentCompareModelNumber[] = [];
+  public percentCompare: PercentCompareModelNumber[] = [];
 
   macroNutrimentsDataSourcesA = new PaginatedDataSource<NutrimentInfoModel>();
   macroNutrimentsDataSourcesB = new PaginatedDataSource<NutrimentInfoModel>();
@@ -122,9 +142,34 @@ export class CompareProductsComponent implements OnInit {
     },
   ];
 
+  optionsBar: ChartOptions = {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    aspectRatio: 1,
+    scales: {
+      x: {
+        display: false,
+        beginAtZero: true,
+        stacked: true,
+        ticks: { format: { style: 'percent' } },
+      },
+      y: { display: false, stacked: true, position: 'left' },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
+
+  dailyRecommanderIncomeChartsBarData?: ChartData[] = [];
+
   constructor(private readonly dragAndDropService: DragAndDropService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    ChartUtils.setChartImports();
+  }
 
   onHttpProductsChange(httpProducts: ResponseProducts): void {
     this.httpProducts = httpProducts;
@@ -151,5 +196,55 @@ export class CompareProductsComponent implements OnInit {
 
   setInfoFromResponseProduct(product: Product): NutrimentInfoModel[] {
     return ProductUtils.setMacroNutrimentsTable(product.nutriments!);
+  }
+
+  setNutrimentsChartsBarsData(
+    nutrimentProductA: Nutriments,
+    nutrimentProductB: Nutriments
+  ): void {
+    let nutrimentChartMapProductA =
+      ProductUtils.setNutrimentChartBarMap(nutrimentProductA);
+
+    let nutrimentChartMapProductB =
+      ProductUtils.setNutrimentChartBarMap(nutrimentProductB);
+
+    nutrimentChartMapProductA.forEach((value: number, key: string) => {
+      const dataSetProductA: ChartDataset = {
+        label: "P'tit déj",
+        data: [value / (value + nutrimentChartMapProductB.get(key)!)],
+        fill: true,
+        backgroundColor: ['#7fc8c9'],
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
+        borderSkipped: false,
+      };
+
+      const dataSetProdutB: ChartDataset = {
+        label: 'Déjeuner',
+        data: [
+          nutrimentChartMapProductB.get(key)! /
+            (value + nutrimentChartMapProductB.get(key)!),
+        ],
+        fill: true,
+        backgroundColor: ['#4c7ed0'],
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
+        borderSkipped: false,
+      };
+
+      const chartData: ChartData = {
+        labels: [key],
+        datasets: [dataSetProductA, dataSetProdutB],
+      };
+      this.dailyRecommanderIncomeChartsBarData?.push(chartData);
+    });
   }
 }

@@ -1,0 +1,54 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription, tap } from 'rxjs';
+import {
+  BannerFilterModel,
+  BannerInfoModel,
+  BannerService,
+} from '../../../../generated';
+import { MaterialModule } from '../../material/material.module';
+
+@Component({
+  selector: 'app-banner',
+  standalone: true,
+  imports: [MaterialModule, CommonModule],
+  templateUrl: './banner.component.html',
+  styleUrl: './banner.component.scss',
+})
+export class BannerComponent implements OnInit, OnDestroy {
+  bannerType = 'info' || 'warn';
+  isOpened?: boolean;
+  icon?: string;
+  bannerToDisplay?: BannerInfoModel;
+
+  subscription = new Subscription();
+
+  constructor(private readonly bannerSearchService: BannerService) {}
+
+  ngOnInit(): void {
+    this.getBanner();
+  }
+
+  getBanner() {
+    this.subscription.add(
+      this.bannerSearchService
+        .getDisplayedBanner()
+        .pipe(
+          tap((res) => {
+            this.bannerToDisplay = res;
+            this.isOpened = this.bannerToDisplay.isActive!;
+            this.bannerType = this.bannerToDisplay.type;
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  closeBanner() {
+    this.isOpened = false;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+}

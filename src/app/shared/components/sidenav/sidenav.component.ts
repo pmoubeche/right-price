@@ -31,7 +31,9 @@ export class SidenavComponent implements OnInit {
         user?.roles?.map((role) => role.id)[0] === RoleTier1.id;
     });
     this.sideNavService.sideNavToggleSubject.subscribe(() => {
-      this.sidenav!.toggle();
+      if (this.sidenav) {
+        this.sidenav!.toggle();
+      }
     });
   }
 }

@@ -17,6 +17,7 @@ import { ProductUtils } from '../../../shared/utils/product.utils';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
+import { Router } from '@angular/router';
 
 export class IngredientInfoModel {
   id?: string;
@@ -356,5 +357,16 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
         },
       ],
     };
+  }
+
+  redirectToOpenFoodFacts() {
+    if (this.product?.id) {
+      window.open(
+        `https://fr.openfoodfacts.org/produit/${this.product?.id}`,
+        '_blank'
+      );
+    } else {
+      window.open(`https://fr.openfoodfacts.org`, '_blank');
+    }
   }
 }

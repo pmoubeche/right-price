@@ -1,0 +1,11 @@
+@use "app-utils" as utils;
+
+.banner-info {
+  height: 6rem;
+  background-color: utils.get-couleur-principale();
+}
+
+.banner-warning {
+  height: 6rem;
+  background-color: utils.get-couleur-tertiaire();
+}

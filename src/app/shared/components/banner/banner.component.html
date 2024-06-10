@@ -1,0 +1,26 @@
+<div
+  id="bannerId"
+  [ngClass]="bannerType === 'info' ? 'banner-info' : 'banner-warning'"
+  [style.display]="isOpened ? 'block' : 'none'"
+>
+  <div
+    style="
+      padding: 1.5rem 3rem 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    "
+  >
+    @switch (bannerType) { @case ('info') {
+    <mat-icon style="color: white">info</mat-icon>
+    } @case ('warn') {
+    <mat-icon style="color: white">warning</mat-icon>
+    } }
+    <span style="color: white; font-size: 16px; font-weight: bold">{{
+      bannerToDisplay?.message
+    }}</span>
+    <button mat-icon-button (click)="closeBanner()">
+      <mat-icon style="color: white">close</mat-icon>
+    </button>
+  </div>
+</div>

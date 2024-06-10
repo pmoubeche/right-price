@@ -4,11 +4,17 @@ import { LoginGoogleComponent } from './login-google/login-google.component';
 import { Router } from '@angular/router';
 import { ProfileComponent } from '../profile/profile.component';
 import { SideNavService } from '../../services/sidenav.service';
+import { BannerComponent } from '../banner/banner.component';
 
 @Component({
   selector: 'app-toolbar',
   standalone: true,
-  imports: [MaterialModule, LoginGoogleComponent, ProfileComponent],
+  imports: [
+    MaterialModule,
+    LoginGoogleComponent,
+    ProfileComponent,
+    BannerComponent,
+  ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
