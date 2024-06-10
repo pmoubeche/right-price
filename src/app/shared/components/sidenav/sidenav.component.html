@@ -7,38 +7,47 @@
     aria-label="Sidebar"
   >
     <mat-nav-list>
-      <mat-list-item
+      <a
+        mat-list-item
         [routerLink]="['/product']"
         routerLinkActive="router-link-active"
       >
-        <div>
-          <mat-icon> shopping_cart</mat-icon>
-          <span>Aliment</span>
-        </div>
-      </mat-list-item>
+        <mat-icon matListItemIcon> shopping_cart</mat-icon>
+        <span matListItemTitle>Aliment</span>
+      </a>
 
-      <mat-list-item
+      <a
+        mat-list-item
         [routerLink]="['/compare']"
         routerLinkActive="router-link-active"
       >
-        <div>
-          <mat-icon> compare_arrows</mat-icon>
-          <span>Comparer</span>
-        </div>
-      </mat-list-item>
-      <mat-list-item
+        <mat-icon matListItemIcon> compare_arrows</mat-icon>
+        <span matListItemTitle>Comparer</span>
+      </a>
+      <a
+        mat-list-item
         [routerLink]="['/meal']"
         routerLinkActive="router-link-active"
         [disabled]="!isAuthorizedMealAccess"
       >
-        <div>
-          <mat-icon> local_dining</mat-icon>
-          <span>Repas</span>
-          @if(!isAuthorizedMealAccess){
-          <mat-icon matSuffix>lock</mat-icon>
-          }
-        </div>
-      </mat-list-item>
+        <mat-icon matListItemIcon> local_dining</mat-icon>
+        <span matListItemTitle>Repas</span>
+        @if(!isAuthorizedMealAccess){
+        <mat-icon matListItemIcon matSuffix>lock</mat-icon>
+        }
+      </a>
+      <a
+        mat-list-item
+        [routerLink]="['/grocery-list']"
+        routerLinkActive="router-link-active"
+        [disabled]="!isAuthorizedMealAccess"
+      >
+        <mat-icon matListItemIcon> playlist_add</mat-icon>
+        <span matListItemTitle>Liste de courses</span>
+        @if(!isAuthorizedMealAccess){
+        <mat-icon matListItemIcon matSuffix>lock</mat-icon>
+        }
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <app-sidenav-content></app-sidenav-content>

@@ -24,7 +24,7 @@
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header> Comparatif </mat-expansion-panel-header>
     <div style="display: flex; justify-content: center">
-      <mat-card style="width: 32%; margin: 0.5rem">
+      <mat-card class="productA-panel" style="width: 32%; margin: 0.5rem">
         <mat-card-header style="display: flex; padding: 1rem">
           <mat-card-title>Produit A</mat-card-title>
         </mat-card-header>
@@ -111,18 +111,33 @@
           >
           </mat-card>
         </div>
-        <mat-card-actions>
+        <mat-card-actions style="display: grid">
           <app-table-generic
-            style="width: 100%"
+            style="width: 100%; margin-top: 0.3rem"
             [columns]="columnParamsCompare"
-            [paginatedDataSource]="compareDataSources"
             [isPaginated]="false"
             [isRowCentered]="true"
             [rowHeight]="'3.25rem'"
           ></app-table-generic>
+          @for(chartData of dailyRecommanderIncomeChartsBarData; track $index){
+          <div style="margin: 0.17rem">
+            <app-chart
+              type="bar"
+              [data]="chartData!"
+              [options]="optionsBar"
+              [height]="30"
+            ></app-chart>
+            <span style="display: flex; justify-content: center">{{
+              percentCompare[$index].percent! | percent
+            }}</span>
+            @if(dailyRecommanderIncomeChartsBarData?.length! -1 !== $index){
+            <mat-divider></mat-divider>
+            }
+          </div>
+          }
         </mat-card-actions>
       </mat-card>
-      <mat-card style="width: 32%; margin: 0.5rem">
+      <mat-card class="productB-panel" style="width: 32%; margin: 0.5rem">
         <mat-card-header style="display: flex; padding: 1rem">
           <mat-card-title>Produit B</mat-card-title>
         </mat-card-header>

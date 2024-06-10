@@ -31,15 +31,23 @@ export const MicroNutrimentsConst = {
 };
 
 export const NutrimentsManConst = {
+  ENERGY_KJ: { label: 'Joules', value: 2500 * 4.13, unit: 'kJ' },
   CALORIES: { label: 'Calories', value: 2500, unit: 'kcal' },
   LIPIDES: { label: 'Lipides', value: 84, unit: 'g' },
+  SATURATED_FAT: { label: 'Acides gras saturés', value: 26, unit: 'g' },
   GLUCIDES: { label: 'Glucides', value: 312, unit: 'g' },
+  SUGARS: { label: 'Sucres', value: 25, unit: 'g' },
   PROTEINES: { label: 'Protéines', value: 124, unit: 'g' },
   FIBERS: { label: 'Fibres', value: 30, unit: 'g' },
   SALT: { label: 'Sel', value: 5, unit: 'g' },
 };
 
 export const NutrimentsWomanConst = {
+  ENERGY_KJ: {
+    label: NutrimentsManConst.ENERGY_KJ.label,
+    value: NutrimentsManConst.ENERGY_KJ.value * 0.8,
+    unit: NutrimentsManConst.ENERGY_KJ.unit,
+  },
   CALORIES: {
     label: NutrimentsManConst.CALORIES.label,
     value: NutrimentsManConst.CALORIES.value * 0.8,
@@ -50,10 +58,20 @@ export const NutrimentsWomanConst = {
     value: NutrimentsManConst.LIPIDES.value * 0.8,
     unit: NutrimentsManConst.LIPIDES.unit,
   },
+  SATURATED_FAT: {
+    label: NutrimentsManConst.SATURATED_FAT.label,
+    value: NutrimentsManConst.SATURATED_FAT.value * 0.8,
+    unit: NutrimentsManConst.SATURATED_FAT.unit,
+  },
   GLUCIDES: {
     label: NutrimentsManConst.GLUCIDES.label,
     value: NutrimentsManConst.GLUCIDES.value * 0.8,
     unit: NutrimentsManConst.GLUCIDES.unit,
+  },
+  SUGARS: {
+    label: NutrimentsManConst.SUGARS.label,
+    value: NutrimentsManConst.SUGARS.value * 0.8,
+    unit: NutrimentsManConst.SUGARS.unit,
   },
   PROTEINES: {
     label: NutrimentsManConst.PROTEINES.label,

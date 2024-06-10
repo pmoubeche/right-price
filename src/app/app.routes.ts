@@ -8,6 +8,7 @@ import { UserAdminstrationComponent } from './features/user-adminstration/user-a
 import { RoleAdmin, RoleTier1 } from './shared/constants/role.constant';
 import { requireAnyRole } from './shared/guard/role.guard';
 import { UserEditComponent } from './features/user-adminstration/user-edit/user-edit.component';
+import { AdministrationComponent } from './features/administration/administration.component';
 
 export const routes: Routes = [
   {
@@ -33,7 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'administration',
-    component: UserAdminstrationComponent,
+    component: AdministrationComponent,
     canActivate: [requireAnyRole(RoleAdmin)],
   },
   {

@@ -1,3 +1,5 @@
+@use "app-utils" as utils;
+
 .example-container {
   width: 400px;
   max-width: 100%;
@@ -67,18 +69,6 @@
   top: 33%;
 }
 
-// .example-list::before {
-//   font-family: "arial";
-//   font-weight: bold;
-//   font-size: 14px;
-//   color: darkgrey;
-//   content: "Glissez un produit \000A depuis la liste";
-//   white-space: pre;
-//   position: absolute;
-//   left: 40%;
-//   top: 50%;
-// }
-
 .example-box {
   border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
@@ -113,4 +103,16 @@
 
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.productA-panel {
+  border-color: utils.get-couleur-secondaire();
+  border-width: medium;
+  border-style: solid;
+}
+
+.productB-panel {
+  border-color: utils.get-couleur-principale();
+  border-width: medium;
+  border-style: solid;
 }
