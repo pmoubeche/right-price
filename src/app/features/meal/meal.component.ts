@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -7,7 +13,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subscription, tap } from 'rxjs';
+import { Observable, Subscription, map, tap } from 'rxjs';
 import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
 import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
 import {
@@ -36,6 +42,13 @@ import { SearchProductComponent } from '../product/search-product/search-product
 import { ChartMealProductComponent } from './chart-meal-product/chart-meal-product.component';
 import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
+import {
+  DefaultMatCalendarRangeStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatCalendarCellCssClasses,
+} from '@angular/material/datepicker';
+import { ActivatedRoute } from '@angular/router';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-meal',
@@ -52,6 +65,14 @@ import { TableProductMealComponent } from './table-product-meal/table-product-me
   ],
   templateUrl: './meal.component.html',
   styleUrl: './meal.component.scss',
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: DefaultMatCalendarRangeStrategy,
+    },
+  ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MealComponent implements OnInit, OnDestroy {
   readonly DATE_MEAL_INPUT = 'dateMeal';
@@ -145,12 +166,17 @@ export class MealComponent implements OnInit, OnDestroy {
   @ViewChild('tableProductMealComponent')
   tableProductMealComponent!: TableProductMealComponent;
 
+  dates$: Observable<any> = this.activatedRoute.data.pipe(
+    map((data) => data['dates'])
+  );
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cardsService: CardResultGenericService,
     private readonly mealService: MealService,
     private readonly mealProductApiService: MealProductApiService,
-    private readonly popInService: DialogGenericService
+    private readonly popInService: DialogGenericService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -171,6 +197,24 @@ export class MealComponent implements OnInit, OnDestroy {
       ],
     });
   }
+
+  dateClass = (date: Date): MatCalendarCellCssClasses => {
+    let classApplied = '';
+    this.dates$.subscribe((dates) => {
+      const meDates = dates.map((date: any) => new Date(date));
+      const index = meDates.findIndex(
+        (x: any) =>
+          new Date(x).toLocaleDateString() === date.toLocaleDateString()
+      );
+      if (index > -1) {
+        if (meDates[index]) {
+          classApplied = 'highlight-date';
+        }
+      }
+      return classApplied;
+    });
+    return classApplied;
+  };
 
   onHttpProductsChange(httpProducts: ResponseProducts): void {
     this.httpProducts = httpProducts;
@@ -212,6 +256,7 @@ export class MealComponent implements OnInit, OnDestroy {
       imageProduct: this.productInfoModelSelected?.image,
       nutriscore: this.productInfoModelSelected?.nutriscore,
       quantity: Number.parseFloat(quantity),
+      packagingQuantity: this.productInfoModelSelected?.packagingQuantity,
       mealType: meal?.id,
       date: date,
     };

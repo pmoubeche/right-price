@@ -3,6 +3,8 @@ README.md
 api.module.ts
 api/api.ts
 api/banner.service.ts
+api/meals.service.ts
+api/products.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -10,7 +12,9 @@ index.ts
 model/bannerCreateModel.ts
 model/bannerFilterModel.ts
 model/bannerInfoModel.ts
+model/dateRangeFilter.ts
 model/getBannerResponseModel.ts
+model/mealProductInfoGenModel.ts
 model/models.ts
 param.ts
 variables.ts

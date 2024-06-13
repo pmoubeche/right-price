@@ -35,9 +35,13 @@ export class BannerComponent implements OnInit, OnDestroy {
         .getDisplayedBanner()
         .pipe(
           tap((res) => {
-            this.bannerToDisplay = res;
-            this.isOpened = this.bannerToDisplay.isActive!;
-            this.bannerType = this.bannerToDisplay.type;
+            if (res && res.id) {
+              this.bannerToDisplay = res;
+              this.isOpened = this.bannerToDisplay.isActive!;
+              this.bannerType = this.bannerToDisplay.type;
+            } else {
+              this.isOpened = false;
+            }
           })
         )
         .subscribe()

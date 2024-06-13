@@ -14,6 +14,7 @@ import { PercentFormatPipe } from './shared/pipes/percent-format.pipe';
 import { RoundNumberDecimalPipe } from './shared/pipes/round-number-decimal.pipe';
 import { UppercaseFirstLetterFormatPipe } from './shared/pipes/uppercase-first-letter-format.pipe';
 import { OpenFoodFactsApiService } from './shared/services/openfoodfact-api.service';
+import { DefaultMatCalendarRangeStrategy } from '@angular/material/datepicker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,5 +26,6 @@ export const appConfig: ApplicationConfig = {
     RoundNumberDecimalPipe,
     UppercaseFirstLetterFormatPipe,
     OpenFoodFactsApiService,
+    DefaultMatCalendarRangeStrategy,
   ],
 };

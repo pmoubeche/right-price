@@ -1,0 +1,50 @@
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header>
+    Faire ma liste de courses
+  </mat-expansion-panel-header>
+  <div style="display: flex">
+    <div style="padding: 1rem">
+      <mat-card style="width: 300px">
+        <mat-calendar
+          (selectedChange)="_onSelectedChange($event!)"
+          [selected]="selectedDateRange!"
+          [dateClass]="dateClass"
+        >
+        </mat-calendar>
+      </mat-card>
+      <br />
+      <button
+        mat-flat-button
+        color="accent"
+        style="border-radius: 20px"
+        (click)="doGroceryList()"
+      >
+        <span>Faire ma liste de courses</span>
+        <mat-icon>playlist_add</mat-icon>
+      </button>
+    </div>
+    <mat-divider [vertical]="true"></mat-divider>
+    <div style="padding: 1rem; width: 100%">
+      <app-table-generic
+        [columns]="paramsColums"
+        [paginatedDataSource]="productInfosPaginated"
+        [isPaginated]="false"
+        rowHeight="4rem"
+      ></app-table-generic>
+      @if(isNoResultMessageDisplayed){
+      <br />
+      <br />
+      <br />
+      <br />
+      <div style="display: flex; justify-content: center">
+        <span
+          ><b
+            >Sélectionner une plage de dates dans lequel des repas ont été
+            renseignés avant de faire votre liste</b
+          ></span
+        >
+      </div>
+      }
+    </div>
+  </div>
+</mat-expansion-panel>
