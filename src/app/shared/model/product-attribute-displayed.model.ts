@@ -4,6 +4,7 @@ export class ProductInfosModel {
   id?: string;
   image?: string;
   label?: string;
+  packagingQuantity?: number;
   nutriscore?: string;
   ecoscore?: string;
   novagroup?: string;
@@ -15,6 +16,7 @@ export class MealProductInfoModel {
   labelProduct?: string;
   nutriscore?: string;
   quantity?: number;
+  packagingQuantity?: number;
   mealId?: string;
   mealType?: string;
   idLProductMeal?: string;
@@ -30,6 +32,7 @@ export class MealProductParam {
   imageProduct?: string;
   nutriscore?: string;
   quantity?: number;
+  packagingQuantity?: number;
   mealType?: string;
   date?: string;
 }

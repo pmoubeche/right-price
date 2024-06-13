@@ -17,3 +17,9 @@
   border-width: thin;
   margin-top: 0.4rem;
 }
+
+.highlight-date {
+  background-color: utils.get-couleur-secondaire() !important;
+  opacity: 50%;
+  border-radius: 3rem;
+}

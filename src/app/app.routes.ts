@@ -4,11 +4,12 @@ import { HomeComponent } from './features/home/home.component';
 import { MealComponent } from './features/meal/meal.component';
 import { ProductComponent } from './features/product/product.component';
 import { SettingsComponent } from './features/settings/settings.component';
-import { UserAdminstrationComponent } from './features/user-adminstration/user-adminstration.component';
 import { RoleAdmin, RoleTier1 } from './shared/constants/role.constant';
 import { requireAnyRole } from './shared/guard/role.guard';
 import { UserEditComponent } from './features/user-adminstration/user-edit/user-edit.component';
 import { AdministrationComponent } from './features/administration/administration.component';
+import { GroceryListComponent } from './features/grocery-list/grocery-list.component';
+import { getListDatesWhereMealsResolver } from './shared/routes/grocery-list-resolver.service';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,13 @@ export const routes: Routes = [
     path: 'meal',
     component: MealComponent,
     canActivate: [requireAnyRole(RoleTier1, RoleAdmin)],
+    resolve: { dates: getListDatesWhereMealsResolver },
+  },
+  {
+    path: 'grocery',
+    component: GroceryListComponent,
+    canActivate: [requireAnyRole(RoleTier1, RoleAdmin)],
+    resolve: { dates: getListDatesWhereMealsResolver },
   },
   {
     path: 'compare',

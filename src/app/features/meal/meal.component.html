@@ -1,14 +1,24 @@
 <mat-expansion-panel [expanded]="true">
   <mat-expansion-panel-header> Recherche</mat-expansion-panel-header>
   <div style="display: flex">
-    <div style="width: 20%; display: flex; align-items: center">
+    <div
+      style="
+        width: 20%;
+        display: flex;
+        align-items: center;
+        padding-right: 1rem;
+      "
+    >
       <app-search-product
         (eventHttpProductsChange)="onHttpProductsChange($event)"
         (eventHttpProductChange)="onHttpProductChange($event)"
         [pageSize]="10"
       ></app-search-product>
     </div>
-    <section style="max-width: 80%; display: flex; overflow: auto">
+    <mat-divider [vertical]="true"></mat-divider>
+    <section
+      style="max-width: 80%; display: flex; overflow: auto; margin-left: 1rem"
+    >
       <app-card-result-generic
         [httpProducts]="httpProducts"
         [isLineDisposal]="true"
@@ -38,7 +48,7 @@
         matIconSuffix
         [for]="picker"
       ></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <mat-datepicker [dateClass]="dateClass" #picker></mat-datepicker>
     </mat-form-field>
     <div style="width: 33%">
       <mat-card

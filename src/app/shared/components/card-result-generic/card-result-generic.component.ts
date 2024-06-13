@@ -104,6 +104,7 @@ export class CardResultGenericComponent implements OnInit {
             ),
             ecoscore: ProductUtils.getUrlEcoscore(productApi.ecoscore_grade!),
             novagroup: ProductUtils.getUrlNovagroup(productApi.nova_group!),
+            packagingQuantity: Number.parseFloat(productApi.product_quantity!),
           } as ProductInfosModel)
       );
     }

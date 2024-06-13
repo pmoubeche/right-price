@@ -10,4 +10,14 @@ export class DateUtils {
       'en'
     );
   }
+
+  /**
+   * Méthode qui permet de ne pas avoir la conversion des -1j par la conversion ISO
+   * @param date : date à convertir
+   */
+  static formatDateMinus1(date: Date): Date {
+    return new Date(
+      date.getTime() + Math.abs(date.getTimezoneOffset() * 60000)
+    );
+  }
 }

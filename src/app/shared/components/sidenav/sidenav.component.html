@@ -30,23 +30,25 @@
         routerLinkActive="router-link-active"
         [disabled]="!isAuthorizedMealAccess"
       >
-        <mat-icon matListItemIcon> local_dining</mat-icon>
-        <span matListItemTitle>Repas</span>
         @if(!isAuthorizedMealAccess){
         <mat-icon matListItemIcon matSuffix>lock</mat-icon>
+        } @else {
+        <mat-icon matListItemIcon> local_dining</mat-icon>
         }
+        <span matListItemTitle>Repas</span>
       </a>
       <a
         mat-list-item
-        [routerLink]="['/grocery-list']"
+        [routerLink]="['/grocery']"
         routerLinkActive="router-link-active"
         [disabled]="!isAuthorizedMealAccess"
       >
-        <mat-icon matListItemIcon> playlist_add</mat-icon>
-        <span matListItemTitle>Liste de courses</span>
         @if(!isAuthorizedMealAccess){
         <mat-icon matListItemIcon matSuffix>lock</mat-icon>
+        } @else {
+        <mat-icon matListItemIcon> playlist_add</mat-icon>
         }
+        <span matListItemTitle>Liste de courses</span>
       </a>
     </mat-nav-list>
   </mat-sidenav>
