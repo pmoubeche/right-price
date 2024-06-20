@@ -10,6 +10,8 @@ import { UserEditComponent } from './features/user-adminstration/user-edit/user-
 import { AdministrationComponent } from './features/administration/administration.component';
 import { GroceryListComponent } from './features/grocery-list/grocery-list.component';
 import { getListDatesWhereMealsResolver } from './shared/routes/grocery-list-resolver.service';
+import { GlucoseMonitoringComponent } from './features/glucose-monitoring/glucose-monitoring.component';
+import { getListDatesWhereCgmResolver } from './shared/routes/cmg-dates-resolver.service';
 
 export const routes: Routes = [
   {
@@ -31,6 +33,16 @@ export const routes: Routes = [
     component: GroceryListComponent,
     canActivate: [requireAnyRole(RoleTier1, RoleAdmin)],
     resolve: { dates: getListDatesWhereMealsResolver },
+  },
+  {
+    path: 'cgm',
+    component: GlucoseMonitoringComponent,
+    canActivate: [requireAnyRole(RoleTier1, RoleAdmin)],
+    resolve: {
+      datesMeals: getListDatesWhereMealsResolver,
+      datesCgm: getListDatesWhereCgmResolver,
+    },
+    // { datesCgm: getListDatesWhereCgmResolver },
   },
   {
     path: 'compare',

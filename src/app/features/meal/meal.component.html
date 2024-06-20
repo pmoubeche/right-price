@@ -35,7 +35,34 @@
     [formGroup]="mealProductForm"
     style="display: flex; align-items: center"
   >
-    <mat-form-field appearance="outline" class="fields">
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        [formControlName]="DATE_MEAL_INPUT"
+        [ngxMatDatetimePicker]="pickerCustomIcon"
+        placeholder="Choose a date"
+        [formControl]="dateControl"
+        (dateChange)="onDateChange($event)"
+      />
+      <ngx-mat-datepicker-toggle
+        matSuffix
+        [for]="pickerCustomIcon"
+      ></ngx-mat-datepicker-toggle>
+      <ngx-mat-datetime-picker
+        #pickerCustomIcon
+        [showSpinners]="false"
+        [showSeconds]="false"
+        [dateClass]="dateClass"
+      >
+        <ngx-mat-datepicker-actions>
+          <button mat-button ngxMatDatepickerCancel>Annuler</button>
+          <button mat-raised-button color="primary" ngxMatDatepickerApply>
+            Appliquer
+          </button>
+        </ngx-mat-datepicker-actions>
+      </ngx-mat-datetime-picker>
+    </mat-form-field>
+    <!-- <mat-form-field appearance="outline" class="fields">
       <mat-label>Choisir une date</mat-label>
       <input
         matInput
@@ -49,7 +76,7 @@
         [for]="picker"
       ></mat-datepicker-toggle>
       <mat-datepicker [dateClass]="dateClass" #picker></mat-datepicker>
-    </mat-form-field>
+    </mat-form-field> -->
     <div style="width: 33%">
       <mat-card
         class="fields"

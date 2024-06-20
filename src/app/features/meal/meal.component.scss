@@ -23,3 +23,14 @@
   opacity: 50%;
   border-radius: 3rem;
 }
+
+::ng-deep {
+  ngx-mat-datepicker-content {
+    background-color: white !important;
+    position: absolute;
+  }
+
+  mat-icon {
+    font-family: "Material Icons" !important;
+  }
+}

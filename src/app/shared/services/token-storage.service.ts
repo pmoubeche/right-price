@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { UserResponse } from '../model/payload/response/user-reponse.model';
-import { SnackbarService } from './snackbar.service';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -13,10 +11,7 @@ const USER_KEY = 'auth-user';
 export class TokenStorageService {
   readonly TOKEN_EXPIRATION_MIN = 60;
 
-  constructor(
-    private readonly router: Router,
-    private readonly snackbarService: SnackbarService
-  ) {}
+  constructor() {}
 
   signOut(): void {
     window.sessionStorage.clear();
@@ -54,11 +49,9 @@ export class TokenStorageService {
     return jwtDecode(this.getAccessToken()!).exp! > Date.now();
   }
 
-  public setTokenExpiration() {
+  public setTokenExpiration(callback: () => void) {
     setTimeout(() => {
-      this.signOut();
-      this.router.navigate(['/home']);
-      this.snackbarService.show('Vous avez été déconnecté');
+      callback();
     }, 1000 * 60 * this.TOKEN_EXPIRATION_MIN);
   }
 }

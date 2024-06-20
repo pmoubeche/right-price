@@ -3,6 +3,7 @@
 @use "@angular/material" as mat;
 @use "app-theme";
 @use "normalisation";
+@use "app-utils" as utils;
 
 @include mat.core();
 
@@ -24,4 +25,19 @@ body {
 body {
   margin: 0;
   font-family: "Google Sans", arial, sans-serif;
+}
+
+.mat-datepicker-content {
+  box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024, 0 1px 10px #0000001f;
+  background-color: #fff;
+  color: #000000de;
+}
+
+.mat-calendar-body-selected {
+  background-color: utils.get-couleur-principale();
+  color: #fff;
+}
+
+.mat-calendar-body-cell-content {
+  border: none !important;
 }

@@ -12,7 +12,7 @@ import { RoleGuest } from '../../../constants/role.constant';
 import { AuthGoogleRequest } from '../../../model/payload/request/auth-google-request.model';
 import { UserGoogleRequest } from '../../../model/payload/request/user-google-request.model';
 import { UserResponse } from '../../../model/payload/response/user-reponse.model';
-import { AuthService } from '../../../services/auth.service';
+import { AuthServiceApi } from '../../../services/auth-api.service';
 
 declare var google: any;
 
@@ -31,7 +31,7 @@ export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
 
   subscription = new Subscription();
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthServiceApi) {}
 
   ngAfterViewInit(): void {
     this.initializeGoogleSignIn();

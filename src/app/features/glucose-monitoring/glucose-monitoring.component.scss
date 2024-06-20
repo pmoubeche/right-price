@@ -1,0 +1,13 @@
+@use "app-utils" as utils;
+
+.highlight-date-meals {
+  background-color: utils.get-couleur-secondaire() !important;
+  opacity: 50%;
+  border-radius: 3rem;
+}
+
+.highlight-date-cgm {
+  background-color: utils.get-couleur-tertiaire() !important;
+  opacity: 50%;
+  border-radius: 3rem;
+}

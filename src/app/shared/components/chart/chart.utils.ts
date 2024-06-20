@@ -15,6 +15,8 @@ import {
   PolarAreaController,
   RadarController,
   RadialLinearScale,
+  TimeScale,
+  TimeSeriesScale,
   Title,
   Tooltip,
 } from 'chart.js';
@@ -39,6 +41,8 @@ export class ChartUtils {
       PolarAreaController,
       RadarController,
       RadialLinearScale,
+      TimeScale,
+      TimeSeriesScale,
       Title,
       Tooltip,
       Legend

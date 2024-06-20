@@ -92,17 +92,4 @@ export class UserService {
       .delete(environment.API.DELETE_ACCOUNT + `/${userId}`)
       .pipe(map(() => undefined));
   }
-
-  logIn(userResponse: UserResponse): void {
-    this.tokenService.saveToken(userResponse.accessToken!);
-    this.tokenService.saveUser(userResponse);
-    this.contextService.setCurrentUser(userResponse);
-    this.tokenService.setTokenExpiration();
-  }
-
-  logOut(): void {
-    this.tokenService.signOut();
-    this.contextService.unsetCurrentUser();
-    this.router.navigate(['/home']);
-  }
 }
