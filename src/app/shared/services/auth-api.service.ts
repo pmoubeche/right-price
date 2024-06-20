@@ -21,7 +21,7 @@ export class UserCredentials {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthServiceApi {
   constructor(private http: HttpClient) {}
 
   loginWithEmail(credentials: AuthRequest): Observable<UserResponse> {

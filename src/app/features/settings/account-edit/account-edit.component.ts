@@ -17,6 +17,7 @@ import { UserModel } from '../../../shared/model/user.model';
 import { ContextService } from '../../../shared/services/context.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { UserService } from '../../../shared/services/user.service';
+import { AuthServiceFront } from '../../../shared/services/auth-front.service';
 
 @Component({
   selector: 'app-account-edit',
@@ -69,6 +70,7 @@ export class AccountEditComponent implements OnInit {
     private readonly snackbarService: SnackbarService,
     private readonly userService: UserService,
     private readonly contextService: ContextService,
+    private readonly authServiceFront: AuthServiceFront,
     private readonly dialogService: DialogGenericService
   ) {}
 
@@ -131,7 +133,7 @@ export class AccountEditComponent implements OnInit {
         .afterClosed()
         .pipe(
           tap(() => {
-            this.userService.logOut();
+            this.authServiceFront.logOut();
             this.snackbarService.show('Votre compte a été supprimé !');
           })
         )

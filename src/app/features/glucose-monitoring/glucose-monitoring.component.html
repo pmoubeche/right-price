@@ -1,0 +1,65 @@
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header
+    >Importer des données :</mat-expansion-panel-header
+  >
+  <div style="display: flex">
+    <form [formGroup]="deviceForm">
+      <mat-form-field class="fields" appearance="outline">
+        <mat-label>Appareil</mat-label>
+        <mat-select
+          [formControlName]="DEVICE_FIELD"
+          (selectionChange)="onSelectDevice($event)"
+          required
+        >
+          @for (device of deviceOptions; track $index) {
+          <mat-option [value]="device.code">{{ device.label }}</mat-option>
+          }
+        </mat-select>
+        @if(!deviceForm.get('device')?.value){
+        <mat-error>Champ obligatoire</mat-error>
+        }
+      </mat-form-field>
+    </form>
+    <input
+      #fileUpload
+      hidden="true"
+      type="file"
+      name="cgmImport"
+      accept=".csv"
+      onclick="value=null"
+      (change)="uploadCsvFile($event)"
+    />
+    <button
+      mat-flat-button
+      color="accent"
+      type="submit"
+      style="border-radius: 20px; margin: 0.5rem"
+      (click)="fileUpload.click()"
+    >
+      <span>Importer</span>
+      <mat-icon>upload</mat-icon>
+    </button>
+  </div>
+</mat-expansion-panel>
+<br />
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header>
+    Voir ma glycémie journalière
+  </mat-expansion-panel-header>
+  <div style="display: flex">
+    <div style="padding: 1rem">
+      <mat-card style="width: 300px">
+        <mat-calendar
+          (selectedChange)="onSelectedDate($event!)"
+          [(selected)]="selectedDate!"
+          [dateClass]="dateClass"
+        >
+        </mat-calendar>
+      </mat-card>
+    </div>
+    <mat-divider [vertical]="true"></mat-divider>
+    <div style="padding: 1rem; width: 100%">
+      <app-chart [options]="options" [data]="cgmChartLineData!"></app-chart>
+    </div>
+  </div>
+</mat-expansion-panel>

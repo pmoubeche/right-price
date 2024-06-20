@@ -10,6 +10,7 @@ import { ContextService } from '../../../services/context.service';
 import { SnackbarService } from '../../../services/snackbar.service';
 import { UserService } from '../../../services/user.service';
 import { Subscription, switchMap, tap } from 'rxjs';
+import { AuthServiceFront } from '../../../services/auth-front.service';
 
 @Component({
   selector: 'app-dialog-delete-account',
@@ -43,6 +44,7 @@ export class DialogDeleteAccountComponent implements OnInit {
     private readonly dialogService: DialogGenericService,
     private readonly contextService: ContextService,
     private readonly snackbarService: SnackbarService,
+    private readonly authServiceFront: AuthServiceFront,
     private readonly userService: UserService
   ) {}
 
@@ -60,7 +62,7 @@ export class DialogDeleteAccountComponent implements OnInit {
               tap(() => {
                 this.dialogService.close(CodeModaleEnum.DELETE_ACCOUNT);
                 this.snackbarService.show('Votre compte a été supprimé !');
-                this.userService.logOut();
+                this.authServiceFront.logOut();
               })
             )
           )

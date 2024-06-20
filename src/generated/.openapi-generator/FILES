@@ -3,6 +3,7 @@ README.md
 api.module.ts
 api/api.ts
 api/banner.service.ts
+api/cgmImport.service.ts
 api/meals.service.ts
 api/products.service.ts
 configuration.ts
@@ -12,6 +13,7 @@ index.ts
 model/bannerCreateModel.ts
 model/bannerFilterModel.ts
 model/bannerInfoModel.ts
+model/cgmInfoModel.ts
 model/dateRangeFilter.ts
 model/getBannerResponseModel.ts
 model/mealProductInfoGenModel.ts

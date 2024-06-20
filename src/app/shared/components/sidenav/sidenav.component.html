@@ -50,6 +50,19 @@
         }
         <span matListItemTitle>Liste de courses</span>
       </a>
+      <a
+        mat-list-item
+        [routerLink]="['/cgm']"
+        routerLinkActive="router-link-active"
+        [disabled]="!isAuthorizedMealAccess"
+      >
+        @if(!isAuthorizedMealAccess){
+        <mat-icon matListItemIcon matSuffix>lock</mat-icon>
+        } @else {
+        <mat-icon matListItemIcon> show_chart</mat-icon>
+        }
+        <span matListItemTitle>Glycémie</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <app-sidenav-content></app-sidenav-content>

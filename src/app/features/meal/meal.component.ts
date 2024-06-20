@@ -49,6 +49,11 @@ import {
 } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule,
+} from '@angular-material-components/datetime-picker';
 
 @Component({
   selector: 'app-meal',
@@ -62,6 +67,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     CardResultGenericComponent,
     DialogInfoComponent,
     CommonModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule,
   ],
   templateUrl: './meal.component.html',
   styleUrl: './meal.component.scss',
@@ -246,7 +254,7 @@ export class MealComponent implements OnInit, OnDestroy {
   }
 
   addMealProductToResult(): void {
-    let date = DateUtils.formatDate(this.dateControl.value);
+    let date = this.dateControl.value;
     let quantity = this.quantityControl!.value;
     let meal = this.mealSelected;
 

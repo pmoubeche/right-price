@@ -11,16 +11,16 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription, tap } from 'rxjs';
 import { MaterialModule } from '../../../material/material.module';
 import { UserRequest } from '../../../model/payload/request/user-request';
-import { AuthService } from '../../../services/auth.service';
+import { UserResponse } from '../../../model/payload/response/user-reponse.model';
+import { AuthServiceApi } from '../../../services/auth-api.service';
+import { AuthServiceFront } from '../../../services/auth-front.service';
 import { SnackbarService } from '../../../services/snackbar.service';
-import { UserService } from '../../../services/user.service';
 import { LoginGoogleComponent } from '../../toolbar/login-google/login-google.component';
 import { DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { UserResponse } from '../../../model/payload/response/user-reponse.model';
 
 @Component({
   selector: 'app-dialog-signup',
@@ -56,10 +56,10 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
-    private readonly authService: AuthService,
+    private readonly authService: AuthServiceApi,
     private readonly dialogGenericService: DialogGenericService,
     private readonly snackbarService: SnackbarService,
-    private readonly userService: UserService,
+    private readonly authServiceFront: AuthServiceFront,
     private readonly formBuilder: FormBuilder
   ) {}
 
@@ -102,7 +102,7 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
   }
 
   public loginAndClosePopUp(res: UserResponse): void {
-    this.userService.logIn(res);
+    this.authServiceFront.logIn(res);
     this.snackbarService.show('Utilisateur créé avec succes');
     this.dialogGenericService.close(CodeModaleEnum.SIGNUP, res);
   }

@@ -18,6 +18,7 @@ import {
 } from '../../../shared/components/dialogs/dialog-generic.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { UserResponse } from '../../../shared/model/payload/response/user-reponse.model';
+import { AuthServiceFront } from '../../../shared/services/auth-front.service';
 
 export enum GenderEnum {
   MALE = 'male',
@@ -104,6 +105,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
     private readonly userService: UserService,
     private readonly contextService: ContextService,
     private readonly formBuilder: FormBuilder,
+    private readonly authServiceFront: AuthServiceFront,
     private readonly dialogService: DialogGenericService,
     private readonly snackBarService: SnackbarService
   ) {}
@@ -157,7 +159,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
         .pipe(
           tap((userRes) => {
             this.user = userRes;
-            this.userService.logIn(userRes);
+            this.authServiceFront.logIn(userRes);
             this.snackBarService.show('Profil modifié avec succès');
           })
         )
