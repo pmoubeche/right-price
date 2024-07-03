@@ -6,5 +6,6 @@ export class PaginatedDataSource<T> {
   pageCount?: number;
   pageSize?: number;
   dataSource = new MatTableDataSource<T>();
+  footer?: T;
   nextPage?: () => void;
 }

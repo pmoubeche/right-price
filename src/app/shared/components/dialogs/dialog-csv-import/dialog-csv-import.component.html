@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ dialogParamData.title }}</h2>
+<mat-dialog-content class="mat-typography">
+  {{ dialogParamData.message }}
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button
+    mat-button
+    color="warn"
+    (click)="importCsvCgmImportOverrideExistingData()"
+    cdkFocusInitial
+  >
+    <mat-label>Remplacer les données existantes</mat-label>
+    <mat-icon> delete_forever</mat-icon>
+  </button>
+  <button
+    mat-button
+    color="accent"
+    (click)="importCsvCgmImportPreserveExistingData()"
+    cdkFocusInitial
+  >
+    <mat-label>Conserver les données existantes</mat-label>
+    <mat-icon> playlist_add</mat-icon>
+  </button>
+  <button mat-button color="primary" mat-dialog-close cdkFocusInitial>
+    <mat-label>Fermer</mat-label>
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>

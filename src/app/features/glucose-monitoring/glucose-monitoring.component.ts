@@ -14,7 +14,7 @@ import {
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import 'chartjs-adapter-moment';
 import {
   EMPTY,
@@ -23,6 +23,7 @@ import {
   catchError,
   combineLatest,
   map,
+  of,
   switchMap,
   tap,
 } from 'rxjs';
@@ -36,8 +37,24 @@ import { SnackbarService } from '../../shared/services/snackbar.service';
 import { MealProductApiService } from '../../shared/services/meal-product-api.service';
 import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.service';
 import { MealProductInfoModel } from '../../shared/model/product-attribute-displayed.model';
-import { ResponseProducts } from '../../shared/model/product.model';
+import {
+  Nutriments,
+  Product,
+  ResponseProducts,
+} from '../../shared/model/product.model';
 import { ProductUtils } from '../../shared/utils/product.utils';
+import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
+import {
+  ColumnTypeParamEnum,
+  TableColumnParamModel,
+} from '../../shared/model/table-column-param.model';
+import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
+import { MatTableDataSource } from '@angular/material/table';
+import { RoundNumberDecimalPipe } from '../../shared/pipes/round-number-decimal.pipe';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../shared/components/dialogs/dialog-generic.service';
 
 export class CarbsAndSugarsValuesCharts {
   mealType!: string;
@@ -55,6 +72,7 @@ export class CarbsAndSugarsValuesCharts {
     ReactiveFormsModule,
     FormsModule,
     ChartComponent,
+    TableGenericComponent,
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -81,7 +99,73 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
     map((data) => data['datesCgm'])
   );
 
-  options: ChartOptions = {
+  columnParamsMeal: TableColumnParamModel[] = [
+    {
+      id: '1',
+      label: 'Aliment',
+      columDef: 'imageProduct',
+      type: ColumnTypeParamEnum.IMAGE,
+      applyStyleWithImage: true,
+      colWidth: '6rem',
+    },
+    {
+      id: '2',
+      label: 'Libellé',
+      columDef: 'labelProduct',
+      isEditable: false,
+      type: ColumnTypeParamEnum.STRING,
+      colWidth: '6rem',
+    },
+    {
+      id: '3',
+      label: 'Nutriscore',
+      columDef: 'nutriscore',
+      type: ColumnTypeParamEnum.IMAGE,
+      applyStyleWithImage: true,
+      padding: '0 0 0 0',
+    },
+    {
+      id: '4',
+      label: 'Quantité (g)',
+      columDef: 'quantity',
+      type: ColumnTypeParamEnum.NUMBER,
+      colWidth: '6rem',
+      padding: '0 0 0 1rem',
+    },
+  ];
+
+  dataSourceBreakfast = new PaginatedDataSource<MealProductInfoModel>();
+  dataSourceLunch = new PaginatedDataSource<MealProductInfoModel>();
+  dataSourceDinner = new PaginatedDataSource<MealProductInfoModel>();
+
+  nutrimentsBreakfast: Nutriments = new Nutriments();
+  nutrimentsLunch: Nutriments = new Nutriments();
+  nutrimentsDinner: Nutriments = new Nutriments();
+
+  public mealProductsBreakfast: MealProductInfoModel[] = [];
+
+  public mealProductsLunch: MealProductInfoModel[] = [];
+
+  public mealProductsDinner: MealProductInfoModel[] = [];
+
+  optionsBarMeal: ChartOptions = {
+    indexAxis: 'y',
+    responsive: true,
+    scales: {
+      x: {
+        beginAtZero: true,
+        stacked: true,
+      },
+      y: { stacked: true, position: 'right' },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
+
+  optionsCgmChart: ChartOptions = {
     responsive: true,
     scales: {
       x: {
@@ -129,7 +213,13 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
   private cgmInfos: CgmInfoModel[] = [];
 
+  public isMaleReco = true;
+
   private carbsAndSugarsValuesCharts: CarbsAndSugarsValuesCharts[] = [];
+
+  dailyRecommanderIncomeChartsBarDataBreakfast?: ChartData[] = [];
+  dailyRecommanderIncomeChartsBarDataLunch?: ChartData[] = [];
+  dailyRecommanderIncomeChartsBarDataDinner?: ChartData[] = [];
 
   public fileSelected!: File;
   private subscription = new Subscription();
@@ -137,9 +227,11 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cgmImportServiceApi: CgmImportService,
-    private readonly mealSerive: MealProductApiService,
+    private readonly mealService: MealProductApiService,
     private readonly openFoodFactApi: OpenFoodFactsApiService,
     private readonly snackbarService: SnackbarService,
+    private readonly roundNumberPipe: RoundNumberDecimalPipe,
+    private readonly dialogService: DialogGenericService,
     private activatedRoute: ActivatedRoute
   ) {}
 
@@ -156,39 +248,75 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
   dateClass = (date: Date): MatCalendarCellCssClasses => {
     let classApplied = '';
-    this.datesMeals$.subscribe((dates) => {
-      const meDates = dates.map((date: any) => new Date(date));
-      const index = meDates.findIndex(
-        (x: any) =>
-          new Date(x).toLocaleDateString() === date.toLocaleDateString()
-      );
-      if (index > -1) {
-        if (meDates[index]) {
-          classApplied = 'highlight-date-meals';
-        }
-      }
-      return classApplied;
-    });
-    this.datesCgms$.subscribe((dates) => {
-      const meDates = dates.map((date: any) => new Date(date));
-      const index = meDates.findIndex(
-        (x: any) =>
-          new Date(x).toLocaleDateString() === date.toLocaleDateString()
-      );
-      if (index > -1) {
-        if (meDates[index]) {
-          classApplied = 'highlight-date-cgm';
-        }
-      }
-      return classApplied;
-    });
+
+    this.subscription.add(
+      combineLatest([this.datesMeals$, this.datesCgms$])
+        .pipe(
+          tap(([datesMeals, datesCgms]) => {
+            const mealsDates: Date[] = datesMeals.map(
+              (date: any) => new Date(date)
+            );
+            const cgmDates: Date[] = datesCgms.map(
+              (date: any) => new Date(date)
+            );
+            const indexMeals = mealsDates.findIndex(
+              (x: any) =>
+                new Date(x).toLocaleDateString() === date.toLocaleDateString()
+            );
+            const indexCgm = cgmDates.findIndex(
+              (x: any) =>
+                new Date(x).toLocaleDateString() === date.toLocaleDateString()
+            );
+
+            if (indexMeals > -1) {
+              if (mealsDates[indexMeals]) {
+                classApplied = 'highlight-date-meals';
+              }
+            }
+
+            if (indexCgm > -1) {
+              if (cgmDates[indexCgm]) {
+                classApplied = 'highlight-date-cgm';
+              }
+            }
+
+            if (indexMeals > -1 && indexCgm > -1) {
+              if (
+                mealsDates[indexMeals].getDay() === cgmDates[indexCgm].getDay()
+              ) {
+                classApplied = 'highlight-date-cgm-and-meals';
+              }
+            }
+            return classApplied;
+          })
+        )
+        .subscribe()
+    );
+
     return classApplied;
   };
 
   onSelectedDate(date: Date): void {
-    this.carbsAndSugarsValuesCharts = [];
+    this.resetDatasOnChange();
     this.getCgmData(date);
     this.getMealProductsInfos(date);
+  }
+
+  private resetDatasOnChange() {
+    this.carbsAndSugarsValuesCharts = [];
+    this.dailyRecommanderIncomeChartsBarDataBreakfast = [];
+    this.dailyRecommanderIncomeChartsBarDataLunch = [];
+    this.dailyRecommanderIncomeChartsBarDataDinner = [];
+    this.mealProductsBreakfast = [];
+    this.mealProductsLunch = [];
+    this.mealProductsDinner = [];
+
+    this.dataSourceBreakfast.dataSource =
+      new MatTableDataSource<MealProductInfoModel>(this.mealProductsBreakfast);
+    this.dataSourceLunch.dataSource =
+      new MatTableDataSource<MealProductInfoModel>(this.mealProductsLunch);
+    this.dataSourceDinner.dataSource =
+      new MatTableDataSource<MealProductInfoModel>(this.mealProductsDinner);
   }
 
   getCgmData(date: Date): void {
@@ -198,7 +326,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         .pipe(
           tap((res) => {
             this.cgmInfos = res;
-            this.setChartData(res);
+            this.setChartCgmData(res);
           })
         )
         .subscribe()
@@ -207,12 +335,16 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
   getMealProductsInfos(date: Date): void {
     this.subscription.add(
-      this.mealSerive
+      this.mealService
         .getMealProducts(DateUtils.formatDate(date))
         .pipe(
           tap((mealProductsInfos) => {
             if (mealProductsInfos.length > 0) {
               this.getHttpProductsFromOFF(mealProductsInfos);
+              mealProductsInfos.forEach((productInfo) => {
+                this.addProductToRightList(productInfo);
+                productInfo.isEditable = false;
+              });
             }
           })
         )
@@ -243,54 +375,131 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
               'dinner'
             );
 
-            this.setChartData(this.cgmInfos);
+            this.setChartCgmData(this.cgmInfos);
+            this.setNutrimentsMeal(
+              httpProducts,
+              mealProductsInfos,
+              'breakfast'
+            );
+            this.setNutrimentsMeal(httpProducts, mealProductsInfos, 'lunch');
+            this.setNutrimentsMeal(httpProducts, mealProductsInfos, 'dinner');
           })
         )
         .subscribe()
     );
   }
 
-  // onSelectedDate(date: Date): void {
-  //   this.carbsAndSugarsValuesCharts = [];
-  //   this.subscription.add(
-  //     combineLatest([
-  //       this.cgmImportServiceApi.getCgmByDateAndUser(
-  //         DateUtils.formatDate(date)
-  //       ),
-  //       this.mealSerive.getMealProducts(DateUtils.formatDate(date)),
-  //     ])
-  //       .pipe(
-  //         switchMap(([cgmInfos, mealProductInfos]) =>
-  //           this.openFoodFactApi
-  //             .findProductsByBarcodes(
-  //               mealProductInfos.map((info) => info.idProduct!)
-  //             )
-  //             .pipe(
-  //               tap((httpProducts) => {
-  //                 this.setCarbMapForBarChart(
-  //                   mealProductInfos,
-  //                   httpProducts,
-  //                   'breakfast'
-  //                 );
-  //                 this.setCarbMapForBarChart(
-  //                   mealProductInfos,
-  //                   httpProducts,
-  //                   'lunch'
-  //                 );
-  //                 this.setCarbMapForBarChart(
-  //                   mealProductInfos,
-  //                   httpProducts,
-  //                   'dinner'
-  //                 );
+  setNutrimentsMeal(
+    httpProducts: ResponseProducts,
+    mealProducts: MealProductInfoModel[],
+    mealType: 'breakfast' | 'lunch' | 'dinner'
+  ) {
+    const nutrimentList = [
+      'energy-kj_100g',
+      'energy-kcal_100g',
+      'carbohydrates_100g',
+      'sugars_100g',
+      'proteins_100g',
+      'fat_100g',
+      'saturated-fat_100g',
+      'fiber_100g',
+      'salt_100g',
+    ];
 
-  //                 this.setChartData(cgmInfos);
-  //               })
-  //             )
-  //         )
-  //       )
-  //       .subscribe()
-  //   );
-  // }
+    let nutriments: Nutriments = new Nutriments();
+
+    if (httpProducts.products?.length! > 0) {
+      httpProducts.products?.forEach((product) => {
+        product!.nutriments =
+          ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(product!);
+      });
+
+      nutrimentList.forEach((nutAttr) => {
+        let attr = nutAttr as keyof typeof Nutriments;
+        //@ts-ignore
+        nutriments[attr] = this.sumNutrimentsInMeal(
+          nutAttr,
+          httpProducts.products!,
+          mealProducts,
+          mealType
+        );
+      });
+
+      this.setNutrimentToNutrimentList(mealType, nutriments);
+      this.setNutrimentsChartsBarsDataBreakfast(this.nutrimentsBreakfast);
+      this.setNutrimentsChartsBarsDataLunch(this.nutrimentsLunch);
+      this.setNutrimentsChartsBarsDataDinner(this.nutrimentsDinner);
+    }
+  }
+
+  sumNutrimentsInMeal(
+    labelNutriment: string,
+    listProduct: Product[],
+    mealProducts: MealProductInfoModel[],
+    mealType: 'breakfast' | 'lunch' | 'dinner'
+  ): number {
+    if (mealProducts.length === 0) {
+      return 0;
+    }
+
+    let sum = 0;
+
+    mealProducts
+      .filter((mealP) => mealP.mealType === mealType)
+      .forEach((mealProduct) => {
+        let product = listProduct.find(
+          (product) => mealProduct.idProduct === product.id
+        )!;
+        type ObjectKey = keyof typeof product.nutriments;
+        const attr = labelNutriment as ObjectKey;
+        sum += product.nutriments![attr] * (mealProduct?.quantity! / 100);
+      });
+
+    return this.roundNumberPipe.transform(sum, 2);
+  }
+
+  private setNutrimentToNutrimentList(
+    mealType: string,
+    nutriments: Nutriments
+  ) {
+    switch (mealType) {
+      case 'breakfast':
+        this.nutrimentsBreakfast = nutriments;
+        break;
+      case 'lunch':
+        this.nutrimentsLunch = nutriments;
+        break;
+      case 'dinner':
+        this.nutrimentsDinner = nutriments;
+        break;
+      default:
+        break;
+    }
+  }
+
+  addProductToRightList(mealProduct: MealProductInfoModel): void {
+    switch (mealProduct.mealType) {
+      case 'breakfast':
+        this.mealProductsBreakfast.push(mealProduct);
+        this.dataSourceBreakfast.dataSource =
+          new MatTableDataSource<MealProductInfoModel>(
+            this.mealProductsBreakfast
+          );
+        break;
+      case 'lunch':
+        this.mealProductsLunch.push(mealProduct);
+        this.dataSourceLunch.dataSource =
+          new MatTableDataSource<MealProductInfoModel>(this.mealProductsLunch);
+        break;
+      case 'dinner':
+        this.mealProductsDinner.push(mealProduct);
+        this.dataSourceDinner.dataSource =
+          new MatTableDataSource<MealProductInfoModel>(this.mealProductsDinner);
+        break;
+      default:
+        break;
+    }
+  }
 
   setCarbMapForBarChart(
     mealProductInfos: MealProductInfoModel[],
@@ -337,25 +546,43 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
   uploadCsvFile(event: any): void {
     this.fileSelected = event.target.files[0];
+
     this.subscription.add(
       this.cgmImportServiceApi
-        .importGgmFromOrigin(this.deviceSelected, this.fileSelected)
+        .existDataInDbFromCsv(this.fileSelected)
         .pipe(
-          tap(() => {
-            this.snackbarService.show('Import de données effectué avec succès');
-          }),
-          catchError(() => {
-            this.snackbarService.show(
-              "Une erreur est survenue lors de l'import"
-            );
-            return EMPTY;
-          })
+          switchMap((res) =>
+            res
+              ? of(true).pipe(
+                  tap(() =>
+                    this.dialogService.openDialog(CodeModaleEnum.CSV_IMPORT, [
+                      this.fileSelected,
+                      this.deviceSelected,
+                    ])
+                  )
+                )
+              : this.cgmImportServiceApi
+                  .importGgmFromOrigin(this.deviceSelected, this.fileSelected)
+                  .pipe(
+                    tap(() => {
+                      this.snackbarService.show(
+                        'Import de données effectué avec succès'
+                      );
+                    }),
+                    catchError(() => {
+                      this.snackbarService.show(
+                        "Une erreur est survenue lors de l'import"
+                      );
+                      return EMPTY;
+                    })
+                  )
+          )
         )
         .subscribe()
     );
   }
 
-  setChartData(datasCgm: CgmInfoModel[]): void {
+  setChartCgmData(datasCgm: CgmInfoModel[]): void {
     const datasChartLine = datasCgm.map((data) => {
       return {
         x: new Date(data.dateTimestamp).getTime(),
@@ -422,6 +649,134 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         },
       ],
     };
+  }
+
+  setNutrimentsChartsBarsDataBreakfast(nutriments: Nutriments): void {
+    this.dailyRecommanderIncomeChartsBarDataBreakfast = [];
+    let nutrimentChartMapBreakfast =
+      ProductUtils.setNutrimentChartBarMap(nutriments);
+
+    nutrimentChartMapBreakfast.forEach((value: number, key: string) => {
+      const dataSetBreakfast: ChartDataset = {
+        label: "P'tit déj",
+        data: [value],
+        fill: true,
+        backgroundColor: ['#7fc8c9'],
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
+        borderSkipped: false,
+      };
+
+      const dataSetFiller: ChartDataset = {
+        label: 'AJR',
+        data: [
+          ChartUtils.setValueFiller(this.isMaleReco, key, dataSetBreakfast),
+        ],
+        fill: true,
+        backgroundColor: ['#f1f1f1'],
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
+        borderSkipped: false,
+      };
+
+      const chartData: ChartData = {
+        labels: [key],
+        datasets: [dataSetBreakfast, dataSetFiller],
+      };
+      this.dailyRecommanderIncomeChartsBarDataBreakfast?.push(chartData);
+    });
+  }
+
+  setNutrimentsChartsBarsDataLunch(nutriments: Nutriments): void {
+    this.dailyRecommanderIncomeChartsBarDataLunch = [];
+    let nutrimentChartMapLunch =
+      ProductUtils.setNutrimentChartBarMap(nutriments);
+
+    nutrimentChartMapLunch.forEach((value: number, key: string) => {
+      const dataSetLunch: ChartDataset = {
+        label: 'Déjeuner',
+        data: [value],
+        fill: true,
+        backgroundColor: ['#4c7ed0'],
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
+        borderSkipped: false,
+      };
+
+      const dataSetFiller: ChartDataset = {
+        label: 'AJR',
+        data: [ChartUtils.setValueFiller(this.isMaleReco, key, dataSetLunch)],
+        fill: true,
+        backgroundColor: ['#f1f1f1'],
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
+        borderSkipped: false,
+      };
+
+      const chartData: ChartData = {
+        labels: [key],
+        datasets: [dataSetLunch, dataSetFiller],
+      };
+      this.dailyRecommanderIncomeChartsBarDataLunch?.push(chartData);
+    });
+  }
+
+  setNutrimentsChartsBarsDataDinner(nutriments: Nutriments): void {
+    this.dailyRecommanderIncomeChartsBarDataDinner = [];
+    let nutrimentChartMapDinner =
+      ProductUtils.setNutrimentChartBarMap(nutriments);
+
+    nutrimentChartMapDinner.forEach((value: number, key: string) => {
+      const dataSetDinner: ChartDataset = {
+        label: 'Dinner',
+        data: [value],
+        fill: true,
+        backgroundColor: ['#ffc30f'],
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
+        borderSkipped: false,
+      };
+
+      const dataSetFiller: ChartDataset = {
+        label: 'AJR',
+        data: [ChartUtils.setValueFiller(this.isMaleReco, key, dataSetDinner)],
+        fill: true,
+        backgroundColor: ['#f1f1f1'],
+        borderRadius: {
+          topLeft: 15,
+          topRight: 15,
+          bottomLeft: 15,
+          bottomRight: 15,
+        },
+        borderSkipped: false,
+      };
+
+      const chartData: ChartData = {
+        labels: [key],
+        datasets: [dataSetDinner, dataSetFiller],
+      };
+      this.dailyRecommanderIncomeChartsBarDataDinner?.push(chartData);
+    });
   }
 
   ngOnDestroy(): void {

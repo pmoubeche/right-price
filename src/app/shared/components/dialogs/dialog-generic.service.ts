@@ -12,6 +12,7 @@ import { DialogSignupComponent } from './dialog-signup/dialog-signup.component';
 import { DialogDeleteAccountComponent } from './dialog-delete-account/dialog-delete-account.component';
 import { DialogAvatarComponent } from './dialog-avatars/dialog-avatars.component';
 import { DialogBannerEditComponent } from './dialog-banner-edit/dialog-banner-edit.component';
+import { DialogCsvImportComponent } from './dialog-csv-import/dialog-csv-import.component';
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
@@ -20,6 +21,7 @@ export enum CodeModaleEnum {
   DELETE_ACCOUNT = 'deleteAccount',
   AVATAR = 'avatar',
   BANNER = 'banner',
+  CSV_IMPORT = 'csvImport',
 }
 
 export interface ConfigModaleModel {
@@ -55,6 +57,12 @@ export class DialogGenericService {
     {
       code: CodeModaleEnum.DELETE_ACCOUNT,
       composant: DialogDeleteAccountComponent,
+      width: '650px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.CSV_IMPORT,
+      composant: DialogCsvImportComponent,
       width: '650px',
       isUniqueModale: true,
     },

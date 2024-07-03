@@ -35,6 +35,7 @@
       type="submit"
       style="border-radius: 20px; margin: 0.5rem"
       (click)="fileUpload.click()"
+      [disabled]="deviceForm.invalid"
     >
       <span>Importer</span>
       <mat-icon>upload</mat-icon>
@@ -56,10 +57,123 @@
         >
         </mat-calendar>
       </mat-card>
+      <br />
+      <mat-chip-listbox>
+        <div style="display: grid">
+          <mat-chip-option selected selectable="false" color="primary"
+            >Données Repas et Cgm</mat-chip-option
+          >
+          <mat-chip-option selected selectable="false" color="accent"
+            >Données Repas</mat-chip-option
+          >
+          <mat-chip-option selected selectable="false" color="warn"
+            >Données Cgm</mat-chip-option
+          >
+        </div>
+      </mat-chip-listbox>
     </div>
     <mat-divider [vertical]="true"></mat-divider>
     <div style="padding: 1rem; width: 100%">
-      <app-chart [options]="options" [data]="cgmChartLineData!"></app-chart>
+      <app-chart
+        [options]="optionsCgmChart"
+        [data]="cgmChartLineData!"
+      ></app-chart>
     </div>
   </div>
 </mat-expansion-panel>
+<br />
+<div style="display: flex">
+  <mat-expansion-panel
+    style="margin-right: 0.5rem; width: 33%"
+    [expanded]="true"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title> Petit déjeuner </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-table-generic
+      [isPaginated]="false"
+      [isClickable]="false"
+      [columns]="columnParamsMeal"
+      [paginatedDataSource]="dataSourceBreakfast"
+      [rowHeight]="'40px'"
+    ></app-table-generic>
+  </mat-expansion-panel>
+  <br />
+  <mat-expansion-panel
+    style="margin-right: 0.5rem; margin-left: 0.5rem; width: 33%"
+    [expanded]="true"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title> Déjeuner </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-table-generic
+      [isPaginated]="false"
+      [isClickable]="false"
+      [columns]="columnParamsMeal"
+      [paginatedDataSource]="dataSourceLunch"
+      [rowHeight]="'40px'"
+    ></app-table-generic>
+  </mat-expansion-panel>
+  <br />
+  <mat-expansion-panel
+    style="margin-left: 0.5rem; width: 33%"
+    [expanded]="true"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title> Diner </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-table-generic
+      [isPaginated]="false"
+      [columns]="columnParamsMeal"
+      [isClickable]="false"
+      [paginatedDataSource]="dataSourceDinner"
+      [rowHeight]="'40px'"
+    ></app-table-generic>
+  </mat-expansion-panel>
+</div>
+<br />
+<div style="display: flex">
+  <mat-expansion-panel
+    style="margin-right: 0.5rem; width: 33%"
+    [expanded]="true"
+  >
+    <br />
+    @for(chartData of dailyRecommanderIncomeChartsBarDataBreakfast; track
+    $index){
+    <app-chart
+      type="bar"
+      [data]="chartData!"
+      [options]="optionsBarMeal"
+      [height]="30"
+    ></app-chart>
+    }
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    style="margin-right: 0.5rem; margin-left: 0.5rem; width: 33%"
+    [expanded]="true"
+  >
+    <br />
+    @for(chartData of dailyRecommanderIncomeChartsBarDataLunch; track $index){
+    <app-chart
+      type="bar"
+      [data]="chartData!"
+      [options]="optionsBarMeal"
+      [height]="30"
+    ></app-chart>
+    }
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    style="margin-left: 0.5rem; width: 33%"
+    [expanded]="true"
+  >
+    <br />
+    @for(chartData of dailyRecommanderIncomeChartsBarDataDinner; track $index){
+    <app-chart
+      type="bar"
+      [data]="chartData!"
+      [options]="optionsBarMeal"
+      [height]="30"
+    ></app-chart>
+    }
+  </mat-expansion-panel>
+</div>

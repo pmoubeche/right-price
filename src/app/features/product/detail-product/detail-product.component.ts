@@ -1,10 +1,13 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
+import { Subscription, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../../shared/common/paginated/paginated-datasource';
-import { ChartUtils } from '../../../shared/components/chart/chart.utils';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
+import { ChartUtils } from '../../../shared/components/chart/chart.utils';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
+import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { Product, ResponseProduct } from '../../../shared/model/product.model';
 import {
@@ -13,11 +16,8 @@ import {
 } from '../../../shared/model/table-column-param.model';
 import { PercentFormatPipe } from '../../../shared/pipes/percent-format.pipe';
 import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-first-letter-format.pipe';
-import { ProductUtils } from '../../../shared/utils/product.utils';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
-import { Subscription, switchMap, tap } from 'rxjs';
-import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
-import { Router } from '@angular/router';
+import { ProductUtils } from '../../../shared/utils/product.utils';
 
 export class IngredientInfoModel {
   id?: string;
@@ -67,6 +67,10 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     this.ingredientCount = this.product?.ingredients?.length;
     this.ingredientDataSources.dataSource =
       new MatTableDataSource<IngredientInfoModel>(this.ingredientsInfo);
+    this.ingredientDataSources.footer = {
+      ingredient: 'Total',
+      percentage: `${this.ingredientsInfo?.length}`,
+    };
     this.setInfoFromResponseProduct();
 
     this.macroNutrimentsDataSources.dataSource =
@@ -198,22 +202,19 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     private readonly formatPercentPipe: PercentFormatPipe,
     private readonly uppercaseFirstLetter: UppercaseFirstLetterFormatPipe,
     private readonly openFoodFactApiService: OpenFoodFactsApiService,
-    private readonly tableGenericService: TableGenericService
+    private readonly tableGenericService: TableGenericService,
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     ChartUtils.setChartImports();
-
     this.subscription.add(
-      this.tableGenericService.selectItem$
+      this.openFoodFactApiService
+        .findProductByBarCode(this.activatedRoute.snapshot.paramMap.get('id')!)
         .pipe(
-          switchMap((itemId) =>
-            this.openFoodFactApiService.findProductByBarCode(itemId).pipe(
-              tap((httpProduct) => {
-                this.httpProduct = httpProduct;
-              })
-            )
-          )
+          tap((httpProduct) => {
+            this.httpProduct = httpProduct;
+          })
         )
         .subscribe()
     );
@@ -340,9 +341,13 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
           data: Array.from(micronutrimentChartMap.values()),
           fill: true,
           backgroundColor: ['#7fc8c9'],
-          borderColor: ['#056560'],
-          borderWidth: 2,
-          borderRadius: 5,
+          borderRadius: {
+            topLeft: 15,
+            topRight: 15,
+            bottomLeft: 15,
+            bottomRight: 15,
+          },
+          borderSkipped: false,
         },
         {
           label: 'Pourcentage AJR (100%)',
@@ -351,9 +356,13 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
             .map((val) => (val < 0 ? 0 : val)),
           fill: true,
           backgroundColor: ['#f1f1f1'],
-          borderColor: ['#9e9e9e'],
-          borderWidth: 2,
-          borderRadius: 5,
+          borderRadius: {
+            topLeft: 15,
+            topRight: 15,
+            bottomLeft: 15,
+            bottomRight: 15,
+          },
+          borderSkipped: false,
         },
       ],
     };

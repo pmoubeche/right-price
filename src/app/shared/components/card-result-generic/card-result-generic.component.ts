@@ -11,6 +11,7 @@ import { DragAndDropService } from '../../services/drag-and-drop.service';
 import { ProductUtils } from '../../utils/product.utils';
 import { CardResultGenericService } from './card-result-generic.service';
 import { TrimStringPipe } from '../../pipes/trim-string.pipe';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-result-generic',
@@ -55,6 +56,7 @@ export class CardResultGenericComponent implements OnInit {
   @Input() isSelectableCard = true;
   @Input() pageSize? = 24;
   @Input() isSelectedForMeal = false;
+  @Input() isRedirectOnSelect = false;
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
@@ -64,7 +66,8 @@ export class CardResultGenericComponent implements OnInit {
   constructor(
     private readonly cardResultGenericService: CardResultGenericService,
     private readonly dragAndDropService: DragAndDropService,
-    private readonly uppercaseFristLetterPipe: UppercaseFirstLetterFormatPipe
+    private readonly uppercaseFristLetterPipe: UppercaseFirstLetterFormatPipe,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +82,11 @@ export class CardResultGenericComponent implements OnInit {
   }
 
   onSelectItem(productInfo?: ProductInfosModel): void {
-    this.cardResultGenericService.onSelectItem(productInfo!);
+    if (this.isRedirectOnSelect) {
+      this.router.navigate(['/product', productInfo?.id]);
+    } else {
+      this.cardResultGenericService.onSelectItem(productInfo!);
+    }
   }
 
   drop(event: CdkDragDrop<ProductInfosModel[]>) {

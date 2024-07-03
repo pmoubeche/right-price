@@ -12,6 +12,7 @@ import { GroceryListComponent } from './features/grocery-list/grocery-list.compo
 import { getListDatesWhereMealsResolver } from './shared/routes/grocery-list-resolver.service';
 import { GlucoseMonitoringComponent } from './features/glucose-monitoring/glucose-monitoring.component';
 import { getListDatesWhereCgmResolver } from './shared/routes/cmg-dates-resolver.service';
+import { DetailProductComponent } from './features/product/detail-product/detail-product.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'product',
     component: ProductComponent,
+  },
+  {
+    path: 'product/:id',
+    component: DetailProductComponent,
   },
   {
     path: 'meal',
@@ -42,7 +47,6 @@ export const routes: Routes = [
       datesMeals: getListDatesWhereMealsResolver,
       datesCgm: getListDatesWhereCgmResolver,
     },
-    // { datesCgm: getListDatesWhereCgmResolver },
   },
   {
     path: 'compare',
