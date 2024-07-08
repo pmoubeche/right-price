@@ -69,6 +69,7 @@ export class CompareProductsComponent implements OnInit {
     this.compareDataSources.dataSource =
       new MatTableDataSource<PercentCompareModelNumber>(this.percentCompare);
     if (productA.id !== this.productB.id) {
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(productA);
       this.setNutrimentsChartsBarsData(
         productA.nutriments!,
         this.productB.nutriments!
@@ -94,6 +95,7 @@ export class CompareProductsComponent implements OnInit {
     this.compareDataSources.dataSource =
       new MatTableDataSource<PercentCompareModelNumber>(this.percentCompare);
     if (productB.id !== this.productA.id) {
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(productB);
       this.setNutrimentsChartsBarsData(
         this.productA.nutriments!,
         productB.nutriments!
@@ -160,6 +162,9 @@ export class CompareProductsComponent implements OnInit {
       legend: {
         display: false,
       },
+      tooltip: {
+        enabled: false,
+      },
     },
   };
 
@@ -210,7 +215,7 @@ export class CompareProductsComponent implements OnInit {
 
     nutrimentChartMapProductA.forEach((value: number, key: string) => {
       const dataSetProductA: ChartDataset = {
-        label: "P'tit déj",
+        label: 'Produit A',
         data: [value / (value + nutrimentChartMapProductB.get(key)!)],
         fill: true,
         backgroundColor: ['#7fc8c9'],
@@ -224,7 +229,7 @@ export class CompareProductsComponent implements OnInit {
       };
 
       const dataSetProdutB: ChartDataset = {
-        label: 'Déjeuner',
+        label: 'Produit B',
         data: [
           nutrimentChartMapProductB.get(key)! /
             (value + nutrimentChartMapProductB.get(key)!),

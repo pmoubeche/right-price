@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../material/material.module';
-import { SidenavContentComponent } from '../sidenav-content/sidenav-content.component';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { ContextService } from '../../services/context.service';
 import { RoleAdmin, RoleTier1 } from '../../constants/role.constant';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -10,7 +9,7 @@ import { SideNavService } from '../../services/sidenav.service';
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [MaterialModule, SidenavContentComponent, RouterLink],
+  imports: [MaterialModule, RouterLink, RouterOutlet],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
 })

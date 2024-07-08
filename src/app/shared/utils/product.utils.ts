@@ -612,6 +612,10 @@ export class ProductUtils {
     }
     return new Map<string, number>([
       [
+        `${NutrimentsManConst.ENERGY_KJ.label} (${NutrimentsManConst.ENERGY_KJ.unit})`,
+        0,
+      ],
+      [
         `${NutrimentsManConst.CALORIES.label} (${NutrimentsManConst.CALORIES.unit})`,
         0,
       ],
@@ -620,7 +624,15 @@ export class ProductUtils {
         0,
       ],
       [
+        `${NutrimentsManConst.SATURATED_FAT.label} (${NutrimentsManConst.SATURATED_FAT.unit})`,
+        0,
+      ],
+      [
         `${NutrimentsManConst.GLUCIDES.label} (${NutrimentsManConst.GLUCIDES.unit})`,
+        0,
+      ],
+      [
+        `${NutrimentsManConst.SUGARS.label} (${NutrimentsManConst.SUGARS.unit})`,
         0,
       ],
       [

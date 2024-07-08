@@ -1,157 +1,141 @@
 <mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header>Product details</mat-expansion-panel-header>
-  <mat-grid-list cols="3" rowHeight="1:1.5">
-    <mat-grid-tile [colspan]="1" title="Product">
-      <mat-card
-        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
-      >
-        <mat-card-header>
-          <mat-card-title>{{
-            product?.product_name! | uppercaseFirstLetterFormat
-          }}</mat-card-title>
-        </mat-card-header>
-        <div class="product-image">
-          <img
-            mat-card-image
-            src="{{ product?.image_front_url }}"
-            style="height: 200px"
-          />
+  <mat-expansion-panel-header>Détails produit</mat-expansion-panel-header>
+  <div style="display: flex">
+    <mat-card style="width: 33%; margin-right: 0.5rem">
+      <mat-card-header>
+        <mat-card-title>{{
+          product?.product_name! | uppercaseFirstLetterFormat
+        }}</mat-card-title>
+      </mat-card-header>
+      <div class="product-image">
+        <img
+          mat-card-image
+          src="{{ product?.image_front_url }}"
+          style="height: 200px"
+        />
+      </div>
+      <mat-card-actions>
+        <img
+          mat-card-image
+          class="product-score"
+          src="{{ nutriscoreImageUrl }}"
+        />
+        <img
+          mat-card-image
+          class="product-score"
+          src="{{ ecoscoreImageUrl }}"
+        />
+        <img
+          mat-card-image
+          class="product-score"
+          src="{{ novagroupImageUrl }}"
+        />
+      </mat-card-actions>
+      <mat-card-footer>
+        <div style="padding: 1rem 1rem 1rem 1rem">
+          <p>
+            <strong>Code barre :</strong>
+            {{ product?._id }}
+          </p>
+          <p><strong> Nom :</strong> {{ product?.product_name }}</p>
+          <p>
+            <strong>Quantité :</strong>
+            {{ product?.product_quantity }}
+            {{ product?.product_quantity_unit }}
+          </p>
+          <p><strong> Marques :</strong> {{ product?.brands }}</p>
+          <p><strong> Catégories :</strong> {{ product?.categories }}</p>
+          <p><strong> Emballages:</strong> {{ product?.packaging }}</p>
+          <br />
         </div>
-        <mat-card-actions>
-          <img
-            mat-card-image
-            class="product-score"
-            src="{{ nutriscoreImageUrl }}"
-          />
-          <img
-            mat-card-image
-            class="product-score"
-            src="{{ ecoscoreImageUrl }}"
-          />
-          <img
-            mat-card-image
-            class="product-score"
-            src="{{ novagroupImageUrl }}"
-          />
-        </mat-card-actions>
-        <mat-card-footer>
-          <div style="padding: 1rem 1rem 1rem 1rem">
-            <p>
-              <strong>Code barre :</strong>
-              {{ product?._id }}
-            </p>
-            <p><strong> Nom :</strong> {{ product?.product_name }}</p>
-            <p>
-              <strong>Quantité :</strong>
-              {{ product?.product_quantity }}
-              {{ product?.product_quantity_unit }}
-            </p>
-            <p><strong> Marques :</strong> {{ product?.brands }}</p>
-            <p><strong> Catégories :</strong> {{ product?.categories }}</p>
-            <p><strong> Emballages:</strong> {{ product?.packaging }}</p>
-            <br />
-          </div>
-        </mat-card-footer>
-      </mat-card>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1">
-      <mat-card
-        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
+      </mat-card-footer>
+    </mat-card>
+    <mat-card style="width: 33%; margin-right: 0.5rem; margin-left: 0.5rem">
+      <mat-card-header>
+        <mat-card-title>Ingredients</mat-card-title>
+      </mat-card-header>
+      <app-table-generic
+        [columns]="columnParamsIngredients"
+        [isPaginated]="false"
+        [paginatedDataSource]="ingredientDataSources"
+        [rowHeight]="'1.5rem'"
       >
-        <mat-card-header>
-          <mat-card-title>Ingredients</mat-card-title>
-        </mat-card-header>
-        <app-table-generic
-          [columns]="columnParamsIngredients"
-          [isPaginated]="false"
-          [paginatedDataSource]="ingredientDataSources"
-          [rowHeight]="'1.5rem'"
-        >
-        </app-table-generic>
-      </mat-card>
-    </mat-grid-tile>
-    <mat-grid-tile [colspan]="1">
-      <mat-card
-        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
+      </app-table-generic>
+    </mat-card>
+    <mat-card style="width: 33%; margin-left: 0.5rem">
+      <mat-card-header>
+        <mat-card-title>Valeurs nutritionnelles</mat-card-title>
+      </mat-card-header>
+      <app-table-generic
+        [columns]="columnParamsMacroNutriments"
+        [isPaginated]="false"
+        [paginatedDataSource]="macroNutrimentsDataSources"
+        [rowHeight]="'1.5rem'"
       >
-        <mat-card-header>
-          <mat-card-title>Valeurs nutritionnelles</mat-card-title>
-        </mat-card-header>
-        <app-table-generic
-          [columns]="columnParamsMacroNutriments"
-          [isPaginated]="false"
-          [paginatedDataSource]="macroNutrimentsDataSources"
-          [rowHeight]="'1.5rem'"
-        >
-        </app-table-generic>
-        <br />
-        <app-chart
-          style="height: 300px; display: flex; justify-content: center"
-          type="doughnut"
-          [data]="macroNutrimentschartPieData!"
-          [options]="chartOptions"
-        ></app-chart>
-        <br />
-      </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
-
+      </app-table-generic>
+      <br />
+      <app-chart
+        style="height: 300px; display: flex; justify-content: center"
+        type="doughnut"
+        [data]="macroNutrimentschartPieData!"
+        [options]="chartOptions"
+      ></app-chart>
+      <br />
+    </mat-card>
+  </div>
+  <br />
   @if(product?.nutriments_estimated){
-  <mat-grid-list cols="2" rowHeight="1:1.5">
-    <mat-grid-tile [colspan]="1">
-      <mat-card
-        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
-      >
-        <mat-card-header>
-          <mat-card-title>Sucres</mat-card-title>
-        </mat-card-header>
+  <div style="display: flex">
+    <mat-card style="width: 66%; margin-right: 0.5rem">
+      <mat-card-header>
+        <mat-card-title>Micro-Nutriments</mat-card-title>
+      </mat-card-header>
+      <div style="display: flex">
         <app-table-generic
-          [columns]="columnParamsSugars"
-          [isPaginated]="false"
-          [paginatedDataSource]="sugarsDataSources"
-          [rowHeight]="'1.5rem'"
-        >
-        </app-table-generic>
-        <br />
-        <br />
-        <app-chart
-          style="height: 300px; display: flex; justify-content: center"
-          type="doughnut"
-          [data]="sugarsChartPieData!"
-          [options]="chartOptions"
-          [height]="100"
-        ></app-chart>
-        <br />
-      </mat-card>
-    </mat-grid-tile>
-
-    <mat-grid-tile [colspan]="1">
-      <mat-card
-        style="min-width: 90%; min-height: 90%; max-width: 90%; max-height: 90%"
-      >
-        <mat-card-header>
-          <mat-card-title>Micro-Nutriments</mat-card-title>
-        </mat-card-header>
-        <app-table-generic
+          style="padding: 1rem"
           [columns]="columnParamsMicroNutriments"
           [isPaginated]="false"
           [paginatedDataSource]="microNutrimentsDataSources"
           [rowHeight]="'1.5rem'"
         >
         </app-table-generic>
-        <br />
-        <br />
+        <mat-divider [vertical]="true"></mat-divider>
         <app-chart
+          style="padding: 1rem"
           type="bar"
           [data]="microNutrimentschartPieData!"
           [options]="optionsBar"
-          [height]="400"
+          [width]="600"
         ></app-chart>
-        <br />
-      </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
+      </div>
+      <br />
+    </mat-card>
+    <mat-card style="width: 33%; margin-left: 0.5rem">
+      <mat-card-header>
+        <mat-card-title>Sucres</mat-card-title>
+      </mat-card-header>
+      <app-table-generic
+        [columns]="columnParamsSugars"
+        [isPaginated]="false"
+        [paginatedDataSource]="sugarsDataSources"
+        [rowHeight]="'1.5rem'"
+      >
+      </app-table-generic>
+      <br />
+      <br />
+      <app-chart
+        style="height: 300px; display: flex; justify-content: center"
+        type="doughnut"
+        [data]="sugarsChartPieData!"
+        [options]="chartOptions"
+        [height]="100"
+      ></app-chart>
+      <br />
+    </mat-card>
+  </div>
   }
+  <br />
+  <br />
   <div style="display: flex; justify-content: center; align-items: center">
     <span>Plus d'infos sur :</span>
     <button mat-button (click)="redirectToOpenFoodFacts()">

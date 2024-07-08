@@ -11,3 +11,15 @@
   opacity: 50%;
   border-radius: 3rem;
 }
+
+.highlight-date-cgm-and-meals {
+  background-color: utils.get-couleur-principale() !important;
+  opacity: 50%;
+  border-radius: 3rem;
+}
+
+.mat-expansion-panel-body-meal-recap {
+  height: auto;
+  display: grid;
+  align-content: space-between;
+}
