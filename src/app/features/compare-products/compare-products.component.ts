@@ -1,10 +1,14 @@
-import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
+import { Subscription, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
 import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
+import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
+import { ChartComponent } from '../../shared/components/chart/chart.component';
+import { ChartUtils } from '../../shared/components/chart/chart.utils';
 import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../shared/material/material.module';
 import { ProductInfosModel } from '../../shared/model/product-attribute-displayed.model';
@@ -18,13 +22,14 @@ import {
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
 import { UppercaseFirstLetterFormatPipe } from '../../shared/pipes/uppercase-first-letter-format.pipe';
-import { DragAndDropService } from '../../shared/services/drag-and-drop.service';
+import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.service';
 import { ProductUtils } from '../../shared/utils/product.utils';
 import { NutrimentInfoModel } from '../product/detail-product/detail-product.component';
+import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
 import { SearchProductComponent } from '../product/search-product/search-product.component';
-import { ChartComponent } from '../../shared/components/chart/chart.component';
-import { ChartUtils } from '../../shared/components/chart/chart.utils';
-import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
+import { CompareProductService } from './compare-product.service';
+import { RoundNumberDecimalPipe } from '../../shared/pipes/round-number-decimal.pipe';
+import { Router } from '@angular/router';
 
 export class PercentCompareModel {
   id?: string;
@@ -34,6 +39,8 @@ export class PercentCompareModel {
 export class PercentCompareModelNumber {
   id?: string;
   percent?: number;
+  diffValue?: number;
+  unit?: string;
 }
 
 @Component({
@@ -46,9 +53,9 @@ export class PercentCompareModelNumber {
     SearchProductComponent,
     CardResultGenericComponent,
     UppercaseFirstLetterFormatPipe,
+    RoundNumberDecimalPipe,
+    SearchProductAutocompleteComponent,
     CommonModule,
-    CdkDropList,
-    CdkDrag,
     ChartComponent,
   ],
   templateUrl: './compare-products.component.html',
@@ -57,8 +64,12 @@ export class PercentCompareModelNumber {
 export class CompareProductsComponent implements OnInit {
   public _productA = new Product();
 
+  public productInfoModelSelected?: ProductInfosModel;
+
   @Input() set productA(productA: Product) {
     this._productA = productA;
+    productA.nutriments =
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(productA);
     this.macroNutrimentInfoA = this.setInfoFromResponseProduct(productA);
     this.macroNutrimentsDataSourcesA.dataSource =
       new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfoA);
@@ -69,7 +80,6 @@ export class CompareProductsComponent implements OnInit {
     this.compareDataSources.dataSource =
       new MatTableDataSource<PercentCompareModelNumber>(this.percentCompare);
     if (productA.id !== this.productB.id) {
-      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(productA);
       this.setNutrimentsChartsBarsData(
         productA.nutriments!,
         this.productB.nutriments!
@@ -85,6 +95,8 @@ export class CompareProductsComponent implements OnInit {
 
   @Input() set productB(productB: Product) {
     this._productB = productB;
+    productB.nutriments =
+      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(productB);
     this.macroNutrimentInfoB = this.setInfoFromResponseProduct(productB);
     this.macroNutrimentsDataSourcesB.dataSource =
       new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfoB);
@@ -95,7 +107,6 @@ export class CompareProductsComponent implements OnInit {
     this.compareDataSources.dataSource =
       new MatTableDataSource<PercentCompareModelNumber>(this.percentCompare);
     if (productB.id !== this.productA.id) {
-      ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(productB);
       this.setNutrimentsChartsBarsData(
         this.productA.nutriments!,
         productB.nutriments!
@@ -116,8 +127,8 @@ export class CompareProductsComponent implements OnInit {
   compareDataSources = new PaginatedDataSource<PercentCompareModelNumber>();
 
   httpProducts!: ResponseProducts;
-  public productInfoModelsA = <ProductInfosModel[]>[];
-  public productInfoModelsB = <ProductInfosModel[]>[];
+  public productInfoModelA = new ProductInfosModel();
+  public productInfoModelB = new ProductInfosModel();
 
   columnParamsMacroNutriments: TableColumnParamModel[] = [
     {
@@ -170,33 +181,73 @@ export class CompareProductsComponent implements OnInit {
 
   dailyRecommanderIncomeChartsBarData?: ChartData[] = [];
 
-  constructor(private readonly dragAndDropService: DragAndDropService) {}
+  private subscription = new Subscription();
+
+  constructor(
+    private readonly cardsService: CardResultGenericService,
+    private readonly openFoodFactsApiService: OpenFoodFactsApiService,
+    private readonly compareProductService: CompareProductService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     ChartUtils.setChartImports();
+    this.cardsService.selectItem$.subscribe((item) => {
+      this.productInfoModelSelected = item;
+    });
+
+    this.setProductAFromProductDetail();
+  }
+
+  viewProduct(productInfoModel: ProductInfosModel): void {
+    this.router.navigate(['/product', productInfoModel.id]);
+  }
+
+  private setProductAFromProductDetail() {
+    this.subscription.add(
+      this.compareProductService.product$
+        .pipe(
+          tap((product) => {
+            this.productInfoModelA =
+              ProductUtils.setProductInfoFromProduct(product);
+            this.productA = product;
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  addProductToLeft(productInfo: ProductInfosModel): void {
+    this.productInfoModelA = productInfo;
+
+    this.subscription.add(
+      this.openFoodFactsApiService
+        .findProductByBarCode(productInfo.id!)
+        .pipe(
+          tap((httpProduct) => {
+            this.productA = httpProduct.product!;
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  addProductToRight(productInfo: ProductInfosModel): void {
+    this.productInfoModelB = productInfo;
+    this.subscription.add(
+      this.openFoodFactsApiService
+        .findProductByBarCode(productInfo.id!)
+        .pipe(
+          tap((httpProduct) => {
+            this.productB = httpProduct.product!;
+          })
+        )
+        .subscribe()
+    );
   }
 
   onHttpProductsChange(httpProducts: ResponseProducts): void {
     this.httpProducts = httpProducts;
-  }
-
-  drop(event: CdkDragDrop<ProductInfosModel[]>) {
-    if (event.container.id === 'productA') {
-      this.productInfoModelsA = [];
-      this.dragAndDropService.dropCard(event);
-      this.productInfoModelsA = event.container.data;
-      this.productA = this.httpProducts.products!.find(
-        (httpProd) => event.container.data[0].id === httpProd.id
-      )!;
-    } else if (event.container.id === 'productB') {
-      this.productInfoModelsB = [];
-      this.dragAndDropService.dropCard(event);
-      this.productInfoModelsB = event.container.data;
-      this.productB = this.httpProducts.products!.find(
-        (httpProd) => event.container.data[0].id === httpProd.id
-      )!;
-    }
-    event.container.data = [];
   }
 
   setInfoFromResponseProduct(product: Product): NutrimentInfoModel[] {

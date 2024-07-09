@@ -1,0 +1,27 @@
+<mat-card style="border-radius: 15px">
+  <mat-card-header>
+    <span>
+      {{ gaugeCardParam.title }}
+    </span>
+  </mat-card-header>
+  <div
+    style="display: flex; flex-direction: row; align-items: center; width: 100%"
+  >
+    <div style="width: 66%; display: flex; justify-content: center">
+      <div style="display: flex; justify-content: center; align-items: center">
+        <h3 style="font-size: 24px" [ngStyle]="{ color: gaugeCardParam.color }">
+          {{ gaugeCardParam.value! | roundNumberDecimal : 0 }}
+        </h3>
+        <span style="padding: 0rem 0rem 0rem 1rem">{{
+          gaugeCardParam.unit
+        }}</span>
+      </div>
+    </div>
+    <app-chart
+      style="width: 33%; padding: 0rem 1rem 1rem 1rem"
+      type="doughnut"
+      [data]="gaugeChartData!"
+      [options]="options"
+    ></app-chart>
+  </div>
+</mat-card>

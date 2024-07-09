@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import {
+  PercentCompareModel,
+  PercentCompareModelNumber,
+} from '../../features/compare-products/compare-products.component';
 import { NutrimentInfoModel } from '../../features/product/detail-product/detail-product.component';
 import {
   MicroNutrimentsConst,
@@ -14,13 +17,11 @@ import {
   NovagroupLinks,
   NutriscoreLinks,
 } from '../enum/svg-urls.enum';
-import { Nutriments, Product } from '../model/product.model';
-import { RoundNumberDecimalPipe } from '../pipes/round-number-decimal.pipe';
+import { ProductInfosModel } from '../model/product-attribute-displayed.model';
+import { Nutriments, Product, ResponseProducts } from '../model/product.model';
 import { PercentFormatPipe } from '../pipes/percent-format.pipe';
-import {
-  PercentCompareModel,
-  PercentCompareModelNumber,
-} from '../../features/compare-products/compare-products.component';
+import { RoundNumberDecimalPipe } from '../pipes/round-number-decimal.pipe';
+import { UppercaseFirstLetterFormatPipe } from '../pipes/uppercase-first-letter-format.pipe';
 
 export class ProductUtils {
   public static readonly UNIT_GRAMME = 'g';
@@ -30,10 +31,44 @@ export class ProductUtils {
   public static readonly UNIT_KJ = 'kJ';
   public static readonly UNIT_KCAL = 'kcal';
 
-  constructor(
-    private readonly roundNumberPipe: RoundNumberDecimalPipe,
-    private readonly percentPipe: PercentFormatPipe
-  ) {}
+  constructor() {}
+
+  static setProductsInfoFromResponseProducts(
+    httpProducts: ResponseProducts
+  ): ProductInfosModel[] {
+    if (httpProducts.products) {
+      httpProducts.page = (Number.parseInt(httpProducts.page!) - 1).toString();
+      return httpProducts.products.map(
+        (productApi) =>
+          ({
+            id: productApi.id,
+            image: productApi.image_small_url,
+            label: UppercaseFirstLetterFormatPipe.transform(
+              productApi?.product_name!
+            ),
+            nutriscore: ProductUtils.getUrlNutriscore(
+              productApi.nutriscore_grade!
+            ),
+            ecoscore: ProductUtils.getUrlEcoscore(productApi.ecoscore_grade!),
+            novagroup: ProductUtils.getUrlNovagroup(productApi.nova_group!),
+            packagingQuantity: Number.parseFloat(productApi.product_quantity!),
+          } as ProductInfosModel)
+      );
+    }
+    return [];
+  }
+
+  static setProductInfoFromProduct(product: Product): ProductInfosModel {
+    return {
+      id: product.id,
+      image: product.image_small_url,
+      label: UppercaseFirstLetterFormatPipe.transform(product?.product_name!),
+      nutriscore: ProductUtils.getUrlNutriscore(product.nutriscore_grade!),
+      ecoscore: ProductUtils.getUrlEcoscore(product.ecoscore_grade!),
+      novagroup: ProductUtils.getUrlNovagroup(product.nova_group!),
+      packagingQuantity: Number.parseFloat(product.product_quantity!),
+    } as ProductInfosModel;
+  }
 
   static getUrlNutriscore(grade: string): string {
     switch (grade) {
@@ -101,6 +136,7 @@ export class ProductUtils {
           nutriment['energy-kj_100g']!,
           2
         ),
+        unit: this.UNIT_KJ,
       },
       {
         id: '1',
@@ -113,6 +149,7 @@ export class ProductUtils {
           nutriment['energy-kcal_100g']!,
           2
         ),
+        unit: this.UNIT_KCAL,
       },
       {
         id: '2',
@@ -125,6 +162,7 @@ export class ProductUtils {
           nutriment['fat_100g']!,
           2
         ),
+        unit: this.UNIT_GRAMME,
       },
       {
         id: '3',
@@ -137,6 +175,7 @@ export class ProductUtils {
           nutriment['saturated-fat_100g']!,
           2
         ),
+        unit: this.UNIT_GRAMME,
       },
       {
         id: '4',
@@ -149,6 +188,7 @@ export class ProductUtils {
           nutriment['carbohydrates_100g']!,
           2
         ),
+        unit: this.UNIT_GRAMME,
       },
       {
         id: '5',
@@ -161,6 +201,7 @@ export class ProductUtils {
           nutriment['sugars_100g']!,
           2
         ),
+        unit: this.UNIT_GRAMME,
       },
       {
         id: '6',
@@ -173,6 +214,7 @@ export class ProductUtils {
           nutriment['fiber_100g']!,
           2
         ),
+        unit: this.UNIT_GRAMME,
       },
       {
         id: '7',
@@ -185,6 +227,7 @@ export class ProductUtils {
           nutriment['proteins_100g']!,
           2
         ),
+        unit: this.UNIT_GRAMME,
       },
       {
         id: '8',
@@ -197,6 +240,7 @@ export class ProductUtils {
           nutriment['salt_100g']!,
           2
         ),
+        unit: this.UNIT_GRAMME,
       },
     ];
   }
@@ -523,10 +567,14 @@ export class ProductUtils {
         const valueNutA = nut.valueNumber;
         const valueNutB = nutrimentsB[index].valueNumber;
         const percentValue = valueNutA! / valueNutB! - 1;
+        const diffValue = valueNutA! - valueNutB!;
+        const unit = nutrimentsB[index].unit;
 
         const percent = {
           id: index.toString(),
           percent: percentValue,
+          diffValue: diffValue,
+          unit: unit,
         };
         percentages.push(percent);
       });

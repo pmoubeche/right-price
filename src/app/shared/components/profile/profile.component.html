@@ -8,11 +8,7 @@
       [round]="true"
     ></ngx-avatars>
   </div>
-  } } @else {
-  <button mat-fab color="accent" [matMenuTriggerFor]="menu">
-    <mat-icon>person</mat-icon>
-  </button>
-  }
+  } }
 
   <mat-menu #menu="matMenu">
     @if (user$ | async; as user) {
@@ -30,9 +26,6 @@
       <label>Se Deconnecter</label>
       <mat-icon>cancel</mat-icon>
     </button>
-    } @else {
-    <button mat-menu-item (click)="signIn()">Se Connecter</button>
-    <button mat-menu-item (click)="signUp()">Creer un compte</button>
     }
   </mat-menu>
 </div>

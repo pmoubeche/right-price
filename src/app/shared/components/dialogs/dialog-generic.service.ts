@@ -16,7 +16,7 @@ import { DialogCsvImportComponent } from './dialog-csv-import/dialog-csv-import.
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
-  SINGIN = 'signin',
+  SIGNIN = 'signin',
   SIGNUP = 'signup',
   DELETE_ACCOUNT = 'deleteAccount',
   AVATAR = 'avatar',
@@ -43,7 +43,7 @@ export class DialogGenericService {
       isUniqueModale: true,
     },
     {
-      code: CodeModaleEnum.SINGIN,
+      code: CodeModaleEnum.SIGNIN,
       composant: DialogSigninComponent,
       width: '650px',
       isUniqueModale: true,

@@ -16,7 +16,7 @@ import { AuthServiceApi } from '../../../services/auth-api.service';
 import { AuthServiceFront } from '../../../services/auth-front.service';
 import { SnackbarService } from '../../../services/snackbar.service';
 import { LoginGoogleComponent } from '../../toolbar/login-google/login-google.component';
-import { DialogContentModel } from '../dialog-content.model';
+import { ButtonAction, DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
@@ -41,6 +41,19 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
 
   signupForm?: FormGroup;
   isDisplaySignupForm = false;
+
+  private buttonsDialog: ButtonAction[] = [
+    {
+      isCloseButton: true,
+      label: 'Fermer',
+    },
+  ];
+
+  public dialogParamDataSignin: DialogContentModel = {
+    title: 'Se Connecter',
+    message: '',
+    buttons: this.buttonsDialog,
+  };
 
   get usernameControl(): FormControl {
     return this.signupForm?.get(this.USERNAME_INPUT) as FormControl;

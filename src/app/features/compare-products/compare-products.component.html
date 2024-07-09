@@ -1,231 +1,240 @@
-<div cdkDropListGroup>
-  <mat-expansion-panel [expanded]="true">
-    <mat-expansion-panel-header> Recherche</mat-expansion-panel-header>
-    <div style="display: flex">
-      <div
-        style="
-          width: 20%;
-          display: flex;
-          align-items: center;
-          padding-right: 1rem;
-        "
-      >
-        <app-search-product
-          (eventHttpProductsChange)="onHttpProductsChange($event)"
-          [pageSize]="10"
-        ></app-search-product>
-      </div>
-      <mat-divider [vertical]="true"></mat-divider>
-      <section
-        style="
-          max-width: 80%;
-          min-width: 80%;
-          display: flex;
-          overflow: auto;
-          margin-left: 1rem;
-        "
-      >
-        <app-card-result-generic
-          [httpProducts]="httpProducts"
-          [isLineDisposal]="true"
-          [pageSize]="10"
-          [countProductPerLine]="10"
-        ></app-card-result-generic>
-      </section>
-    </div>
-  </mat-expansion-panel>
-  <br />
-  <mat-expansion-panel [expanded]="true">
-    <mat-expansion-panel-header> Comparatif </mat-expansion-panel-header>
-    <div style="display: flex; justify-content: center">
-      <mat-card class="productA-panel" style="width: 32%; margin: 0.5rem">
-        <mat-card-header style="display: flex; padding: 1rem">
-          <mat-card-title>Produit A</mat-card-title>
-        </mat-card-header>
-        <div style="display: flex; justify-content: center">
-          <div
-            id="productA"
-            class="example-list"
-            cdkDropList
-            [cdkDropListData]="productInfoModelsA"
-            (cdkDropListDropped)="drop($event)"
-          >
-            @for (productInfoModel of productInfoModelsA; track
-            productInfoModel) {
-            <div class="example-box" cdkDrag>
-              <mat-card
-                style="display: flex; width: 190px; height: 310px"
-                cdkDrag
-                [cdkDragData]="productInfoModel"
-              >
-                <mat-card-header
-                  style="
-                    display: flex;
-                    padding: 1rem 1rem 0.5rem 1rem;
-                    height: 25%;
-                  "
-                >
-                  <mat-card-title style="font-size: 14px">{{
-                    productInfoModel?.label!
-                  }}</mat-card-title>
-                </mat-card-header>
-                <mat-card-content
-                  style="
-                    display: flex;
-                    justify-content: center;
-                    max-height: 60%;
-                  "
-                >
-                  <img
-                    mat-card-image
-                    src="{{ productInfoModel?.image }}"
-                    style="height: 90%; width: auto"
-                  />
-                </mat-card-content>
+<div style="display: flex; justify-content: center">
+  <mat-card
+    class="productA-panel"
+    style="width: 32%; margin: 0.5rem; border-radius: 15px"
+  >
+    <mat-card-header style="display: flex; padding: 1rem">
+      <mat-card-title>Produit A</mat-card-title>
+    </mat-card-header>
+    <div style="display: grid; justify-content: center">
+      <div id="productA">
+        <div class="example-box">
+          <mat-card style="display: flex; width: 190px; height: 310px">
+            <mat-card-header
+              style="display: flex; padding: 1rem 1rem 0.5rem 1rem; height: 25%"
+            >
+              <mat-card-title style="font-size: 14px">{{
+                productInfoModelA.label!
+              }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content
+              style="display: flex; justify-content: center; max-height: 60%"
+            >
+              <img
+                mat-card-image
+                src="{{ productInfoModelA.image }}"
+                style="height: 90%; width: auto"
+              />
+            </mat-card-content>
 
-                <mat-card-footer class="mat-card-footer">
-                  <img
-                    mat-card-image
-                    class="product-score"
-                    src="{{ productInfoModel?.nutriscore }}"
-                  />
-                  <img
-                    mat-card-image
-                    class="product-score"
-                    src="{{ productInfoModel?.ecoscore }}"
-                  />
-                  <img
-                    mat-card-image
-                    class="product-score"
-                    src="{{ productInfoModel?.novagroup }}"
-                  />
-                </mat-card-footer>
-              </mat-card>
-            </div>
-            }
-          </div>
-        </div>
-        <mat-card-actions>
-          <app-table-generic
-            style="width: 100%"
-            [columns]="columnParamsMacroNutriments"
-            [paginatedDataSource]="macroNutrimentsDataSourcesA"
-            [isPaginated]="false"
-          ></app-table-generic>
-        </mat-card-actions>
-      </mat-card>
-      <mat-card style="width: 32%; margin: 0.5rem">
-        <mat-card-header style="display: flex; padding: 1rem">
-          <mat-card-title>Comparé à :</mat-card-title>
-        </mat-card-header>
-        <div style="display: flex; justify-content: center">
-          <mat-card
-            class="compare"
-            style="display: flex; width: 190px; height: 310px"
-          >
+            <mat-card-footer class="mat-card-footer">
+              <img
+                mat-card-image
+                class="product-score"
+                src="{{ productInfoModelA.nutriscore }}"
+              />
+              <img
+                mat-card-image
+                class="product-score"
+                src="{{ productInfoModelA.ecoscore }}"
+              />
+              <img
+                mat-card-image
+                class="product-score"
+                src="{{ productInfoModelA.novagroup }}"
+              />
+            </mat-card-footer>
           </mat-card>
         </div>
-        <mat-card-actions style="display: grid">
-          <app-table-generic
-            style="width: 100%; margin-top: 0.3rem"
-            [columns]="columnParamsCompare"
-            [isPaginated]="false"
-            [isRowCentered]="true"
-            [rowHeight]="'3.25rem'"
-          ></app-table-generic>
-          @for(chartData of dailyRecommanderIncomeChartsBarData; track $index){
-          <div style="margin: 0.17rem">
-            <app-chart
-              type="bar"
-              [data]="chartData!"
-              [options]="optionsBar"
-              [height]="30"
-            ></app-chart>
-            <span style="display: flex; justify-content: center">{{
-              percentCompare[$index].percent! | percent
-            }}</span>
-            @if(dailyRecommanderIncomeChartsBarData?.length! -1 !== $index){
-            <mat-divider></mat-divider>
-            }
-          </div>
-          }
-        </mat-card-actions>
-      </mat-card>
-      <mat-card class="productB-panel" style="width: 32%; margin: 0.5rem">
-        <mat-card-header style="display: flex; padding: 1rem">
-          <mat-card-title>Produit B</mat-card-title>
-        </mat-card-header>
-        <div style="display: flex; justify-content: center">
-          <div
-            id="productB"
-            class="example-list"
-            cdkDropList
-            [cdkDropListData]="productInfoModelsB"
-            (cdkDropListDropped)="drop($event)"
-          >
-            @for (productInfoModel of productInfoModelsB; track
-            productInfoModel) {
-            <div class="example-box" cdkDrag>
-              <mat-card
-                style="display: flex; width: 190px; height: 310px"
-                cdkDrag
-                [cdkDragData]="productInfoModel"
-              >
-                <mat-card-header
-                  style="
-                    display: flex;
-                    padding: 1rem 1rem 0.5rem 1rem;
-                    height: 25%;
-                  "
-                >
-                  <mat-card-title style="font-size: 14px">{{
-                    productInfoModel?.label!
-                  }}</mat-card-title>
-                </mat-card-header>
-                <mat-card-content
-                  style="
-                    display: flex;
-                    justify-content: center;
-                    max-height: 60%;
-                  "
-                >
-                  <img
-                    mat-card-image
-                    src="{{ productInfoModel?.image }}"
-                    style="height: 90%; width: auto"
-                  />
-                </mat-card-content>
-                <mat-card-footer class="mat-card-footer">
-                  <img
-                    mat-card-image
-                    class="product-score"
-                    src="{{ productInfoModel?.nutriscore }}"
-                  />
-                  <img
-                    mat-card-image
-                    class="product-score"
-                    src="{{ productInfoModel?.ecoscore }}"
-                  />
-                  <img
-                    mat-card-image
-                    class="product-score"
-                    src="{{ productInfoModel?.novagroup }}"
-                  />
-                </mat-card-footer>
-              </mat-card>
-            </div>
-            }
-          </div>
-        </div>
-        <mat-card-actions>
-          <app-table-generic
-            style="width: 100%"
-            [columns]="columnParamsMacroNutriments"
-            [paginatedDataSource]="macroNutrimentsDataSourcesB"
-            [isPaginated]="false"
-          ></app-table-generic>
-        </mat-card-actions>
-      </mat-card>
+      </div>
+      <button
+        mat-fab
+        extended
+        color="primary"
+        style="margin: 1rem 1rem 1rem 0rem"
+        (click)="viewProduct(productInfoModelA)"
+        [disabled]="!productInfoModelA.id"
+      >
+        <span>Voir le détail</span>
+        <mat-icon>visibility</mat-icon>
+      </button>
     </div>
-  </mat-expansion-panel>
+    <mat-card-actions>
+      <app-table-generic
+        style="width: 100%"
+        [columns]="columnParamsMacroNutriments"
+        [paginatedDataSource]="macroNutrimentsDataSourcesA"
+        [isPaginated]="false"
+      ></app-table-generic>
+    </mat-card-actions>
+  </mat-card>
+  <mat-card style="width: 32%; margin: 0.5rem; border-radius: 15px">
+    <mat-card-header style="display: flex; padding: 1rem">
+      <mat-card-title>Comparé à :</mat-card-title>
+    </mat-card-header>
+    <div style="display: grid; padding: 1.5rem; margin-top: 5rem">
+      <div style="display: flex; flex-direction: column; align-items: center">
+        <br />
+        <app-search-product-autocomplete></app-search-product-autocomplete>
+        <br />
+        <mat-card
+          class="fields"
+          style="
+            max-height: 3.5rem;
+            margin-bottom: 1.8rem;
+            border-radius: 30px;
+            width: 400px;
+          "
+        >
+          @if(productInfoModelSelected!.id !== undefined){
+          <mat-card-actions class="mat-card-actions">
+            <img
+              mat-card-image
+              src="{{ productInfoModelSelected?.image }}"
+              style="height: 2rem; margin-right: auto"
+            />
+            <div style="padding: 0.5rem">
+              {{ productInfoModelSelected?.label }}
+            </div>
+            <img
+              mat-card-image
+              class="product-score"
+              src="{{ productInfoModelSelected?.nutriscore }}"
+              style="height: 2rem; margin-left: auto"
+            />
+          </mat-card-actions>
+          } @else {
+          <p style="display: flex; justify-content: center">
+            Rechercher et selectionner un aliment dans la liste *
+          </p>
+          }
+        </mat-card>
+        <div style="display: flex; justify-content: center; width: 100%">
+          <button
+            mat-fab
+            extended
+            color="primary"
+            style="margin: 1rem 1rem 1rem 0rem; width: 33%"
+            (click)="addProductToLeft(productInfoModelSelected!)"
+            [disabled]="!productInfoModelSelected?.id"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button
+            mat-fab
+            extended
+            color="primary"
+            style="margin: 1rem 0rem 1rem 1rem; width: 33%"
+            (click)="addProductToRight(productInfoModelSelected!)"
+            [disabled]="!productInfoModelSelected?.id"
+          >
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <mat-card-actions style="display: grid; margin-top: -0.2rem">
+      <app-table-generic
+        style="width: 100%; margin-top: 0.3rem"
+        [columns]="columnParamsCompare"
+        [isPaginated]="false"
+        [isRowCentered]="true"
+        [rowHeight]="'3.25rem'"
+      ></app-table-generic>
+      @for(chartData of dailyRecommanderIncomeChartsBarData; track $index){
+      <div style="margin: 0.1rem">
+        <app-chart
+          type="bar"
+          [data]="chartData!"
+          [options]="optionsBar"
+          [height]="30"
+        ></app-chart>
+        <span style="display: flex; justify-content: center">
+          @if(percentCompare[$index]){ @if(percentCompare[$index].percent!> 0){
+          +{{ percentCompare[$index].diffValue! | roundNumberDecimal : 1 }}
+          {{ percentCompare[$index].unit }}
+          <strong
+            >&nbsp; (+{{ percentCompare[$index].percent! | percent }})
+          </strong>
+          } @else {
+          {{ percentCompare[$index].diffValue! | roundNumberDecimal : 1 }}
+          {{ percentCompare[$index].unit }}
+          <strong
+            >&nbsp; ({{ percentCompare[$index].percent! | percent }})
+          </strong>
+          } } @else { Non applicable }
+        </span>
+        @if(dailyRecommanderIncomeChartsBarData?.length! -1 !== $index){
+        <mat-divider></mat-divider>
+        }
+      </div>
+      }
+    </mat-card-actions>
+  </mat-card>
+  <mat-card
+    class="productB-panel"
+    style="width: 32%; margin: 0.5rem; border-radius: 15px"
+  >
+    <mat-card-header style="display: flex; padding: 1rem">
+      <mat-card-title>Produit B</mat-card-title>
+    </mat-card-header>
+    <div style="display: grid; justify-content: center">
+      <div id="productB">
+        <mat-card style="display: flex; width: 190px; height: 310px">
+          <mat-card-header
+            style="display: flex; padding: 1rem 1rem 0.5rem 1rem; height: 25%"
+          >
+            <mat-card-title style="font-size: 14px">{{
+              productInfoModelB.label!
+            }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content
+            style="display: flex; justify-content: center; max-height: 60%"
+          >
+            <img
+              mat-card-image
+              src="{{ productInfoModelB.image }}"
+              style="height: 90%; width: auto"
+            />
+          </mat-card-content>
+          <mat-card-footer class="mat-card-footer">
+            <img
+              mat-card-image
+              class="product-score"
+              src="{{ productInfoModelB.nutriscore }}"
+            />
+            <img
+              mat-card-image
+              class="product-score"
+              src="{{ productInfoModelB.ecoscore }}"
+            />
+            <img
+              mat-card-image
+              class="product-score"
+              src="{{ productInfoModelB.novagroup }}"
+            />
+          </mat-card-footer>
+        </mat-card>
+      </div>
+      <button
+        mat-fab
+        extended
+        color="primary"
+        style="margin: 1rem 1rem 1rem 0rem"
+        (click)="viewProduct(productInfoModelB)"
+        [disabled]="!productInfoModelB.id"
+      >
+        <span>Voir le détail</span>
+        <mat-icon>visibility</mat-icon>
+      </button>
+    </div>
+    <mat-card-actions>
+      <app-table-generic
+        style="width: 100%"
+        [columns]="columnParamsMacroNutriments"
+        [paginatedDataSource]="macroNutrimentsDataSourcesB"
+        [isPaginated]="false"
+      ></app-table-generic>
+    </mat-card-actions>
+  </mat-card>
 </div>

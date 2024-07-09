@@ -28,9 +28,9 @@
         mat-list-item
         [routerLink]="['/meal']"
         routerLinkActive="router-link-active"
-        [disabled]="!isAuthorizedMealAccess"
+        [disabled]="!isTier1"
       >
-        @if(!isAuthorizedMealAccess){
+        @if(!isTier1){
         <mat-icon matListItemIcon matSuffix>lock</mat-icon>
         } @else {
         <mat-icon matListItemIcon> local_dining</mat-icon>
@@ -41,9 +41,9 @@
         mat-list-item
         [routerLink]="['/grocery']"
         routerLinkActive="router-link-active"
-        [disabled]="!isAuthorizedMealAccess"
+        [disabled]="!isTier1"
       >
-        @if(!isAuthorizedMealAccess){
+        @if(!isTier1){
         <mat-icon matListItemIcon matSuffix>lock</mat-icon>
         } @else {
         <mat-icon matListItemIcon> playlist_add</mat-icon>
@@ -54,9 +54,9 @@
         mat-list-item
         [routerLink]="['/cgm']"
         routerLinkActive="router-link-active"
-        [disabled]="!isAuthorizedMealAccess"
+        [disabled]="!isTier2"
       >
-        @if(!isAuthorizedMealAccess){
+        @if(!isTier2){
         <mat-icon matListItemIcon matSuffix>lock</mat-icon>
         } @else {
         <mat-icon matListItemIcon> show_chart</mat-icon>

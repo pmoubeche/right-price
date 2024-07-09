@@ -20,4 +20,23 @@ export class DateUtils {
       date.getTime() + Math.abs(date.getTimezoneOffset() * 60000)
     );
   }
+
+  static fromTimeStringToMapTime(timeString: string): {
+    hours: number;
+    minutes: number;
+  } {
+    const timeSplit = timeString
+      .split(':')
+      .map((time) => Number.parseFloat(time));
+    return {
+      hours: timeSplit[0],
+      minutes: timeSplit[1],
+    };
+  }
+
+  static dateStringWithoutOffesetTimeZone(date: Date): string {
+    return new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    ).toISOString();
+  }
 }

@@ -1,0 +1,52 @@
+<form [formGroup]="searchForm!" style="display: grid; justify-content: center">
+  <mat-form-field appearance="outline" style="width: 25rem" class="foe">
+    @if(isLabelDisplayed){
+    <mat-label>Recherche</mat-label>
+    }
+    <input
+      matInput
+      type="text"
+      [matAutocomplete]="auto"
+      [formControl]="textInputControl"
+    />
+    <mat-autocomplete #auto="matAutocomplete" class="autocomp">
+      @if(isLoading$ | async; as isLoading){
+      <mat-spinner
+        style="
+          display: flex;
+          justify-content: center;
+          width: 2rem;
+          height: auto;
+        "
+      ></mat-spinner>
+      } @else { @for (product of products$ | async; track $index) {
+      <mat-option
+        [value]="product.product_name"
+        (click)="onSelectItem(product)"
+        style="display: flex; flex-direction: row"
+      >
+        <div style="width: 20%">
+          <img [src]="product.image_small_url" height="25" />
+        </div>
+        <div style="width: 60%">
+          <span>{{ product.product_name }}</span>
+        </div>
+        <div style="width: 20%">
+          <img
+            [src]="product.nutriscore_grade! | nutriscoreUrlFromGrade"
+            height="25"
+          />
+        </div>
+      </mat-option>
+      } }
+    </mat-autocomplete>
+    @if(textInputControl.value){
+    <button mat-icon-button matSuffix (click)="resetForm()">
+      <mat-icon color="primary">close</mat-icon>
+    </button>
+    }
+    <button mat-icon-button matSuffix disabled>
+      <mat-icon class="icon">search</mat-icon>
+    </button>
+  </mat-form-field>
+</form>

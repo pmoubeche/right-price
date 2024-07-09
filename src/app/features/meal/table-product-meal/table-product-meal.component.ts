@@ -256,7 +256,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
 
   onSelectLine(line: MealProductInfoModel): void {
     this.tableGenericService.onSelectItem(line.idProduct!);
-    this.router.navigate([`/product`]);
+    this.router.navigate([`/product`, line.idProduct!]);
   }
 
   ngOnDestroy(): void {

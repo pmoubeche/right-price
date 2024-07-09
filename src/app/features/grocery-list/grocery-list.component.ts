@@ -1,33 +1,30 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MAT_DATE_LOCALE,
-  provideNativeDateAdapter,
-} from '@angular/material/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import {
   DateRange,
   DefaultMatCalendarRangeStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription, map, tap } from 'rxjs';
 import {
   DateRangeFilter,
   MealProductInfoGenModel,
-  MealsService,
   ProductsService,
 } from '../../../generated';
+import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
+import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../shared/material/material.module';
 import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
-import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
-import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
 import { DateUtils } from '../../shared/utils/date.utils';
-import { MatTableDataSource } from '@angular/material/table';
+import { SearchProductComponent } from '../product/search-product/search-product.component';
 
 @Component({
   selector: 'app-grocery-list',

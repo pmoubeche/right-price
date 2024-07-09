@@ -167,6 +167,9 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
   optionsCgmChart: ChartOptions = {
     responsive: true,
+    interaction: {
+      intersect: false,
+    },
     scales: {
       x: {
         type: 'time',
@@ -192,7 +195,6 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
       },
       y1: {
         type: 'linear',
-        // display: true,
         position: 'right',
         title: {
           display: true,
@@ -202,6 +204,14 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         grid: {
           drawOnChartArea: false, // only want the grid lines for one axis to show up
         },
+      },
+    },
+    plugins: {
+      filler: {
+        propagate: false,
+      },
+      title: {
+        display: true,
       },
     },
   };
@@ -628,24 +638,44 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
           : datasChartLine.map((el) => el.x),
       datasets: [
         {
+          order: 2,
           label: 'Glucides (g)',
           type: 'bar',
           data: this.carbsAndSugarsValuesCharts.length > 0 ? mealCarbList : [],
-          backgroundColor: ['#2b5fad'],
-          borderColor: ['#2b5fad'],
+          backgroundColor: '#2b5fad',
+          borderColor: '#2b5fad',
           yAxisID: 'y1',
-          order: 2,
           barThickness: 10,
           borderRadius: 5,
         },
         {
+          order: 1,
           label: 'Glycémie journalière en mg/dL',
           type: 'line',
           data: datasChartLine.map((el) => el.y),
-          backgroundColor: ['#7fc8c9'],
-          borderColor: ['#7fc8c9'],
+          borderColor: '#7fc8c9',
+          pointRadius: 0,
           yAxisID: 'y',
-          order: 1,
+          tension: 0.4,
+        },
+        {
+          order: 3,
+          label: 'Moyenne basse',
+          type: 'line',
+          data: datasChartLine.map((_) => 100),
+          backgroundColor: ['#ffc30f'],
+          borderColor: '#ffc30f',
+          pointRadius: 0,
+        },
+        {
+          order: 4,
+          label: 'Moyenne haute',
+          type: 'line',
+          data: datasChartLine.map((_) => 140),
+          borderColor: '#ffc30f',
+          backgroundColor: 'rgb(255, 205, 86, 0.2)',
+          pointRadius: 0,
+          fill: '-1',
         },
       ],
     };

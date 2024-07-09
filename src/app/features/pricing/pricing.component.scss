@@ -1,0 +1,11 @@
+@use "app-utils" as utils;
+
+.card-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-width: 2px;
+  border-color: utils.get-couleur-secondaire();
+}
+
+.icon-checked {
+  color: utils.get-couleur-secondaire();
+}

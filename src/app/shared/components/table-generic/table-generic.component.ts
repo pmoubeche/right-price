@@ -28,6 +28,7 @@ import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { TableGenericService } from './table-generic.service';
 import { RouterLink } from '@angular/router';
 import { FormatDatePipe } from '../../pipes/format-date.pipe';
+import { CardResultGenericService } from '../card-result-generic/card-result-generic.service';
 
 export class UpdateData {
   element: any;
@@ -98,7 +99,8 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private readonly formBuilder: FormBuilder,
-    private readonly tableGenericService: TableGenericService
+    private readonly tableGenericService: TableGenericService,
+    private readonly cardGenericService: CardResultGenericService
   ) {}
 
   ngOnInit(): void {
@@ -140,6 +142,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   onSelectItem(row: any): void {
     this.eventSelectLine.next(row);
     this.tableGenericService.onSelectItem(row.idProduct);
+    this.cardGenericService.productIdBs.next(row.idProduct);
   }
 
   onClickMoreActions(event: any) {

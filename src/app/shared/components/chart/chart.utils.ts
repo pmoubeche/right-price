@@ -6,6 +6,7 @@ import {
   Chart,
   ChartDataset,
   DoughnutController,
+  Filler,
   Legend,
   LineController,
   LineElement,
@@ -43,6 +44,7 @@ export class ChartUtils {
       RadialLinearScale,
       TimeScale,
       TimeSeriesScale,
+      Filler,
       Title,
       Tooltip,
       Legend
@@ -106,5 +108,13 @@ export class ChartUtils {
     }
 
     return valueToAdd;
+  }
+
+  static setValueFillerFull(isMaleReco: boolean, key: string): number {
+    const dailyRecos = isMaleReco
+      ? Object.values(NutrimentsManConst)
+      : Object.values(NutrimentsWomanConst);
+    return dailyRecos.find((reco) => `${reco.label} (${reco.unit})` === key)
+      ?.value!;
   }
 }

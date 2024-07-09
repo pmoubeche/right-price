@@ -12,15 +12,14 @@ import { EMPTY, Subscription, catchError, of, tap } from 'rxjs';
 import { MaterialModule } from '../../../material/material.module';
 import { UserResponse } from '../../../model/payload/response/user-reponse.model';
 import { AuthServiceApi } from '../../../services/auth-api.service';
+import { AuthServiceFront } from '../../../services/auth-front.service';
 import { SnackbarService } from '../../../services/snackbar.service';
-import { UserService } from '../../../services/user.service';
 import { LoginGoogleComponent } from '../../toolbar/login-google/login-google.component';
-import { DialogContentModel } from '../dialog-content.model';
+import { ButtonAction, DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { AuthServiceFront } from '../../../services/auth-front.service';
 
 @Component({
   selector: 'app-dialog-signin',
@@ -50,6 +49,19 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
   get passwordControl(): FormControl {
     return this.signinForm?.get(this.PASSWORD_INPUT) as FormControl;
   }
+
+  private buttonsDialog: ButtonAction[] = [
+    {
+      isCloseButton: true,
+      label: 'Fermer',
+    },
+  ];
+
+  public dialogParamDataSignin: DialogContentModel = {
+    title: 'Se Connecter',
+    message: '',
+    buttons: this.buttonsDialog,
+  };
 
   subscription = new Subscription();
 
@@ -103,7 +115,7 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
   public loginAndClosePopUp(res: UserResponse): void {
     this.authServiceFront.logIn(res);
     this.snackbarService.show('Vous etes connecté');
-    this.dialogGenericService.close(CodeModaleEnum.SINGIN, res);
+    this.dialogGenericService.close(CodeModaleEnum.SIGNIN, res);
   }
 
   ngOnDestroy(): void {
