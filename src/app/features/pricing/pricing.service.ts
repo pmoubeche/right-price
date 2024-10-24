@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Price } from './pricing.component';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../../shared/components/dialogs/dialog-generic.service';
+import { Price } from './pricing.component';
 
 @Injectable({ providedIn: 'root' })
 export class PricingService {
   prices: Price[] = [
     {
-      title: 'Gratuit',
+      title: 'Découvrir',
       price: '0€',
       features: [
         'Recherche et détails des aliments',
@@ -20,7 +20,7 @@ export class PricingService {
       action: () => this.redirectRegister(),
     },
     {
-      title: 'Tier 1',
+      title: 'Niveau 1',
       price: '7,99€',
       features: [
         'Recherche et détails des aliments',
@@ -29,10 +29,10 @@ export class PricingService {
         'Export de la liste de courses associée',
       ],
       link: "S'abonner",
-      action: () => this.redirectRegister(),
+      action: () => this.subscribeTier1(),
     },
     {
-      title: 'Tier 2',
+      title: 'Niveau 2',
       price: '12,99€',
       features: [
         'Recherche et détails des aliments',
@@ -44,7 +44,7 @@ export class PricingService {
         'Récapitulatif journalier des apports',
       ],
       link: "S'abonner",
-      action: () => this.redirectRegister(),
+      action: () => this.subscribeTier2(),
     },
   ];
 
@@ -56,5 +56,17 @@ export class PricingService {
 
   redirectRegister(): void {
     this.dialogService.openDialog(CodeModaleEnum.SIGNUP);
+  }
+
+  subscribeTier1(): void {
+    this.dialogService.openDialog(CodeModaleEnum.EXTERNAL_LINK, {
+      url: 'https://datafood.lemonsqueezy.com/buy/10d8c623-2df5-48fc-aaf4-95f243906f43?embed=1&discount=0',
+    });
+  }
+
+  subscribeTier2(): void {
+    this.dialogService.openDialog(CodeModaleEnum.EXTERNAL_LINK, {
+      url: 'https://datafood.lemonsqueezy.com/buy/05bad941-d342-4ffa-85ce-5f0cf41be760?embed=1&discount=0',
+    });
   }
 }

@@ -5,11 +5,14 @@
   <button
     mat-flat-button
     color="accent"
-    style="border-radius: 20px"
+    style="border-radius: 20px; height: 50px"
     (click)="onClick()"
   >
-    <mat-icon>home</mat-icon>
-    <span>DataFood</span>
+    <img
+      style="height: 40px; margin: 0.5rem"
+      src="../../../../assets/svg/logos/logo_primary_datafood.png"
+    />
+    <!-- <label style="margin: 0.5rem 0.5rem 2rem 0.5rem">DataFood</label> -->
   </button>
   <span class="example-spacer"></span>
   <app-search-product-autocomplete

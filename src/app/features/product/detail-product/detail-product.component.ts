@@ -132,7 +132,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
       label: '%',
       columDef: 'percentage',
       type: ColumnTypeParamEnum.STRING,
-      colWidth: '5rem',
+      colWidth: '3rem',
     },
   ];
 

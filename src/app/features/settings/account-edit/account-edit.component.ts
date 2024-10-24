@@ -18,6 +18,7 @@ import { ContextService } from '../../../shared/services/context.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { UserService } from '../../../shared/services/user.service';
 import { AuthServiceFront } from '../../../shared/services/auth-front.service';
+import { SubscriptionService } from '../../../../generated';
 
 @Component({
   selector: 'app-account-edit',
@@ -71,6 +72,7 @@ export class AccountEditComponent implements OnInit {
     private readonly userService: UserService,
     private readonly contextService: ContextService,
     private readonly authServiceFront: AuthServiceFront,
+    private readonly subscriptionService: SubscriptionService,
     private readonly dialogService: DialogGenericService
   ) {}
 
@@ -124,38 +126,29 @@ export class AccountEditComponent implements OnInit {
   }
 
   openPopInDeleteAccount(): void {
-    const dialRef = this.dialogService.openDialog(
-      CodeModaleEnum.DELETE_ACCOUNT
-    );
-
     this.subscription.add(
-      dialRef
-        .afterClosed()
+      this.contextService
+        .getCurrentUser()
         .pipe(
-          tap(() => {
-            this.authServiceFront.logOut();
-            this.snackbarService.show('Votre compte a été supprimé !');
+          tap((userRes) => {
+            this.dialogService.openDialog(
+              CodeModaleEnum.DELETE_ACCOUNT,
+              userRes
+            );
           })
         )
         .subscribe()
     );
   }
 
-  deleteAccount(): void {
+  openPopInUnsubscribe(): void {
     this.subscription.add(
       this.contextService
         .getCurrentUser()
         .pipe(
-          switchMap((userRes) =>
-            this.userService.deleteAccount(userRes?.id!).pipe(
-              tap(() => {
-                this.dialogService.close(
-                  CodeModaleEnum.DELETE_ACCOUNT,
-                  userRes
-                );
-              })
-            )
-          )
+          tap((userRes) => {
+            this.dialogService.openDialog(CodeModaleEnum.UNSUBSCRIBE, userRes);
+          })
         )
         .subscribe()
     );
