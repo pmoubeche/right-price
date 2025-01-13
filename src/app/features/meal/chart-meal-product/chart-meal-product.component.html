@@ -16,11 +16,17 @@
   <br />
   <br />
   @for(chartData of dailyRecommanderIncomeChartsBarData; track $index){
-  <app-chart
-    type="bar"
-    [data]="chartData!"
-    [options]="optionsBar"
-    [height]="30"
-  ></app-chart>
+  <div style="display: flex; flex-direction: column">
+    <span style="display: flex; justify-content: center">{{
+      chartData.label
+    }}</span>
+    <app-chart
+      type="bar"
+      [data]="chartData!.chart"
+      [options]="optionsBar"
+      [height]="25"
+    ></app-chart>
+  </div>
+  <br />
   }
 </mat-expansion-panel>

@@ -1,0 +1,74 @@
+<mat-expansion-panel [expanded]="true" style="height: 89vh">
+  <mat-expansion-panel-header
+    >Souscrire à un abonnement</mat-expansion-panel-header
+  >
+  <div>
+    <h1 style="display: flex; justify-content: center">
+      {{ title }}
+    </h1>
+    <p style="display: flex; justify-content: center">
+      {{ description }}
+    </p>
+  </div>
+
+  <div style="display: flex; justify-content: center">
+    @for(price of prices$ | async; track $index){
+    <mat-card class="card-link" style="margin: 1rem; width: 25%; height: 70vh">
+      <mat-card-header style="padding: 1rem 1rem 0rem 1rem">
+        <h3>
+          {{ price.title }}
+        </h3>
+      </mat-card-header>
+      <mat-card-content
+        style="
+          display: flex;
+          flex-direction: column;
+          padding: 0rem 1rem 0rem 1rem;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            padding: 1rem 1rem 0rem 1rem;
+            align-items: center;
+          "
+        >
+          <h1 style="margin-right: 0.5rem">
+            {{ price.price }}
+          </h1>
+          <span> / mois</span>
+        </div>
+        <div>
+          <mat-list>
+            @for(feature of price.features; track $index){
+            <a mat-list-item>
+              <mat-icon matListItemIcon class="icon-checked">check</mat-icon>
+              <span matListItemTitle>{{ feature }}</span>
+            </a>
+            }
+          </mat-list>
+        </div>
+      </mat-card-content>
+      <mat-card-footer
+        style="
+          display: flex;
+          justify-content: center;
+          margin-top: auto;
+          padding: 1rem 2rem 2rem 2rem;
+          flex-direction: column;
+        "
+      >
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="price.action()"
+          style="border-radius: 20px"
+        >
+          <span>{{ price.link }}</span>
+        </button>
+      </mat-card-footer>
+    </mat-card>
+    }
+  </div>
+</mat-expansion-panel>

@@ -25,9 +25,6 @@
   <div
     [ngClass]="isLineDisposal ? 'card-wrapper-line' : 'card-wrapper-table'"
     style="--nb: {{ countProductPerLine }}"
-    cdkDropList
-    [cdkDropListData]="productsAttributesToDisplay"
-    (cdkDropListDropped)="drop($event)"
   >
     @for (productInfoModel of productsAttributesToDisplay; track $index) {
     <mat-card
@@ -40,7 +37,6 @@
         margin: 0.5rem;
       "
       (click)="onSelectItem(productInfoModel)"
-      cdkDrag
     >
       <mat-card-header
         style="display: flex; padding: 1rem 1rem 0.5rem 1rem; height: 25%"

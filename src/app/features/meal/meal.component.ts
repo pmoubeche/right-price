@@ -54,6 +54,7 @@ import {
   NgxMatNativeDateModule,
   NgxMatTimepickerModule,
 } from '@angular-material-components/datetime-picker';
+import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
 
 @Component({
   selector: 'app-meal',
@@ -70,6 +71,7 @@ import {
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     NgxMatNativeDateModule,
+    SearchProductAutocompleteComponent,
   ],
   templateUrl: './meal.component.html',
   styleUrl: './meal.component.scss',
@@ -84,6 +86,7 @@ import {
 })
 export class MealComponent implements OnInit, OnDestroy {
   readonly DATE_MEAL_INPUT = 'dateMeal';
+  readonly TIME_MEAL_INPUT = 'timeMeal';
   readonly QUANTITY_FORM = 'quantity';
   readonly MEAL_FORM = 'meal';
   readonly PRODUCT_INFO_FORM = 'productInfo';
@@ -167,7 +170,12 @@ export class MealComponent implements OnInit, OnDestroy {
     return this.mealProductForm?.get(this.DATE_MEAL_INPUT) as FormControl;
   }
 
+  get timeControl(): FormControl {
+    return this.mealProductForm?.get(this.TIME_MEAL_INPUT) as FormControl;
+  }
+
   selectedDate?: string;
+  public selDate!: Date | null;
 
   subscription = new Subscription();
 
@@ -184,7 +192,7 @@ export class MealComponent implements OnInit, OnDestroy {
     private readonly mealService: MealService,
     private readonly mealProductApiService: MealProductApiService,
     private readonly popInService: DialogGenericService,
-    private activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -192,11 +200,26 @@ export class MealComponent implements OnInit, OnDestroy {
     this.cardsService.selectItem$.subscribe((item) => {
       this.productInfoModelSelected = item;
     });
+
+    this.setProductInfoSelectedFromProductDetail();
+  }
+
+  private setProductInfoSelectedFromProductDetail() {
+    this.subscription.add(
+      this.mealService.productInfoModel$
+        .pipe(
+          tap((productInfo) => {
+            this.productInfoModelSelected = productInfo;
+          })
+        )
+        .subscribe()
+    );
   }
 
   initForm(): void {
     this.mealProductForm = this.formBuilder.group({
       [this.DATE_MEAL_INPUT]: [new Date(), [Validators.required]],
+      [this.TIME_MEAL_INPUT]: ['', [Validators.required]],
       [this.QUANTITY_FORM]: ['', [Validators.required]],
       [this.MEAL_FORM]: new FormControl('', [Validators.required]),
       [this.PRODUCT_INFO_FORM]: [
@@ -238,7 +261,8 @@ export class MealComponent implements OnInit, OnDestroy {
   }
 
   onDateChange(event: any) {
-    this.mealService.dateSelectedBs.next(DateUtils.formatDate(event.value));
+    this.dateControl.setValue(event);
+    this.mealService.dateSelectedBs.next(DateUtils.formatDate(event));
   }
 
   onMealProductsBreakfastChange(mealProducts: MealProductInfoModel[]): void {
@@ -254,9 +278,14 @@ export class MealComponent implements OnInit, OnDestroy {
   }
 
   addMealProductToResult(): void {
-    let date = this.dateControl.value;
+    let time = DateUtils.fromTimeStringToMapTime(this.timeControl.value);
     let quantity = this.quantityControl!.value;
     let meal = this.mealSelected;
+
+    let myDate = new Date(this.dateControl.value).setHours(
+      time.hours,
+      time.minutes
+    );
 
     const mealProductParam: MealProductParam = {
       barcodeProduct: this.productInfoModelSelected?.id,
@@ -266,7 +295,7 @@ export class MealComponent implements OnInit, OnDestroy {
       quantity: Number.parseFloat(quantity),
       packagingQuantity: this.productInfoModelSelected?.packagingQuantity,
       mealType: meal?.id,
-      date: date,
+      date: DateUtils.dateStringWithoutOffesetTimeZone(new Date(myDate)),
     };
 
     this.mealProductForm.markAllAsTouched();

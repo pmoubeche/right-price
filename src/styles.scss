@@ -5,6 +5,8 @@
 @use "normalisation";
 @use "app-utils" as utils;
 
+@import "assets/style/tailwind.scss";
+
 @include mat.core();
 
 @include app-theme.theme();

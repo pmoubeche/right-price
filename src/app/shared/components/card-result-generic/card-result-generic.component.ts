@@ -1,17 +1,15 @@
-import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { MaterialModule } from '../../material/material.module';
 import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
 import { ResponseProducts } from '../../model/product.model';
 import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
+import { TrimStringPipe } from '../../pipes/trim-string.pipe';
 import { UppercaseFirstLetterFormatPipe } from '../../pipes/uppercase-first-letter-format.pipe';
-import { DragAndDropService } from '../../services/drag-and-drop.service';
 import { ProductUtils } from '../../utils/product.utils';
 import { CardResultGenericService } from './card-result-generic.service';
-import { TrimStringPipe } from '../../pipes/trim-string.pipe';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-result-generic',
@@ -22,8 +20,6 @@ import { Router } from '@angular/router';
     PercentFormatPipe,
     UppercaseFirstLetterFormatPipe,
     TrimStringPipe,
-    CdkDropList,
-    CdkDrag,
   ],
   templateUrl: './card-result-generic.component.html',
   styleUrl: './card-result-generic.component.scss',
@@ -41,7 +37,8 @@ export class CardResultGenericComponent implements OnInit {
   @Input() set httpProducts(httpProducts: ResponseProducts) {
     if (httpProducts !== undefined) {
       this._httpProducts = httpProducts;
-      this.setProductsInfoFromResponseProducts();
+      this.productsAttributesToDisplay =
+        ProductUtils.setProductsInfoFromResponseProducts(httpProducts);
     }
   }
 
@@ -65,8 +62,6 @@ export class CardResultGenericComponent implements OnInit {
 
   constructor(
     private readonly cardResultGenericService: CardResultGenericService,
-    private readonly dragAndDropService: DragAndDropService,
-    private readonly uppercaseFristLetterPipe: UppercaseFirstLetterFormatPipe,
     private readonly router: Router
   ) {}
 
@@ -84,36 +79,9 @@ export class CardResultGenericComponent implements OnInit {
   onSelectItem(productInfo?: ProductInfosModel): void {
     if (this.isRedirectOnSelect) {
       this.router.navigate(['/product', productInfo?.id]);
+      this.cardResultGenericService.productIdBs.next(productInfo!.id!);
     } else {
       this.cardResultGenericService.onSelectItem(productInfo!);
-    }
-  }
-
-  drop(event: CdkDragDrop<ProductInfosModel[]>) {
-    this.dragAndDropService.dropCard(event);
-  }
-
-  setProductsInfoFromResponseProducts(): void {
-    if (this.httpProducts.products) {
-      this.httpProducts.page = (
-        Number.parseInt(this.httpProducts.page!) - 1
-      ).toString();
-      this.productsAttributesToDisplay = this.httpProducts.products.map(
-        (productApi) =>
-          ({
-            id: productApi.id,
-            image: productApi.image_small_url,
-            label: this.uppercaseFristLetterPipe.transform(
-              productApi?.product_name!
-            ),
-            nutriscore: ProductUtils.getUrlNutriscore(
-              productApi.nutriscore_grade!
-            ),
-            ecoscore: ProductUtils.getUrlEcoscore(productApi.ecoscore_grade!),
-            novagroup: ProductUtils.getUrlNovagroup(productApi.nova_group!),
-            packagingQuantity: Number.parseFloat(productApi.product_quantity!),
-          } as ProductInfosModel)
-      );
     }
   }
 }

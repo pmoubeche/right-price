@@ -3,7 +3,9 @@
   [expanded]="isExpandedBreakfast"
 >
   <mat-expansion-panel-header>
-    <mat-panel-title> Petit déjeuner </mat-panel-title>
+    <mat-panel-title>
+      Petit déjeuner ({{ dateBreakfast ?? "No time" }})</mat-panel-title
+    >
   </mat-expansion-panel-header>
   <app-table-generic
     [isPaginated]="false"
@@ -19,7 +21,7 @@
 <br />
 <mat-expansion-panel class="meal-lunch-panel" [expanded]="isExpandedLunch">
   <mat-expansion-panel-header>
-    <mat-panel-title> Déjeuner </mat-panel-title>
+    <mat-panel-title> Déjeuner ({{ dateLunch ?? "No time" }})</mat-panel-title>
   </mat-expansion-panel-header>
   <app-table-generic
     [isPaginated]="false"
@@ -35,7 +37,7 @@
 <br />
 <mat-expansion-panel class="meal-dinner-panel" [expanded]="isExpandedDinner">
   <mat-expansion-panel-header>
-    <mat-panel-title> Diner </mat-panel-title>
+    <mat-panel-title> Diner ({{ dateDinner ?? "No time" }})</mat-panel-title>
   </mat-expansion-panel-header>
   <app-table-generic
     (onDeleteItem)="deleteLProductMeal($event)"

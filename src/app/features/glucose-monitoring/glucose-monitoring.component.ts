@@ -167,6 +167,9 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
   optionsCgmChart: ChartOptions = {
     responsive: true,
+    interaction: {
+      intersect: false,
+    },
     scales: {
       x: {
         type: 'time',
@@ -192,7 +195,6 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
       },
       y1: {
         type: 'linear',
-        // display: true,
         position: 'right',
         title: {
           display: true,
@@ -202,6 +204,14 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         grid: {
           drawOnChartArea: false, // only want the grid lines for one axis to show up
         },
+      },
+    },
+    plugins: {
+      filler: {
+        propagate: false,
+      },
+      title: {
+        display: true,
       },
     },
   };
@@ -510,32 +520,36 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
       const mealProductInfo = mealProductInfos.filter(
         (mealProduct) => mealProduct.mealType === mealType
       );
-      const productsFromOFF = httpProducts.products?.filter((productHttp) =>
-        mealProductInfo.map((mpi) => mpi.idProduct).includes(productHttp.id!)
-      );
-      let sumCarbs: number = 0;
-      let sumSugars: number = 0;
-
-      mealProductInfo.forEach((mealProduct) => {
-        const productOFF = productsFromOFF?.find(
-          (prodOFF) => mealProduct.idProduct === prodOFF.id
+      if (mealProductInfo.length > 0) {
+        const productsFromOFF = httpProducts.products?.filter((productHttp) =>
+          mealProductInfo.map((mpi) => mpi.idProduct).includes(productHttp.id!)
         );
-        productOFF!.nutriments =
-          ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(productOFF!);
-        sumCarbs +=
-          (productOFF?.nutriments!['carbohydrates_100g']! *
-            mealProduct.quantity!) /
-          100;
-        sumSugars +=
-          (productOFF?.nutriments!['sugars_100g']! * mealProduct.quantity!) /
-          100;
-      });
-      this.carbsAndSugarsValuesCharts.push({
-        mealType: mealType,
-        dateTime: new Date(mealProductInfo[0].date!).getTime(),
-        sumCarbs: sumCarbs,
-        sumSugars: sumSugars,
-      });
+        let sumCarbs: number = 0;
+        let sumSugars: number = 0;
+
+        mealProductInfo.forEach((mealProduct) => {
+          const productOFF = productsFromOFF?.find(
+            (prodOFF) => mealProduct.idProduct === prodOFF.id
+          );
+          productOFF!.nutriments =
+            ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(
+              productOFF!
+            );
+          sumCarbs +=
+            (productOFF?.nutriments!['carbohydrates_100g']! *
+              mealProduct.quantity!) /
+            100;
+          sumSugars +=
+            (productOFF?.nutriments!['sugars_100g']! * mealProduct.quantity!) /
+            100;
+        });
+        this.carbsAndSugarsValuesCharts.push({
+          mealType: mealType,
+          dateTime: new Date(mealProductInfo[0].date!).getTime() - 3600 * 1000,
+          sumCarbs: sumCarbs,
+          sumSugars: sumSugars,
+        });
+      }
     }
   }
 
@@ -600,25 +614,32 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         .sort();
 
       // Look for indexes where meals datetimes have been inserted
-      const indexMealBreakfastDateTime = arrayDateTimes.indexOf(
+      let indexMealBreakfastDateTime = arrayDateTimes.indexOf(
         this.carbsAndSugarsValuesCharts[0].dateTime
       );
-      const indexMealLunchDateTime = arrayDateTimes.indexOf(
-        this.carbsAndSugarsValuesCharts[1].dateTime
-      );
-      const indexMealDinnerDateTime = arrayDateTimes.indexOf(
-        this.carbsAndSugarsValuesCharts[2].dateTime
-      );
-
       // Create a new list filled with 0s and replace the indexes values by current meal intake value to match timeline
       mealCarbList = Array(arrayDateTimes.length).fill(0);
 
       mealCarbList[indexMealBreakfastDateTime] =
         this.carbsAndSugarsValuesCharts[0].sumCarbs;
-      mealCarbList[indexMealLunchDateTime] =
-        this.carbsAndSugarsValuesCharts[1].sumCarbs;
-      mealCarbList[indexMealDinnerDateTime] =
-        this.carbsAndSugarsValuesCharts[2].sumCarbs;
+
+      let indexMealLunchDateTime = 0;
+      if (this.carbsAndSugarsValuesCharts.length === 2) {
+        indexMealLunchDateTime = arrayDateTimes.indexOf(
+          this.carbsAndSugarsValuesCharts[1].dateTime
+        );
+        mealCarbList[indexMealLunchDateTime] =
+          this.carbsAndSugarsValuesCharts[1].sumCarbs;
+      }
+
+      let indexMealDinnerDateTime = 0;
+      if (this.carbsAndSugarsValuesCharts.length === 3) {
+        indexMealDinnerDateTime = arrayDateTimes.indexOf(
+          this.carbsAndSugarsValuesCharts[2].dateTime
+        );
+        mealCarbList[indexMealDinnerDateTime] =
+          this.carbsAndSugarsValuesCharts[2].sumCarbs;
+      }
     }
 
     this.cgmChartLineData = {
@@ -628,24 +649,44 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
           : datasChartLine.map((el) => el.x),
       datasets: [
         {
+          order: 2,
           label: 'Glucides (g)',
           type: 'bar',
           data: this.carbsAndSugarsValuesCharts.length > 0 ? mealCarbList : [],
-          backgroundColor: ['#2b5fad'],
-          borderColor: ['#2b5fad'],
+          backgroundColor: '#2b5fad',
+          borderColor: '#2b5fad',
           yAxisID: 'y1',
-          order: 2,
           barThickness: 10,
           borderRadius: 5,
         },
         {
+          order: 1,
           label: 'Glycémie journalière en mg/dL',
           type: 'line',
           data: datasChartLine.map((el) => el.y),
-          backgroundColor: ['#7fc8c9'],
-          borderColor: ['#7fc8c9'],
+          borderColor: '#7fc8c9',
+          pointRadius: 0,
           yAxisID: 'y',
-          order: 1,
+          tension: 0.4,
+        },
+        {
+          order: 3,
+          label: 'Moyenne basse',
+          type: 'line',
+          data: datasChartLine.map((_) => 100),
+          backgroundColor: ['#ffc30f'],
+          borderColor: '#ffc30f',
+          pointRadius: 0,
+        },
+        {
+          order: 4,
+          label: 'Moyenne haute',
+          type: 'line',
+          data: datasChartLine.map((_) => 140),
+          borderColor: '#ffc30f',
+          backgroundColor: 'rgb(255, 205, 86, 0.2)',
+          pointRadius: 0,
+          fill: '-1',
         },
       ],
     };

@@ -6,6 +6,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class UppercaseFirstLetterFormatPipe implements PipeTransform {
   transform(value?: string): string {
+    return UppercaseFirstLetterFormatPipe.transform(value);
+  }
+
+  static transform(value?: string): string {
     if (!value) {
       return '';
     }
