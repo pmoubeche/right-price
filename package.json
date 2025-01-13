@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:datafood-front": "node dist/datafood-front/server/server.mjs",
-    "generate-api": "npx @openapitools/openapi-generator-cli generate -i C:/Users/lamou/Documents/dev/projects/datafood/datafood-back/src/main/resources/open-api-contract/open-api.yml -g typescript-angular -o src/generated"
+    "generate-api": "npx @openapitools/openapi-generator-cli generate -i C:/Users/pmoub/Documents/projects/datafood-back/src/main/resources/open-api-contract/open-api.yml -g typescript-angular -o src/generated"
   },
   "private": true,
   "dependencies": {

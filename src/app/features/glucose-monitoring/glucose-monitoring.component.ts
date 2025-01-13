@@ -596,6 +596,13 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
     );
   }
 
+  openDeleteDataDialog(): void {
+    this.dialogService.openDialog(
+      CodeModaleEnum.DELETE_DATA_CGM,
+      this.datesCgms$
+    );
+  }
+
   setChartCgmData(datasCgm: CgmInfoModel[]): void {
     const datasChartLine = datasCgm.map((data) => {
       return {

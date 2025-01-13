@@ -1,0 +1,7 @@
+@use "app-utils" as utils;
+
+.highlight-date {
+  background-color: utils.get-couleur-tertiaire() !important;
+  opacity: 50%;
+  border-radius: 3rem;
+}

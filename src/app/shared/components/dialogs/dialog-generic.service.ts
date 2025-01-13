@@ -15,6 +15,7 @@ import { DialogBannerEditComponent } from './dialog-banner-edit/dialog-banner-ed
 import { DialogCsvImportComponent } from './dialog-csv-import/dialog-csv-import.component';
 import { ExternalLinkDialogComponent } from './dialog-susbcribe-tier1/dialog-subscribe-tier1.component';
 import { DialogUnsubscribeComponent } from './dialog-unsubscribe/dialog-unsubscribe.component';
+import { DialogDeleteDataCgmComponent } from './dialog-delete-cgm/dialog-delete-cgm.component';
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
@@ -26,6 +27,7 @@ export enum CodeModaleEnum {
   BANNER = 'banner',
   CSV_IMPORT = 'csvImport',
   EXTERNAL_LINK = 'externalLink',
+  DELETE_DATA_CGM = 'deleteDataCgm',
 }
 
 export interface ConfigModaleModel {
@@ -92,6 +94,12 @@ export class DialogGenericService {
       code: CodeModaleEnum.EXTERNAL_LINK,
       composant: ExternalLinkDialogComponent,
       width: '1920px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.DELETE_DATA_CGM,
+      composant: DialogDeleteDataCgmComponent,
+      width: '1000px',
       isUniqueModale: true,
     },
   ];

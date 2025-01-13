@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{ dialogParamData.title }}</h2>
+<mat-dialog-content
+  class="mat-typography"
+  style="display: flex; align-items: center"
+>
+  {{ dialogParamData.message }}
+  <br />
+  <br />
+  <div style="display: flex; align-items: center">
+    <mat-card style="width: 300px">
+      <mat-calendar
+        (selectedChange)="_onSelectedChange($event!)"
+        [selected]="selectedDateRange!"
+        [dateClass]="dateClass"
+      >
+      </mat-calendar>
+    </mat-card>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="warn" (click)="deleteDataCgm()" cdkFocusInitial>
+    <mat-label>Confirmer</mat-label>
+    <mat-icon> delete_permanantly</mat-icon>
+  </button>
+  <button mat-button color="primary" mat-dialog-close cdkFocusInitial>
+    <mat-label>Fermer</mat-label>
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>
