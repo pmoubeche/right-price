@@ -34,3 +34,7 @@
     font-family: "Material Icons" !important;
   }
 }
+
+.mat-mdc-input-element::-webkit-calendar-picker-indicator {
+  display: block;
+}

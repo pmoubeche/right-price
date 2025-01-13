@@ -1,13 +1,22 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
-import { Subscription, tap } from 'rxjs';
+import { Subscription, switchMap, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../../shared/common/paginated/paginated-datasource';
+import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
 import { ChartUtils } from '../../../shared/components/chart/chart.utils';
+import {
+  GaugeCardParams,
+  GaugeChartCardComponent,
+} from '../../../shared/components/gauge-chart-card/gauge-chart-card.component';
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
-import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
+import {
+  RoleAdmin,
+  RoleTier1,
+  RoleTier2,
+} from '../../../shared/constants/role.constant';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { Product, ResponseProduct } from '../../../shared/model/product.model';
 import {
@@ -16,8 +25,11 @@ import {
 } from '../../../shared/model/table-column-param.model';
 import { PercentFormatPipe } from '../../../shared/pipes/percent-format.pipe';
 import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-first-letter-format.pipe';
+import { ContextService } from '../../../shared/services/context.service';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { ProductUtils } from '../../../shared/utils/product.utils';
+import { CompareProductService } from '../../compare-products/compare-product.service';
+import { MealService } from '../../meal/meal.service';
 
 export class IngredientInfoModel {
   id?: string;
@@ -32,6 +44,7 @@ export class NutrimentInfoModel {
   valueNumber?: number;
   ajr?: string;
   percentAjr_100g?: number;
+  unit?: string;
 }
 
 @Component({
@@ -43,11 +56,12 @@ export class NutrimentInfoModel {
     PercentFormatPipe,
     UppercaseFirstLetterFormatPipe,
     ChartComponent,
+    GaugeChartCardComponent,
   ],
   templateUrl: './detail-product.component.html',
   styleUrl: './detail-product.component.scss',
 })
-export class DetailProductComponent implements OnInit, AfterViewInit {
+export class DetailProductComponent implements OnInit, OnDestroy {
   private _httpProduct!: ResponseProduct;
   public ingredientsInfo?: IngredientInfoModel[] = [];
   public macroNutrimentInfo?: NutrimentInfoModel[] = [];
@@ -84,11 +98,18 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     this.microNutrimentsDataSources.dataSource =
       new MatTableDataSource<NutrimentInfoModel>(this.microNutrimentInfo);
     this.setMicroNutrimentsChartBarsData();
+
+    this.setGaugesParamsDatas(httpProduct);
   }
 
   get httpProduct() {
     return this._httpProduct;
   }
+
+  gaugeChartParamCal = new GaugeCardParams();
+  gaugeChartParamProt = new GaugeCardParams();
+  gaugeChartParamGluc = new GaugeCardParams();
+  gaugeChartParamLip = new GaugeCardParams();
 
   ingredientCount?: number;
 
@@ -100,14 +121,14 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
   columnParamsIngredients: TableColumnParamModel[] = [
     {
       id: '1',
-      label: `Ingredients (${this.ingredientCount})`,
+      label: `Ingredients`,
       columDef: 'ingredient',
       type: ColumnTypeParamEnum.STRING,
-      applyStyleWithImage: false,
+      colWidth: '9rem',
     },
     {
       id: '2',
-      label: 'Pourcentage (%)',
+      label: '%',
       columDef: 'percentage',
       type: ColumnTypeParamEnum.STRING,
     },
@@ -119,10 +140,11 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
       label: 'Nutriment',
       columDef: 'nutriment',
       type: ColumnTypeParamEnum.STRING,
+      colWidth: '9rem',
     },
     {
       id: '2',
-      label: 'Valeur pour 100g',
+      label: 'Valeur / 100g',
       columDef: 'value',
       type: ColumnTypeParamEnum.STRING,
     },
@@ -134,10 +156,11 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
       label: 'Sucres',
       columDef: 'nutriment',
       type: ColumnTypeParamEnum.STRING,
+      colWidth: '9rem',
     },
     {
       id: '2',
-      label: 'Valeur pour 100g',
+      label: 'Valeur / 100g',
       columDef: 'value',
       type: ColumnTypeParamEnum.STRING,
     },
@@ -196,32 +219,123 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     },
   };
 
+  isTier1 = false;
+
   subscription = new Subscription();
 
   constructor(
     private readonly formatPercentPipe: PercentFormatPipe,
     private readonly uppercaseFirstLetter: UppercaseFirstLetterFormatPipe,
     private readonly openFoodFactApiService: OpenFoodFactsApiService,
-    private readonly tableGenericService: TableGenericService,
+    private readonly cardResultService: CardResultGenericService,
+    private readonly compareProductService: CompareProductService,
+    private readonly mealService: MealService,
+    private readonly contextService: ContextService,
+    private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     ChartUtils.setChartImports();
+    this.getProductFromOFFApi();
+    this.setRights();
+  }
+
+  private setRights() {
     this.subscription.add(
-      this.openFoodFactApiService
-        .findProductByBarCode(this.activatedRoute.snapshot.paramMap.get('id')!)
+      this.contextService
+        .getCurrentUser()
         .pipe(
-          tap((httpProduct) => {
-            this.httpProduct = httpProduct;
+          tap((user) => {
+            this.isTier1 =
+              user?.roles?.map((role) => role.id).includes(RoleTier1.id)! ||
+              user?.roles?.map((role) => role.id).includes(RoleTier2.id)! ||
+              user?.roles?.map((role) => role.id).includes(RoleAdmin.id)!;
           })
         )
         .subscribe()
     );
   }
 
-  ngAfterViewInit(): void {
-    this.ingredientCount = this.product?.ingredients?.length;
+  public backToSearch(): void {
+    this.subscription.add(
+      this.cardResultService.textSearched$
+        .pipe(
+          tap((searchText) => {
+            this.router.navigate(['/product'], {
+              queryParams: { search: searchText },
+            });
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  public redirectAndAddToCompare(): void {
+    this.router.navigate(['/compare']);
+    this.compareProductService.productBs.next(this.httpProduct.product!);
+  }
+
+  public redirectAndAddToMeal(): void {
+    this.router.navigate(['/meal']);
+    this.mealService.productInfoModelBs.next(
+      ProductUtils.setProductInfoFromProduct(this.httpProduct.product!)
+    );
+  }
+
+  private getProductFromOFFApi(): void {
+    this.subscription.add(
+      this.activatedRoute.params
+        .pipe(
+          switchMap((data) =>
+            this.openFoodFactApiService.findProductByBarCode(data['id']).pipe(
+              tap((httpProduct) => {
+                this.httpProduct = httpProduct;
+              })
+            )
+          )
+        )
+        .subscribe()
+    );
+  }
+
+  private setGaugesParamsDatas(httpProduct: ResponseProduct) {
+    this.gaugeChartParamCal = {
+      title: 'Calories',
+      color: '#be0e13',
+      unit: 'kcal',
+      value: httpProduct.product?.nutriments?.['energy-kcal_100g'],
+      valueMax: 900,
+      height: 30,
+      width: 15,
+    };
+    this.gaugeChartParamProt = {
+      title: 'Protéines',
+      color: '#FFCE56',
+      unit: 'g',
+      value: httpProduct.product?.nutriments?.proteins_100g,
+      valueMax: 100,
+      height: 30,
+      width: 15,
+    };
+    this.gaugeChartParamGluc = {
+      title: 'Glucides',
+      color: '#36A2EB',
+      unit: 'g',
+      value: httpProduct.product?.nutriments?.carbohydrates_100g,
+      valueMax: 100,
+      height: 30,
+      width: 15,
+    };
+    this.gaugeChartParamLip = {
+      title: 'Lipides',
+      color: '#7fc8c9',
+      unit: 'g',
+      value: httpProduct.product?.nutriments?.fat_100g,
+      valueMax: 100,
+      height: 30,
+      width: 15,
+    };
   }
 
   private setUrlsForImagesCard() {
@@ -377,5 +491,9 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     } else {
       window.open(`https://fr.openfoodfacts.org`, '_blank');
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

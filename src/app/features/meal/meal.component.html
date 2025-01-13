@@ -1,159 +1,123 @@
 <mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header> Recherche</mat-expansion-panel-header>
-  <div style="display: flex">
-    <div
-      style="
-        width: 20%;
-        display: flex;
-        align-items: center;
-        padding-right: 1rem;
-      "
-    >
-      <app-search-product
-        (eventHttpProductsChange)="onHttpProductsChange($event)"
-        (eventHttpProductChange)="onHttpProductChange($event)"
-        [pageSize]="10"
-      ></app-search-product>
-    </div>
-    <mat-divider [vertical]="true"></mat-divider>
-    <section
-      style="max-width: 80%; display: flex; overflow: auto; margin-left: 1rem"
-    >
-      <app-card-result-generic
-        [httpProducts]="httpProducts"
-        [isLineDisposal]="true"
-        [pageSize]="10"
-        [countProductPerLine]="10"
-      ></app-card-result-generic>
-    </section>
-  </div>
-</mat-expansion-panel>
-<br />
-<mat-expansion-panel [expanded]="true">
   <mat-expansion-panel-header> Jour :</mat-expansion-panel-header>
   <form
     [formGroup]="mealProductForm"
     style="display: flex; align-items: center"
   >
-    <mat-form-field appearance="outline">
-      <input
-        matInput
-        [formControlName]="DATE_MEAL_INPUT"
-        [ngxMatDatetimePicker]="pickerCustomIcon"
-        placeholder="Choose a date"
-        [formControl]="dateControl"
-        (dateChange)="onDateChange($event)"
-      />
-      <ngx-mat-datepicker-toggle
-        matSuffix
-        [for]="pickerCustomIcon"
-      ></ngx-mat-datepicker-toggle>
-      <ngx-mat-datetime-picker
-        #pickerCustomIcon
-        [showSpinners]="false"
-        [showSeconds]="false"
+    <mat-card style="width: 300px">
+      <mat-calendar
+        (selectedChange)="onDateChange($event!)"
         [dateClass]="dateClass"
       >
-        <ngx-mat-datepicker-actions>
-          <button mat-button ngxMatDatepickerCancel>Annuler</button>
-          <button mat-raised-button color="primary" ngxMatDatepickerApply>
-            Appliquer
-          </button>
-        </ngx-mat-datepicker-actions>
-      </ngx-mat-datetime-picker>
-    </mat-form-field>
-    <!-- <mat-form-field appearance="outline" class="fields">
-      <mat-label>Choisir une date</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker"
-        [formControlName]="DATE_MEAL_INPUT"
-        ngDefaultControl
-        (dateChange)="onDateChange($event)"
-      />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker [dateClass]="dateClass" #picker></mat-datepicker>
-    </mat-form-field> -->
-    <div style="width: 33%">
-      <mat-card
+      </mat-calendar>
+    </mat-card>
+    <mat-divider
+      [vertical]="true"
+      style="padding: 1rem; height: 35vh"
+    ></mat-divider>
+    <div style="display: grid; margin: 1rem">
+      <mat-form-field class="fields" appearance="outline">
+        <mat-label>Repas</mat-label>
+        <mat-select
+          [formControlName]="MEAL_FORM"
+          [compareWith]="compareCategoryObjects"
+          (selectionChange)="onSelectMeal($event)"
+          required
+        >
+          @for (meal of meals; track $index) {
+          <mat-option [value]="meal">{{ meal.label }}</mat-option>
+          }
+        </mat-select>
+        @if(!mealSelected){
+        <mat-error>Champ obligatoire</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="fields" appearance="outline">
+        <mat-label>Heure du repas</mat-label>
+        <input
+          matInput
+          type="time"
+          [formControlName]="TIME_MEAL_INPUT"
+          [value]="timeControl.value"
+        />
+      </mat-form-field>
+    </div>
+    <div style="display: grid; padding-bottom: 1.5rem">
+      <div>
+        <mat-card
+          class="fields"
+          [ngClass]="!productInfoModelSelected?.id ? 'product-mandatory' : ''"
+          style="
+            max-height: 3.5rem;
+            min-width: 100%;
+            margin-bottom: 1.8rem;
+            border-radius: 30px;
+          "
+        >
+          @if(productInfoModelSelected!.id !== undefined){
+          <mat-card-actions class="mat-card-actions">
+            <img
+              mat-card-image
+              src="{{ productInfoModelSelected?.image }}"
+              style="max-height: 2.25rem; display: flex; margin-top: 1.25rem"
+            />
+            <div style="margin-top: 1.25rem; padding: 1rem">
+              {{ productInfoModelSelected?.label }}
+            </div>
+            <img
+              mat-card-image
+              class="product-score"
+              src="{{ productInfoModelSelected?.nutriscore }}"
+              style="height: 4rem; padding-top: 1rem"
+            />
+          </mat-card-actions>
+          } @else {
+          <p>Rechercher et selectionner un aliment dans la liste *</p>
+          }
+        </mat-card>
+
+        @if(!productInfoModelSelected?.id){
+        <p style="font-size: 12px; color: #d92828; margin-top: -1.5rem">
+          &nbsp;&nbsp;&nbsp;&nbsp;Champ obligatoire
+        </p>
+        }
+      </div>
+      <app-search-product-autocomplete></app-search-product-autocomplete>
+    </div>
+    <div style="display: grid; margin: 1rem">
+      <mat-form-field class="fields" appearance="outline">
+        <mat-label>Quantité (g)</mat-label>
+        <input
+          matInput
+          type="number"
+          [formControlName]="QUANTITY_FORM"
+          placeholder="Ex. 100"
+          required
+        />
+        @if(quantityControl.invalid){
+        <mat-error>Champ obligatoire</mat-error>
+        }
+      </mat-form-field>
+
+      <div
         class="fields"
-        [ngClass]="!productInfoModelSelected?.id ? 'product-mandatory' : ''"
         style="
-          max-height: 3.5rem;
-          min-width: 100%;
-          max-width: 33%;
-          margin-bottom: 1.8rem;
+          margin-bottom: 2rem;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
         "
       >
-        @if(productInfoModelSelected!.id !== undefined){
-        <mat-card-actions class="mat-card-actions">
-          <img
-            mat-card-image
-            src="{{ productInfoModelSelected?.image }}"
-            style="max-height: 2.25rem; display: flex; margin-top: 1.25rem"
-          />
-          <div style="margin-top: 1.25rem; padding: 1rem">
-            {{ productInfoModelSelected?.label }}
-          </div>
-          <img
-            mat-card-image
-            class="product-score"
-            src="{{ productInfoModelSelected?.nutriscore }}"
-            style="height: 4rem; padding-top: 1rem"
-          />
-        </mat-card-actions>
-        } @else {
-        <p>Veuillez selectionner un aliment dans la liste *</p>
-        }
-      </mat-card>
-      @if(!productInfoModelSelected?.id){
-      <p style="font-size: 12px; color: #d92828; margin-top: -1.5rem">
-        &nbsp;&nbsp;&nbsp;&nbsp;Champ obligatoire
-      </p>
-      }
-    </div>
-    <mat-form-field class="fields" appearance="outline">
-      <mat-label>Quantité (g)</mat-label>
-      <input
-        matInput
-        type="number"
-        [formControlName]="QUANTITY_FORM"
-        placeholder="Ex. 100"
-        required
-      />
-      @if(quantityControl.invalid){
-      <mat-error>Champ obligatoire</mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field class="fields" appearance="outline">
-      <mat-label>Repas</mat-label>
-      <mat-select
-        [formControlName]="MEAL_FORM"
-        [compareWith]="compareCategoryObjects"
-        (selectionChange)="onSelectMeal($event)"
-        required
-      >
-        @for (meal of meals; track $index) {
-        <mat-option [value]="meal">{{ meal.label }}</mat-option>
-        }
-      </mat-select>
-      @if(!mealSelected){
-      <mat-error>Champ obligatoire</mat-error>
-      }
-    </mat-form-field>
-    <div class="fields" style="margin-bottom: 2rem">
-      <button
-        mat-fab
-        extended
-        color="accent"
-        (click)="addMealProductToResult()"
-      >
-        <mat-icon>add_shopping_cart</mat-icon>
-        Ajouter au repas
-      </button>
+        <button
+          mat-fab
+          extended
+          color="accent"
+          (click)="addMealProductToResult()"
+        >
+          <mat-icon>add_shopping_cart</mat-icon>
+          Ajouter au repas
+        </button>
+      </div>
     </div>
   </form>
 </mat-expansion-panel>

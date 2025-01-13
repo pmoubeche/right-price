@@ -13,15 +13,21 @@ import { DialogDeleteAccountComponent } from './dialog-delete-account/dialog-del
 import { DialogAvatarComponent } from './dialog-avatars/dialog-avatars.component';
 import { DialogBannerEditComponent } from './dialog-banner-edit/dialog-banner-edit.component';
 import { DialogCsvImportComponent } from './dialog-csv-import/dialog-csv-import.component';
+import { ExternalLinkDialogComponent } from './dialog-susbcribe-tier1/dialog-subscribe-tier1.component';
+import { DialogUnsubscribeComponent } from './dialog-unsubscribe/dialog-unsubscribe.component';
+import { DialogDeleteDataCgmComponent } from './dialog-delete-cgm/dialog-delete-cgm.component';
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
-  SINGIN = 'signin',
+  SIGNIN = 'signin',
   SIGNUP = 'signup',
   DELETE_ACCOUNT = 'deleteAccount',
+  UNSUBSCRIBE = 'unsubscribe',
   AVATAR = 'avatar',
   BANNER = 'banner',
   CSV_IMPORT = 'csvImport',
+  EXTERNAL_LINK = 'externalLink',
+  DELETE_DATA_CGM = 'deleteDataCgm',
 }
 
 export interface ConfigModaleModel {
@@ -43,7 +49,7 @@ export class DialogGenericService {
       isUniqueModale: true,
     },
     {
-      code: CodeModaleEnum.SINGIN,
+      code: CodeModaleEnum.SIGNIN,
       composant: DialogSigninComponent,
       width: '650px',
       isUniqueModale: true,
@@ -57,6 +63,12 @@ export class DialogGenericService {
     {
       code: CodeModaleEnum.DELETE_ACCOUNT,
       composant: DialogDeleteAccountComponent,
+      width: '650px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.UNSUBSCRIBE,
+      composant: DialogUnsubscribeComponent,
       width: '650px',
       isUniqueModale: true,
     },
@@ -76,6 +88,18 @@ export class DialogGenericService {
       code: CodeModaleEnum.BANNER,
       composant: DialogBannerEditComponent,
       width: '1050px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.EXTERNAL_LINK,
+      composant: ExternalLinkDialogComponent,
+      width: '1920px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.DELETE_DATA_CGM,
+      composant: DialogDeleteDataCgmComponent,
+      width: '1000px',
       isUniqueModale: true,
     },
   ];

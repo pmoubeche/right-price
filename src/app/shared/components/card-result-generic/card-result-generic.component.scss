@@ -13,10 +13,10 @@
 }
 
 .mat-card-footer {
+  margin-top: auto;
   display: flex;
   justify-content: space-evenly;
   padding: 0.5rem;
-  height: 15%;
 }
 
 .product-score {
@@ -43,7 +43,6 @@
 }
 
 .card-link:hover {
-  background-color: rgba(0, 0, 0, 0.05);
   border-width: 2px;
   border-color: utils.get-couleur-secondaire();
   cursor: pointer;

@@ -21,6 +21,12 @@ export class CardResultGenericService {
   );
   public selectItem$ = this.selectItemBs.asObservable();
 
+  public productIdBs = new BehaviorSubject<string>('');
+  public productId$ = this.productIdBs.asObservable();
+
+  public textSearchedBs = new BehaviorSubject<string>('');
+  public textSearched$ = this.textSearchedBs.asObservable();
+
   onPageChange(pageIndex: number, pageSize?: number) {
     this.onPageIndexChangeBs.next({ pageIndex, pageSize });
     this.loadingBs.next(true);

@@ -6,6 +6,7 @@ api/banner.service.ts
 api/cgmImport.service.ts
 api/meals.service.ts
 api/products.service.ts
+api/subscription.service.ts
 configuration.ts
 encoder.ts
 git_push.sh

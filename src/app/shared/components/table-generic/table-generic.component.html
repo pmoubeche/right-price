@@ -1,4 +1,9 @@
-<div class="mat-elevation-z8" style="max-width: 100%">
+<section
+  class="mat-elevation-z8"
+  [ngClass]="isSection ? 'example-container' : ''"
+  style="max-width: 100%"
+  tabindex="0"
+>
   @if (paginatedDataSource.dataSource && this.loading === false) {
   <table
     mat-table
@@ -170,4 +175,4 @@
   } } @else {
   <mat-spinner style="margin: 0 auto"></mat-spinner>
   }
-</div>
+</section>

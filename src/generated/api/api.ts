@@ -6,4 +6,6 @@ export * from './meals.service';
 import { MealsService } from './meals.service';
 export * from './products.service';
 import { ProductsService } from './products.service';
-export const APIS = [BannerService, CgmImportService, MealsService, ProductsService];
+export * from './subscription.service';
+import { SubscriptionService } from './subscription.service';
+export const APIS = [BannerService, CgmImportService, MealsService, ProductsService, SubscriptionService];

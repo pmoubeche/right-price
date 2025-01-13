@@ -1,0 +1,37 @@
+@use "app-utils" as utils;
+
+.example-form {
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 28px;
+}
+
+.mat-mdc-option .mdc-list-item__primary-text {
+  white-space: normal;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  text-decoration: inherit;
+  text-transform: inherit;
+  margin-right: auto;
+  display: contents;
+}
+
+.foe {
+  // --mdc-outlined-text-field-outline-color: white;
+  background-color: white;
+  border-radius: 30px;
+  height: 3.5rem;
+}
+
+.icon {
+  // color: white;
+}

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
+<h2 mat-dialog-title>{{ dialogParamDataSignin.title }}</h2>
 <mat-dialog-content class="mat-typography">
   <div style="display: flex; justify-content: center">
     <app-login-google
@@ -78,7 +78,8 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  @for(button of data.buttons; track $index){ @if(button.isIntialyFocused) {
+  @for(button of dialogParamDataSignin.buttons; track $index){
+  @if(button.isIntialyFocused) {
   <button
     mat-button
     [color]="button.color"

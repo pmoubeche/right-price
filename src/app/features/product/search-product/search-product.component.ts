@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -12,6 +13,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, Subscription, catchError, of, tap } from 'rxjs';
 import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
@@ -19,6 +21,7 @@ import {
   ResponseProduct,
   ResponseProducts,
 } from '../../../shared/model/product.model';
+import { NutriscoreUrlFromGradePipe } from '../../../shared/pipes/nutriscore-url-from-grade.pipe';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 
 export enum ChipParamSearch {
@@ -31,7 +34,12 @@ export enum ChipParamSearch {
 @Component({
   selector: 'app-search-product',
   standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule],
+  imports: [
+    MaterialModule,
+    ReactiveFormsModule,
+    CommonModule,
+    NutriscoreUrlFromGradePipe,
+  ],
   templateUrl: './search-product.component.html',
   styleUrl: './search-product.component.scss',
 })
@@ -60,7 +68,8 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly openFoodFactApiService: OpenFoodFactsApiService,
-    private readonly cardResultService: CardResultGenericService
+    private readonly cardResultService: CardResultGenericService,
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +77,22 @@ export class SearchProductComponent implements OnInit, OnDestroy {
     this.setForm();
     this.switchPage();
     this.selectFromCardList();
-    this.search(this.pageIndex, this.pageSize);
+    this.searchFromFormField();
+  }
+
+  private searchFromFormField() {
+    this.subscription.add(
+      this.activatedRoute.queryParams
+        .pipe(
+          tap((params) => {
+            if (Object.keys(params).length > 0) {
+              this.textInputControl.setValue(params['search']);
+            }
+            this.search(this.pageIndex, this.pageSize);
+          })
+        )
+        .subscribe()
+    );
   }
 
   private selectFromCardList() {
@@ -176,6 +200,7 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   setProductsFromApi(apiEndpoint: Observable<ResponseProducts>): void {
     this.cardResultService.isErrorBs.next(false);
     this.cardResultService.loadingBs.next(true);
+    this.cardResultService.textSearchedBs.next(this.textInputControl.value);
     apiEndpoint
       .pipe(
         tap((response: ResponseProducts) => {

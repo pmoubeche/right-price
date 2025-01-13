@@ -104,7 +104,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
 
   public isDisplayedLegend: boolean = true;
 
-  dailyRecommanderIncomeChartsBarData?: ChartData[] = [];
+  dailyRecommanderIncomeChartsBarData?: { label: string; chart: ChartData }[];
 
   optionsBar: ChartOptions = {
     indexAxis: 'y',
@@ -114,7 +114,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         beginAtZero: true,
         stacked: true,
       },
-      y: { stacked: true, position: 'right' },
+      y: { stacked: true, display: false },
     },
     plugins: {
       legend: {
@@ -287,6 +287,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
           bottomRight: 15,
         },
         borderSkipped: false,
+        stack: '0',
       };
 
       const dataSetLunch: ChartDataset = {
@@ -301,6 +302,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
           bottomRight: 15,
         },
         borderSkipped: false,
+        stack: '0',
       };
 
       const dataSetDinner: ChartDataset = {
@@ -315,19 +317,12 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
           bottomRight: 15,
         },
         borderSkipped: false,
+        stack: '0',
       };
 
       const dataSetFiller: ChartDataset = {
         label: 'AJR',
-        data: [
-          ChartUtils.setValueFiller(
-            this.isMaleReco,
-            key,
-            dataSetBreakfast,
-            dataSetLunch,
-            dataSetDinner
-          ),
-        ],
+        data: [ChartUtils.setValueFillerFull(this.isMaleReco, key)],
         fill: true,
         backgroundColor: ['#f1f1f1'],
         borderRadius: {
@@ -337,6 +332,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
           bottomRight: 15,
         },
         borderSkipped: false,
+        stack: '1',
       };
 
       const chartData: ChartData = {
@@ -348,7 +344,10 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
           dataSetFiller,
         ],
       };
-      this.dailyRecommanderIncomeChartsBarData?.push(chartData);
+      this.dailyRecommanderIncomeChartsBarData?.push({
+        label: key,
+        chart: chartData,
+      });
     });
   }
 
