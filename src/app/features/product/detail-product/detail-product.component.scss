@@ -5,8 +5,8 @@
 }
 
 .product-score {
-  height: 5rem;
-  padding: 1rem 1rem 1rem 1rem;
+  height: 4rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
 
 .mat-mdc-card-header {
@@ -31,4 +31,9 @@
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.example-container {
+  height: 400px;
+  overflow: auto;
 }

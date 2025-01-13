@@ -261,6 +261,7 @@ export class MealComponent implements OnInit, OnDestroy {
   }
 
   onDateChange(event: any) {
+    this.dateControl.setValue(event);
     this.mealService.dateSelectedBs.next(DateUtils.formatDate(event));
   }
 

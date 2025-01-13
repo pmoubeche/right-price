@@ -25,16 +25,16 @@
         (click)="onSelectItem(product)"
         style="display: flex; flex-direction: row"
       >
-        <div style="width: 20%">
-          <img [src]="product.image_small_url" height="25" />
+        <div style="width: 20%; display: flex; justify-content: start">
+          <img [src]="product.image_small_url" style="height: 48px" />
         </div>
         <div style="width: 60%">
           <span>{{ product.product_name }}</span>
         </div>
         <div style="width: 20%">
           <img
+            style="height: 36px"
             [src]="product.nutriscore_grade! | nutriscoreUrlFromGrade"
-            height="25"
           />
         </div>
       </mat-option>

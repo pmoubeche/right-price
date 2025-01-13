@@ -24,7 +24,6 @@ import {
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
 import { DateUtils } from '../../shared/utils/date.utils';
-import { SearchProductComponent } from '../product/search-product/search-product.component';
 
 @Component({
   selector: 'app-grocery-list',

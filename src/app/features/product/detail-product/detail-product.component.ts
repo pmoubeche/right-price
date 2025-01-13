@@ -124,15 +124,13 @@ export class DetailProductComponent implements OnInit, OnDestroy {
       label: `Ingredients`,
       columDef: 'ingredient',
       type: ColumnTypeParamEnum.STRING,
-      applyStyleWithImage: false,
-      colWidth: '11rem',
+      colWidth: '9rem',
     },
     {
       id: '2',
       label: '%',
       columDef: 'percentage',
       type: ColumnTypeParamEnum.STRING,
-      colWidth: '3rem',
     },
   ];
 
@@ -142,7 +140,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
       label: 'Nutriment',
       columDef: 'nutriment',
       type: ColumnTypeParamEnum.STRING,
-      colWidth: '11rem',
+      colWidth: '9rem',
     },
     {
       id: '2',
@@ -158,7 +156,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
       label: 'Sucres',
       columDef: 'nutriment',
       type: ColumnTypeParamEnum.STRING,
-      colWidth: '11rem',
+      colWidth: '9rem',
     },
     {
       id: '2',

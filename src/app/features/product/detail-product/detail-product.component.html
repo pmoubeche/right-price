@@ -70,22 +70,24 @@
     <mat-card-header>
       <mat-card-title>Informations</mat-card-title>
     </mat-card-header>
-    <div style="padding: 1rem 1rem 1rem 1rem">
-      <p>
-        <strong>Code barre :</strong>
-        {{ product?._id }}
-      </p>
-      <p><strong> Nom :</strong> {{ product?.product_name }}</p>
-      <p>
-        <strong>Quantité :</strong>
-        {{ product?.product_quantity }}
-        {{ product?.product_quantity_unit }}
-      </p>
-      <p><strong> Marques :</strong> {{ product?.brands }}</p>
-      <p><strong> Catégories :</strong> {{ product?.categories }}</p>
-      <p><strong> Emballages:</strong> {{ product?.packaging }}</p>
-      <br />
-    </div>
+    <section class="example-container" tabindex="0">
+      <div style="padding: 1rem 1rem 1rem 1rem">
+        <p>
+          <strong>Code barre :</strong>
+          {{ product?._id }}
+        </p>
+        <p><strong> Nom :</strong> {{ product?.product_name }}</p>
+        <p>
+          <strong>Quantité :</strong>
+          {{ product?.product_quantity }}
+          {{ product?.product_quantity_unit }}
+        </p>
+        <p><strong> Marques :</strong> {{ product?.brands }}</p>
+        <p><strong> Catégories :</strong> {{ product?.categories }}</p>
+        <p><strong> Emballages:</strong> {{ product?.packaging }}</p>
+        <br />
+      </div>
+    </section>
   </mat-card>
 
   <mat-card
@@ -102,8 +104,9 @@
     <app-table-generic
       [columns]="columnParamsIngredients"
       [isPaginated]="false"
+      [isSection]="true"
       [paginatedDataSource]="ingredientDataSources"
-      [rowHeight]="'1.5rem'"
+      [rowHeight]="'2rem'"
       style="padding: 1rem"
     >
     </app-table-generic>
@@ -152,7 +155,7 @@
       [isPaginated]="false"
       [paginatedDataSource]="macroNutrimentsDataSources"
       [rowHeight]="'2rem'"
-      style="padding: 1rem"
+      style="padding: 0.5rem"
     >
     </app-table-generic>
   </mat-card>
@@ -160,7 +163,7 @@
     <mat-card-header>
       <mat-card-title>Proportions Nutriments</mat-card-title>
     </mat-card-header>
-    <div style="display: flex; align-items: center">
+    <div>
       <app-chart
         type="doughnut"
         [data]="macroNutrimentschartPieData!"

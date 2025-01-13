@@ -76,6 +76,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   @Input() isClickable = false;
   @Input() pageSizeOptions: number[] = [24];
   @Input() isEditOnTable = true;
+  @Input() isSection = false;
 
   @Output() onDeleteItem = new EventEmitter<T>();
   @Output() onEditItem = new EventEmitter<T>();

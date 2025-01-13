@@ -520,32 +520,36 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
       const mealProductInfo = mealProductInfos.filter(
         (mealProduct) => mealProduct.mealType === mealType
       );
-      const productsFromOFF = httpProducts.products?.filter((productHttp) =>
-        mealProductInfo.map((mpi) => mpi.idProduct).includes(productHttp.id!)
-      );
-      let sumCarbs: number = 0;
-      let sumSugars: number = 0;
-
-      mealProductInfo.forEach((mealProduct) => {
-        const productOFF = productsFromOFF?.find(
-          (prodOFF) => mealProduct.idProduct === prodOFF.id
+      if (mealProductInfo.length > 0) {
+        const productsFromOFF = httpProducts.products?.filter((productHttp) =>
+          mealProductInfo.map((mpi) => mpi.idProduct).includes(productHttp.id!)
         );
-        productOFF!.nutriments =
-          ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(productOFF!);
-        sumCarbs +=
-          (productOFF?.nutriments!['carbohydrates_100g']! *
-            mealProduct.quantity!) /
-          100;
-        sumSugars +=
-          (productOFF?.nutriments!['sugars_100g']! * mealProduct.quantity!) /
-          100;
-      });
-      this.carbsAndSugarsValuesCharts.push({
-        mealType: mealType,
-        dateTime: new Date(mealProductInfo[0].date!).getTime(),
-        sumCarbs: sumCarbs,
-        sumSugars: sumSugars,
-      });
+        let sumCarbs: number = 0;
+        let sumSugars: number = 0;
+
+        mealProductInfo.forEach((mealProduct) => {
+          const productOFF = productsFromOFF?.find(
+            (prodOFF) => mealProduct.idProduct === prodOFF.id
+          );
+          productOFF!.nutriments =
+            ProductUtils.setNutrimentsEstimatedIfNutrimentsUndefined(
+              productOFF!
+            );
+          sumCarbs +=
+            (productOFF?.nutriments!['carbohydrates_100g']! *
+              mealProduct.quantity!) /
+            100;
+          sumSugars +=
+            (productOFF?.nutriments!['sugars_100g']! * mealProduct.quantity!) /
+            100;
+        });
+        this.carbsAndSugarsValuesCharts.push({
+          mealType: mealType,
+          dateTime: new Date(mealProductInfo[0].date!).getTime() - 3600 * 1000,
+          sumCarbs: sumCarbs,
+          sumSugars: sumSugars,
+        });
+      }
     }
   }
 
@@ -610,25 +614,32 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         .sort();
 
       // Look for indexes where meals datetimes have been inserted
-      const indexMealBreakfastDateTime = arrayDateTimes.indexOf(
+      let indexMealBreakfastDateTime = arrayDateTimes.indexOf(
         this.carbsAndSugarsValuesCharts[0].dateTime
       );
-      const indexMealLunchDateTime = arrayDateTimes.indexOf(
-        this.carbsAndSugarsValuesCharts[1].dateTime
-      );
-      const indexMealDinnerDateTime = arrayDateTimes.indexOf(
-        this.carbsAndSugarsValuesCharts[2].dateTime
-      );
-
       // Create a new list filled with 0s and replace the indexes values by current meal intake value to match timeline
       mealCarbList = Array(arrayDateTimes.length).fill(0);
 
       mealCarbList[indexMealBreakfastDateTime] =
         this.carbsAndSugarsValuesCharts[0].sumCarbs;
-      mealCarbList[indexMealLunchDateTime] =
-        this.carbsAndSugarsValuesCharts[1].sumCarbs;
-      mealCarbList[indexMealDinnerDateTime] =
-        this.carbsAndSugarsValuesCharts[2].sumCarbs;
+
+      let indexMealLunchDateTime = 0;
+      if (this.carbsAndSugarsValuesCharts.length === 2) {
+        indexMealLunchDateTime = arrayDateTimes.indexOf(
+          this.carbsAndSugarsValuesCharts[1].dateTime
+        );
+        mealCarbList[indexMealLunchDateTime] =
+          this.carbsAndSugarsValuesCharts[1].sumCarbs;
+      }
+
+      let indexMealDinnerDateTime = 0;
+      if (this.carbsAndSugarsValuesCharts.length === 3) {
+        indexMealDinnerDateTime = arrayDateTimes.indexOf(
+          this.carbsAndSugarsValuesCharts[2].dateTime
+        );
+        mealCarbList[indexMealDinnerDateTime] =
+          this.carbsAndSugarsValuesCharts[2].sumCarbs;
+      }
     }
 
     this.cgmChartLineData = {

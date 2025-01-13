@@ -1,7 +1,9 @@
 <mat-card style="border-radius: 15px">
   <mat-card-header>
     <span>
-      {{ gaugeCardParam.title }}
+      <b>
+        {{ gaugeCardParam.title }}
+      </b>
     </span>
   </mat-card-header>
   <div
@@ -10,7 +12,7 @@
     <div style="width: 66%; display: flex; justify-content: center">
       <div style="display: flex; justify-content: center; align-items: center">
         <h3 style="font-size: 24px" [ngStyle]="{ color: gaugeCardParam.color }">
-          {{ gaugeCardParam.value! | roundNumberDecimal : 0 }}
+          <b>{{ gaugeCardParam.value! | roundNumberDecimal : 0 }}</b>
         </h3>
         <span style="padding: 0rem 0rem 0rem 1rem">{{
           gaugeCardParam.unit
@@ -18,7 +20,7 @@
       </div>
     </div>
     <app-chart
-      style="width: 33%; padding: 0rem 1rem 1rem 1rem"
+      style="width: 33%; padding: 0rem 1rem 0rem 0rem"
       type="doughnut"
       [data]="gaugeChartData!"
       [options]="options"

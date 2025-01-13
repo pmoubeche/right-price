@@ -33,6 +33,10 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
   isExpandedLunch = false;
   isExpandedDinner = false;
 
+  dateBreakfast?: string;
+  dateLunch?: string;
+  dateDinner?: string;
+
   dateSelected?: string;
 
   @Input() set mealProduct(mealProductInfoModel: MealProductInfoModel) {
@@ -163,6 +167,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
   }
 
   addProductToRightList(mealProduct: MealProductInfoModel): void {
+    let date = new Date(mealProduct.date!);
     switch (mealProduct.mealType) {
       case 'breakfast':
         this.mealProductsBreakfast.push(mealProduct);
@@ -171,18 +176,39 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
             this.mealProductsBreakfast
           );
         this.isExpandedBreakfast = true;
+        this.dateBreakfast = date
+          .getUTCHours()
+          .toString()
+          .concat(':')
+          .concat(
+            date.getUTCMinutes() === 0 ? '00' : date.getUTCMinutes().toString()
+          );
         break;
       case 'lunch':
         this.mealProductsLunch.push(mealProduct);
         this.dataSourceLunch.dataSource =
           new MatTableDataSource<MealProductInfoModel>(this.mealProductsLunch);
         this.isExpandedLunch = true;
+        this.dateLunch = date
+          .getUTCHours()
+          .toString()
+          .concat(':')
+          .concat(
+            date.getUTCMinutes() === 0 ? '00' : date.getUTCMinutes().toString()
+          );
         break;
       case 'dinner':
         this.mealProductsDinner.push(mealProduct);
         this.dataSourceDinner.dataSource =
           new MatTableDataSource<MealProductInfoModel>(this.mealProductsDinner);
         this.isExpandedDinner = true;
+        this.dateDinner = date
+          .getUTCHours()
+          .toString()
+          .concat(':')
+          .concat(
+            date.getUTCMinutes() === 0 ? '00' : date.getUTCMinutes().toString()
+          );
         break;
       default:
         break;
