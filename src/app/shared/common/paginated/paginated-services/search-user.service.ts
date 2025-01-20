@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Page, PageRequest } from '../page';
-import { UserService } from '../../../services/user.service';
-import { UserModel } from '../../../model/user.model';
-import { UserFilterModel } from '../../../model/payload/request/user-filter.model';
-import { GetUsersModelResponse } from '../response/get-users-model-response.model';
+import {
+  GetUserResponseModel,
+  UserFilterModel,
+  UserModel,
+  UserService,
+} from '../../../../../generated';
 
 @Injectable({
   providedIn: 'root',
@@ -26,12 +28,12 @@ export class SearchUserService {
         userFilterModel
       )
       .pipe(
-        switchMap((response: GetUsersModelResponse) => {
+        switchMap((response: GetUserResponseModel) => {
           if (response) {
             return of({
               content: response.users!,
               number: response.size!,
-              size: response.totalPage!,
+              size: response.totalPages!,
               totalElements: response.totalElements!,
             });
           } else {

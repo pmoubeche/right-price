@@ -1,11 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, tap } from 'rxjs';
-import {
-  BannerFilterModel,
-  BannerInfoModel,
-  BannerService,
-} from '../../../../generated';
+import { BannerInfoModel, BannerService } from '../../../../generated';
 import { MaterialModule } from '../../material/material.module';
 
 @Component({
@@ -16,7 +12,7 @@ import { MaterialModule } from '../../material/material.module';
   styleUrl: './banner.component.scss',
 })
 export class BannerComponent implements OnInit, OnDestroy {
-  bannerType = 'info' || 'warn';
+  bannerType?: string;
   isOpened?: boolean;
   icon?: string;
   bannerToDisplay?: BannerInfoModel;

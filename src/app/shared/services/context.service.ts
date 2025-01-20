@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { UserResponse } from '../model/payload/response/user-reponse.model';
+import { UserResponse } from '../../../generated';
 
 @Injectable({ providedIn: 'root' })
 export class ContextService {

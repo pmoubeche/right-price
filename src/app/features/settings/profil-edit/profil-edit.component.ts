@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { ContextService } from '../../../shared/services/context.service';
 import { CommonModule } from '@angular/common';
-import { Gender, UserModel } from '../../../shared/model/user.model';
+import { Gender } from '../../../shared/model/gender.model';
 import {
   FormBuilder,
   FormControl,
@@ -11,13 +11,12 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Subscription, tap } from 'rxjs';
-import { UserService } from '../../../shared/services/user.service';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../../../shared/components/dialogs/dialog-generic.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
-import { UserResponse } from '../../../shared/model/payload/response/user-reponse.model';
+import { UserModel, UserResponse, UserService } from '../../../../generated';
 import { AuthServiceFront } from '../../../shared/services/auth-front.service';
 
 export enum GenderEnum {
@@ -63,7 +62,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
     return this._user!;
   }
 
-  private _user = new UserModel();
+  private _user?: UserModel;
   editProfilForm?: FormGroup;
   imageUrl?: string;
 
@@ -157,9 +156,9 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
       this.userService
         .updateUser(userParam)
         .pipe(
-          tap((userRes) => {
-            this.user = userRes;
-            this.authServiceFront.logIn(userRes);
+          tap((res) => {
+            this.user = res.userModel!;
+            this.authServiceFront.logIn(res.refreshTokenResponse!);
             this.snackBarService.show('Profil modifié avec succès');
           })
         )

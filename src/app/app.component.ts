@@ -22,11 +22,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     // only useful for reloading page and check if user is already logged in
-    if (
-      this.tokenService.getAccessToken() !== null &&
-      !this.tokenService.isTokenExpired()
-    ) {
-      this.contextService.setCurrentUser(this.tokenService.getUser());
+    if (this.tokenService.getAccessToken() !== null) {
+      this.contextService.setCurrentUser(
+        this.tokenService.getCurrentUserFromToken()
+      );
     }
   }
 }

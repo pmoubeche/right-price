@@ -1,14 +1,12 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { MaterialModule } from '../../../material/material.module';
 import { DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { UserService } from '../../../services/user.service';
-import { ContextService } from '../../../services/context.service';
-import { Subscription, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-dialog-avatars',
@@ -46,9 +44,7 @@ export class DialogAvatarComponent implements OnInit {
   subscription = new Subscription();
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
-    private readonly dialogGenericService: DialogGenericService,
-    private readonly userService: UserService,
-    private readonly contextService: ContextService
+    private readonly dialogGenericService: DialogGenericService
   ) {}
 
   ngOnInit(): void {

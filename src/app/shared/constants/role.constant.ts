@@ -23,3 +23,10 @@ export const RoleTier2: RoleModel = {
   name: 'TIER2_26050f70-a315-4667-aaeb-eec6fd0bf78d',
   code: 'TIER2',
 };
+
+export const RolesConstants: RoleModel[] = [
+  RoleGuest,
+  RoleTier1,
+  RoleTier2,
+  RoleAdmin,
+];

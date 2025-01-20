@@ -8,29 +8,22 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Subscription, tap } from 'rxjs';
+import { UserFilterModel, UserModel, UserService } from '../../../generated';
 import { PageRequest } from '../../shared/common/paginated/page';
 import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
 import { SearchUserService } from '../../shared/common/paginated/paginated-services/search-user.service';
 import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
 import { TableGenericService } from '../../shared/components/table-generic/table-generic.service';
-import {
-  RoleAdmin,
-  RoleGuest,
-  RoleTier1,
-  RoleTier2,
-} from '../../shared/constants/role.constant';
+import { RolesConstants } from '../../shared/constants/role.constant';
 import { MaterialModule } from '../../shared/material/material.module';
 import { CodeLabelModel } from '../../shared/model/code-label.model';
-import { UserFilterModel } from '../../shared/model/payload/request/user-filter.model';
 import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
-import { UserModel } from '../../shared/model/user.model';
 import { DateUtils } from '../../shared/utils/date.utils';
-import { UserService } from '../../shared/services/user.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-adminstration',
@@ -75,12 +68,7 @@ export class UserAdminstrationComponent implements OnInit, OnDestroy {
     { code: 'email', label: 'Email' },
   ];
 
-  rolesOptions: CodeLabelModel[] = [
-    RoleGuest,
-    RoleTier1,
-    RoleTier2,
-    RoleAdmin,
-  ].map((role) => {
+  rolesOptions: CodeLabelModel[] = RolesConstants.map((role) => {
     return {
       code: role.id,
       label: role.name?.substring(0, role.name.indexOf('_')),

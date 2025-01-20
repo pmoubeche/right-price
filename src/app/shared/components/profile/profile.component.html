@@ -12,7 +12,7 @@
 
   <mat-menu #menu="matMenu">
     @if (user$ | async; as user) {
-    <button mat-menu-item [routerLink]="'/settings'">
+    <button mat-menu-item [routerLink]="'/settings/' + user.id">
       <label>Parametres</label>
       <mat-icon>settings</mat-icon>
     </button>

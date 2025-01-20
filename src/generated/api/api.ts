@@ -1,3 +1,5 @@
+export * from './auth.service';
+import { AuthService } from './auth.service';
 export * from './banner.service';
 import { BannerService } from './banner.service';
 export * from './cgmImport.service';
@@ -6,6 +8,10 @@ export * from './meals.service';
 import { MealsService } from './meals.service';
 export * from './products.service';
 import { ProductsService } from './products.service';
+export * from './refreshToken.service';
+import { RefreshTokenService } from './refreshToken.service';
 export * from './subscription.service';
 import { SubscriptionService } from './subscription.service';
-export const APIS = [BannerService, CgmImportService, MealsService, ProductsService, SubscriptionService];
+export * from './user.service';
+import { UserService } from './user.service';
+export const APIS = [AuthService, BannerService, CgmImportService, MealsService, ProductsService, RefreshTokenService, SubscriptionService, UserService];

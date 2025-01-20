@@ -563,7 +563,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
     this.subscription.add(
       this.cgmImportServiceApi
-        .existDataInDbFromCsv(this.fileSelected)
+        .existDataInDbFromCsv(this.deviceSelected, this.fileSelected)
         .pipe(
           switchMap((res) =>
             res
