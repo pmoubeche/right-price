@@ -18,6 +18,8 @@ import { GlucoseMonitoringComponent } from './features/glucose-monitoring/glucos
 import { getListDatesWhereCgmResolver } from './shared/routes/cmg-dates-resolver.service';
 import { DetailProductComponent } from './features/product/detail-product/detail-product.component';
 import { SubscriptionComponent } from './features/pricing/pricing.component';
+import { authGuard } from './shared/guard/auth.guard';
+import { getUserByIdResolver } from './shared/routes/user-resolver.service';
 
 export const routes: Routes = [
   {
@@ -35,19 +37,19 @@ export const routes: Routes = [
   {
     path: 'meal',
     component: MealComponent,
-    canActivate: [requireAnyRole(RoleTier1, RoleTier2, RoleAdmin)],
+    canActivate: [requireAnyRole(RoleTier1, RoleTier2, RoleAdmin), authGuard()],
     resolve: { dates: getListDatesWhereMealsResolver },
   },
   {
     path: 'grocery',
     component: GroceryListComponent,
-    canActivate: [requireAnyRole(RoleTier1, RoleTier2, RoleAdmin)],
+    canActivate: [requireAnyRole(RoleTier1, RoleTier2, RoleAdmin), authGuard()],
     resolve: { dates: getListDatesWhereMealsResolver },
   },
   {
     path: 'cgm',
     component: GlucoseMonitoringComponent,
-    canActivate: [requireAnyRole(RoleTier2, RoleAdmin)],
+    canActivate: [requireAnyRole(RoleTier2, RoleAdmin), authGuard()],
     resolve: {
       datesMeals: getListDatesWhereMealsResolver,
       datesCgm: getListDatesWhereCgmResolver,
@@ -58,22 +60,25 @@ export const routes: Routes = [
     component: CompareProductsComponent,
   },
   {
-    path: 'settings',
+    path: 'settings/:id',
     component: SettingsComponent,
+    canActivate: [authGuard()],
+    resolve: { user: getUserByIdResolver },
   },
   {
     path: 'administration',
     component: AdministrationComponent,
-    canActivate: [requireAnyRole(RoleAdmin)],
+    canActivate: [requireAnyRole(RoleAdmin), authGuard()],
   },
   {
     path: 'user-edit/:id',
     component: UserEditComponent,
-    canActivate: [requireAnyRole(RoleAdmin)],
+    canActivate: [requireAnyRole(RoleAdmin), authGuard()],
   },
   {
     path: 'subscribe',
     component: SubscriptionComponent,
+    canActivate: [authGuard()],
   },
   {
     path: '',

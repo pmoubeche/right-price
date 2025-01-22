@@ -8,9 +8,9 @@ import {
 } from '../dialog-generic.service';
 import { ContextService } from '../../../services/context.service';
 import { SnackbarService } from '../../../services/snackbar.service';
-import { UserService } from '../../../services/user.service';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { AuthServiceFront } from '../../../services/auth-front.service';
+import { UserService } from '../../../../../generated';
 
 @Component({
   selector: 'app-dialog-delete-account',

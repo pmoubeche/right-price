@@ -8,17 +8,14 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Subscription, switchMap, tap } from 'rxjs';
+import { UserModel, UserService } from '../../../../generated';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../../../shared/components/dialogs/dialog-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
-import { UserModel } from '../../../shared/model/user.model';
 import { ContextService } from '../../../shared/services/context.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
-import { UserService } from '../../../shared/services/user.service';
-import { AuthServiceFront } from '../../../shared/services/auth-front.service';
-import { SubscriptionService } from '../../../../generated';
 
 @Component({
   selector: 'app-account-edit',
@@ -45,7 +42,7 @@ export class AccountEditComponent implements OnInit {
     return this._user!;
   }
 
-  private _user = new UserModel();
+  private _user?: UserModel;
   passwordChangeForm!: FormGroup;
 
   subscription = new Subscription();
@@ -71,8 +68,6 @@ export class AccountEditComponent implements OnInit {
     private readonly snackbarService: SnackbarService,
     private readonly userService: UserService,
     private readonly contextService: ContextService,
-    private readonly authServiceFront: AuthServiceFront,
-    private readonly subscriptionService: SubscriptionService,
     private readonly dialogService: DialogGenericService
   ) {}
 

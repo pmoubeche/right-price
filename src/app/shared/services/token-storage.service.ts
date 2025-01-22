@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { UserResponse } from '../model/payload/response/user-reponse.model';
+import { RolesConstants } from '../constants/role.constant';
+import { UserResponse } from '../../../generated';
 
-const TOKEN_KEY = 'auth-token';
-const USER_KEY = 'auth-user';
+const TOKEN_KEY = 'accesstoken';
+const REFRESH_TOKEN = 'refreshToken';
+const EXP = 'exp';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +19,19 @@ export class TokenStorageService {
     window.sessionStorage.clear();
   }
 
-  public saveToken(token: string): void {
+  public saveAccessToken(accessToken: string): void {
     window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    window.sessionStorage.setItem(TOKEN_KEY, accessToken);
+  }
+
+  public saveRefreshToken(refreshToken: string): void {
+    window.sessionStorage.removeItem(REFRESH_TOKEN);
+    window.sessionStorage.setItem(REFRESH_TOKEN, refreshToken);
+  }
+
+  public saveExpirationDate(exp: string): void {
+    window.sessionStorage.removeItem(EXP);
+    window.sessionStorage.setItem(EXP, exp);
   }
 
   public getAccessToken(): string | null {
@@ -29,29 +41,52 @@ export class TokenStorageService {
     return window.sessionStorage.getItem(TOKEN_KEY)!;
   }
 
-  public saveUser(user: UserResponse): void {
-    window.sessionStorage.removeItem(USER_KEY);
-    window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
-  }
-
-  public getUser(): UserResponse | null {
+  public getRefreshToken(): string | null {
     if (typeof window === 'undefined') {
       return null;
     }
-    return JSON.parse(sessionStorage.getItem(USER_KEY)!);
+    return window.sessionStorage.getItem(REFRESH_TOKEN)!;
   }
 
-  public isTokenExpired(): boolean {
+  public getExpiresAt(): string | null {
     if (typeof window === 'undefined') {
-      return true;
+      return null;
     }
-
-    return jwtDecode(this.getAccessToken()!).exp! > Date.now();
+    return window.sessionStorage.getItem(EXP)!;
   }
 
-  public setTokenExpiration(callback: () => void) {
-    setTimeout(() => {
-      callback();
-    }, 1000 * 60 * this.TOKEN_EXPIRATION_MIN);
+  getCurrentUserFromToken(): UserResponse {
+    return {
+      id: this.getUserIdFromToken(),
+      roles: RolesConstants.filter((role) =>
+        this.getRolesFromToken().includes(role.id!)
+      ),
+      image: this.getImageUrlFromToken(),
+      username: this.getUsernameFromToken(),
+    } as UserResponse;
+  }
+
+  public isAccessTokenExpired(): boolean {
+    return Date.parse(this.getExpiresAt()!) < Date.now();
+  }
+
+  public getImageUrlFromToken(): string {
+    var token: any = jwtDecode(this.getAccessToken()!);
+    return token['img'];
+  }
+
+  public getUserIdFromToken(): string {
+    var token: any = jwtDecode(this.getAccessToken()!);
+    return token['id'];
+  }
+
+  public getUsernameFromToken(): string {
+    var token: any = jwtDecode(this.getAccessToken()!);
+    return token['sub'];
+  }
+
+  public getRolesFromToken(): string[] {
+    var token: any = jwtDecode(this.getAccessToken()!);
+    return token['roles'];
   }
 }

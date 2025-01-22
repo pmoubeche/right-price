@@ -3,8 +3,8 @@
     <br />
     <br />
     <div style="display: grid; justify-items: center">
-      @if(user.image){
-      <img [src]="user.image" style="height: 10rem; border-radius: 5rem" />
+      @if(user?.image){
+      <img [src]="user?.image" style="height: 10rem; border-radius: 5rem" />
       } @else {
       <button
         mat-fab
@@ -26,7 +26,7 @@
       <br />
       <br />
       <span style="font-size: 24px; font-weight: bold">{{
-        user.username
+        user?.username
       }}</span>
     </div>
   </mat-expansion-panel>
@@ -49,7 +49,7 @@
             matInput
             type="text"
             [formControlName]="ID_FIELD"
-            [value]="user.id"
+            [value]="user?.id"
             readonly
           />
         </mat-form-field>
@@ -60,7 +60,7 @@
             matInput
             type="text"
             [formControlName]="NAME_FIELD"
-            [value]="user.name"
+            [value]="user?.name"
             ngDefaultControl
           />
         </mat-form-field>
@@ -71,7 +71,7 @@
             matInput
             type="text"
             [formControlName]="FIRSTNAME_FIELD"
-            [value]="user.firstname"
+            [value]="user?.firstname"
             ngDefaultControl
           />
         </mat-form-field>
@@ -82,7 +82,7 @@
             matInput
             type="text"
             [formControlName]="USERNAME_FIELD"
-            [value]="user.username"
+            [value]="user?.username"
             ngDefaultControl
           />
         </mat-form-field>
@@ -93,7 +93,7 @@
             matInput
             type="text"
             [formControlName]="EMAIL_FIELD"
-            [value]="user.email"
+            [value]="user?.email"
             ngDefaultControl
           />
         </mat-form-field>
@@ -162,7 +162,7 @@
             matInput
             type="number"
             [formControlName]="HEIGHT_FIELD"
-            [value]="user.height"
+            [value]="user?.height"
             ngDefaultControl
           />
         </mat-form-field>
@@ -173,7 +173,7 @@
             matInput
             type="number"
             [formControlName]="WEIGHT_FIELD"
-            [value]="user.name"
+            [value]="user?.name"
             ngDefaultControl
           />
         </mat-form-field>
@@ -184,7 +184,7 @@
             matInput
             type="text"
             [formControlName]="ORIGIN_FIELD"
-            [value]="user.origin"
+            [value]="user?.origin"
             ngDefaultControl
           />
         </mat-form-field>
@@ -194,7 +194,7 @@
           <mat-select
             [formControlName]="GENDER_FIELD"
             [compareWith]="compareCategoryObjects"
-            [(value)]="user.gender"
+            [(value)]="user!.gender"
           >
             <mat-option [value]="null"></mat-option>
             @for (gender of genders; track $index) {
@@ -209,7 +209,7 @@
             matInput
             [matDatepicker]="picker"
             [formControlName]="DATE_CREATION_FIELD"
-            [value]="user.dateCreation"
+            [value]="user?.dateCreation"
             ngDefaultControl
           />
           <mat-datepicker-toggle
@@ -221,7 +221,7 @@
         <br />
         <mat-checkbox
           [formControlName]="IS_ACTIVE_FIELD"
-          [checked]="user.isActive"
+          [checked]="user?.isActive"
           >Actif</mat-checkbox
         >
       </div>

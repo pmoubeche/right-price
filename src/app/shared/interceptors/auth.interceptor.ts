@@ -23,7 +23,13 @@ export const authInterceptor: HttpInterceptorFn = (
   const snackbarService = inject(SnackbarService);
   const accessToken = tokenService.getAccessToken();
 
-  if (accessToken && req.url.startsWith(environment.API.BASE_SERVER_URL)) {
+  if (
+    accessToken &&
+    // Adding Authorization header on backend api
+    req.url.startsWith(environment.API.BASE_SERVER_URL) &&
+    // exclude non authenticated endpoints
+    !Object.values(environment.NON_AUTH_API).includes(req.url)
+  ) {
     req = req.clone({
       setHeaders: { Authorization: `Bearer ${accessToken}` },
     });

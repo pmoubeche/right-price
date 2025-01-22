@@ -10,21 +10,16 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, tap } from 'rxjs';
+import { UserAdminModel, UserService } from '../../../../generated';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../../../shared/components/dialogs/dialog-generic.service';
-import {
-  RoleAdmin,
-  RoleGuest,
-  RoleTier1,
-  RoleTier2,
-} from '../../../shared/constants/role.constant';
+import { RolesConstants } from '../../../shared/constants/role.constant';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { RoleModel } from '../../../shared/model/role.model';
-import { Gender, UserAdminModel } from '../../../shared/model/user.model';
+import { Gender } from '../../../shared/model/gender.model';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
-import { UserService } from '../../../shared/services/user.service';
 import { GenderEnum } from '../../settings/profil-edit/profil-edit.component';
 
 @Component({
@@ -59,11 +54,11 @@ export class UserEditComponent {
     { id: GenderEnum.NON_BINARY, label: 'Non Binaire' },
   ];
 
-  roles: RoleModel[] = [RoleGuest, RoleTier1, RoleTier2, RoleAdmin];
+  roles: RoleModel[] = RolesConstants;
 
   userId?: string;
 
-  public user = new UserAdminModel();
+  public user?: UserAdminModel;
   editProfilForm?: FormGroup;
   imageUrl?: string;
 
@@ -160,28 +155,28 @@ export class UserEditComponent {
   private initForm() {
     this.editProfilForm = this.formBuilder.group({
       [this.USERNAME_FIELD]: [
-        this.user.username ? this.user.username : '',
+        this.user?.username ? this.user.username : '',
         [Validators.required],
       ],
       [this.EMAIL_FIELD]: [
-        this.user.email ? this.user.email : '',
+        this.user?.email ? this.user.email : '',
         [Validators.required],
       ],
-      [this.NAME_FIELD]: [this.user.name ? this.user.name : ''],
-      [this.FIRSTNAME_FIELD]: [this.user.firstname ? this.user.firstname : ''],
-      [this.HEIGHT_FIELD]: [this.user.height ? this.user.height : ''],
-      [this.WEIGHT_FIELD]: [this.user.weight ? this.user.weight : ''],
-      [this.GENDER_FIELD]: [this.user.gender ? this.user.gender : ''],
+      [this.NAME_FIELD]: [this.user?.name ? this.user.name : ''],
+      [this.FIRSTNAME_FIELD]: [this.user?.firstname ? this.user.firstname : ''],
+      [this.HEIGHT_FIELD]: [this.user?.height ? this.user.height : ''],
+      [this.WEIGHT_FIELD]: [this.user?.weight ? this.user.weight : ''],
+      [this.GENDER_FIELD]: [this.user?.gender ? this.user.gender : ''],
       [this.PASSWORD_FIELD]: [''],
       [this.DATE_CREATION_FIELD]: [
-        this.user.dateCreation ? this.user.dateCreation : '',
+        this.user?.dateCreation ? this.user.dateCreation : '',
         [Validators.required],
       ],
       [this.ID_FIELD]: [
-        this.user.id ? { value: this.user.id, disabled: true } : '',
+        this.user?.id ? { value: this.user.id, disabled: true } : '',
       ],
-      [this.IS_ACTIVE_FIELD]: [this.user.isActive ? this.user.isActive : ''],
-      [this.ORIGIN_FIELD]: [this.user.origin ? this.user.origin : ''],
+      [this.IS_ACTIVE_FIELD]: [this.user?.isActive ? this.user.isActive : ''],
+      [this.ORIGIN_FIELD]: [this.user?.origin ? this.user.origin : ''],
       [this.ROLES_FIELD]: [this.selectedRolesNames, [Validators.required]],
     });
 
@@ -239,7 +234,7 @@ export class UserEditComponent {
         .afterClosed()
         .pipe(
           tap((res) => {
-            this.user.image = res;
+            this.user!.image = res;
             this.imageUrl = res;
           })
         )

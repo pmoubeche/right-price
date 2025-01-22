@@ -8,11 +8,13 @@ import {
 } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { Subscription, tap } from 'rxjs';
+import {
+  AuthGoogleRequest,
+  AuthService,
+  RefreshTokenResponse,
+  UserGoogleRequest,
+} from '../../../../../generated';
 import { RoleGuest } from '../../../constants/role.constant';
-import { AuthGoogleRequest } from '../../../model/payload/request/auth-google-request.model';
-import { UserGoogleRequest } from '../../../model/payload/request/user-google-request.model';
-import { UserResponse } from '../../../model/payload/response/user-reponse.model';
-import { AuthServiceApi } from '../../../services/auth-api.service';
 
 declare var google: any;
 
@@ -27,11 +29,11 @@ export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
   @Input() isSignup: boolean = false;
   @Input() isSignin: boolean = false;
 
-  @Output() eventLogin = new EventEmitter<UserResponse>();
+  @Output() eventLogin = new EventEmitter<RefreshTokenResponse>();
 
   subscription = new Subscription();
 
-  constructor(private readonly authService: AuthServiceApi) {}
+  constructor(private readonly authService: AuthService) {}
 
   ngAfterViewInit(): void {
     this.initializeGoogleSignIn();
@@ -63,17 +65,17 @@ export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
   }
 
   handleCredentialResponse(response: any) {
-    const token: any = jwtDecode(response.credential);
+    const tokenFromGoogle: any = jwtDecode(response.credential);
     if (this.isSignup) {
       const userReq: UserGoogleRequest = {
-        idGoogle: token.sub,
-        familyName: token.family_name,
-        givenName: token.given_name,
-        email: token.email,
-        username: token.name,
-        image: token.picture,
-        emailVerified: token.email_verified,
-        sessionExpiration: token.exp,
+        idGoogle: tokenFromGoogle.sub,
+        familyName: tokenFromGoogle.family_name,
+        givenName: tokenFromGoogle.given_name,
+        email: tokenFromGoogle.email,
+        username: tokenFromGoogle.name,
+        image: tokenFromGoogle.picture,
+        emailVerified: tokenFromGoogle.email_verified,
+        sessionExpiration: tokenFromGoogle.exp,
         roles: [RoleGuest],
       };
 
@@ -81,9 +83,8 @@ export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
         this.authService
           .registerWithGoogle(userReq)
           .pipe(
-            tap((userRes) => {
-              userRes.googleId = token.sub;
-              this.eventLogin.next(userRes);
+            tap((rtRes) => {
+              this.eventLogin.next(rtRes);
             })
           )
           .subscribe()
@@ -92,17 +93,16 @@ export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
 
     if (this.isSignin) {
       const userReq: AuthGoogleRequest = {
-        idGoogle: token.sub,
-        email: token.email,
+        idGoogle: tokenFromGoogle.sub,
+        email: tokenFromGoogle.email,
       };
 
       this.subscription.add(
         this.authService
           .loginWithGoogle(userReq)
           .pipe(
-            tap((userRes) => {
-              userRes.googleId = token.sub;
-              this.eventLogin.next(userRes);
+            tap((rtRes) => {
+              this.eventLogin.next(rtRes);
             })
           )
           .subscribe()

@@ -10,9 +10,6 @@ import {
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription, tap } from 'rxjs';
 import { MaterialModule } from '../../../material/material.module';
-import { UserRequest } from '../../../model/payload/request/user-request';
-import { UserResponse } from '../../../model/payload/response/user-reponse.model';
-import { AuthServiceApi } from '../../../services/auth-api.service';
 import { AuthServiceFront } from '../../../services/auth-front.service';
 import { SnackbarService } from '../../../services/snackbar.service';
 import { LoginGoogleComponent } from '../../toolbar/login-google/login-google.component';
@@ -21,6 +18,11 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
+import {
+  AuthService,
+  RefreshTokenResponse,
+  UserRequest,
+} from '../../../../../generated';
 
 @Component({
   selector: 'app-dialog-signup',
@@ -69,7 +71,7 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
-    private readonly authService: AuthServiceApi,
+    private readonly authService: AuthService,
     private readonly dialogGenericService: DialogGenericService,
     private readonly snackbarService: SnackbarService,
     private readonly authServiceFront: AuthServiceFront,
@@ -114,7 +116,7 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
     }
   }
 
-  public loginAndClosePopUp(res: UserResponse): void {
+  public loginAndClosePopUp(res: RefreshTokenResponse): void {
     this.authServiceFront.logIn(res);
     this.snackbarService.show('Utilisateur créé avec succes');
     this.dialogGenericService.close(CodeModaleEnum.SIGNUP, res);
