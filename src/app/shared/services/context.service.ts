@@ -25,4 +25,8 @@ export class ContextService {
   isAuthenticated(): Observable<boolean> {
     return this.currentUser$.getValue() ? of(true) : of(false);
   }
+
+  isNotAuthenticated(): Observable<boolean> {
+    return this.currentUser$.getValue() ? of(false) : of(true);
+  }
 }

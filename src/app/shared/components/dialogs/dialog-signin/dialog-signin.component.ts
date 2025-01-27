@@ -39,7 +39,6 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
   signinForm?: FormGroup;
   isDisplaySigninForm = false;
   isEmailPasswordIncorrect = false;
-  isPasswordHidden = true;
 
   get emailControl(): FormControl {
     return this.signinForm?.get(this.EMAIL_INPUT) as FormControl;

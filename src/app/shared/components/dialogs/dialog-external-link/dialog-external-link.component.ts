@@ -7,7 +7,8 @@ import { SafeUrlPipe } from '../../../pipes/safe-url.pipe';
   selector: 'app-dialog-subscribe-tier1',
   standalone: true,
   imports: [MaterialModule, SafeUrlPipe],
-  templateUrl: './dialog-subscribe-tier1.component.html',
+  templateUrl: './dialog-external-link.component.html',
+  styleUrl: './dialog-external-link.component.scss',
 })
 export class ExternalLinkDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { url: string }) {}

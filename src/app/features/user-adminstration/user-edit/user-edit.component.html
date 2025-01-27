@@ -130,17 +130,18 @@
             <mat-label>Roles</mat-label>
             <mat-select
               [formControlName]="ROLES_FIELD"
-              [(value)]="selectedRolesNames"
+              [compareWith]="compareCategoryObjects"
+              [(value)]="selectedRoles"
               multiple
             >
               @for (role of roles; track $index) {
-              <mat-option [value]="role.name">{{ role.code }}</mat-option>
+              <mat-option [value]="role">{{ role.code }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
           <mat-chip-set>
-            @for (role of selectedRolesCodes; track $index) {
-            <mat-chip [value]="role">{{ role }}</mat-chip>
+            @for (role of selectedRoles; track $index) {
+            <mat-chip [value]="role">{{ role.code }}</mat-chip>
             }
           </mat-chip-set>
         </div>
@@ -194,7 +195,6 @@
           <mat-select
             [formControlName]="GENDER_FIELD"
             [compareWith]="compareCategoryObjects"
-            [(value)]="user!.gender"
           >
             <mat-option [value]="null"></mat-option>
             @for (gender of genders; track $index) {

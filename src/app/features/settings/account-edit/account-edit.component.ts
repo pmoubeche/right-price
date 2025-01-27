@@ -79,7 +79,7 @@ export class AccountEditComponent implements OnInit {
     this.passwordChangeForm = this.formBuilder.group({
       [this.NEW_PASSWORD_FIELD]: [''],
       [this.CONFIRM_PASSWORD_FIELD]: [''],
-      [this.DATE_CREATION]: [{ value: this.user.dateCreation, disabled: true }],
+      [this.DATE_CREATION]: [this.user ? this.user.dateCreation : ''],
     });
   }
 

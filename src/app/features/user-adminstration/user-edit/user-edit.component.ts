@@ -118,8 +118,7 @@ export class UserEditComponent {
 
   hidePassword = true;
 
-  selectedRolesNames: string[] = [];
-  selectedRolesCodes: string[] = [];
+  selectedRoles: RoleModel[] = [];
 
   constructor(
     private readonly userService: UserService,
@@ -131,6 +130,7 @@ export class UserEditComponent {
   ) {}
 
   ngOnInit(): void {
+    this.initForm();
     this.userId = this.activatedRoute.snapshot.params['id'];
     this.getUserFromRoute();
   }
@@ -143,8 +143,7 @@ export class UserEditComponent {
           tap((user) => {
             this.user = user;
             this.imageUrl = user.image;
-            this.selectedRolesNames = user.roles!.map((role) => role.name!);
-            this.selectedRolesCodes = user.roles!.map((role) => role.code!);
+            this.selectedRoles = user.roles!;
             this.initForm();
           })
         )
@@ -155,35 +154,29 @@ export class UserEditComponent {
   private initForm() {
     this.editProfilForm = this.formBuilder.group({
       [this.USERNAME_FIELD]: [
-        this.user?.username ? this.user.username : '',
+        this.user ? this.user.username : '',
         [Validators.required],
       ],
       [this.EMAIL_FIELD]: [
-        this.user?.email ? this.user.email : '',
+        this.user ? this.user.email : '',
         [Validators.required],
       ],
-      [this.NAME_FIELD]: [this.user?.name ? this.user.name : ''],
-      [this.FIRSTNAME_FIELD]: [this.user?.firstname ? this.user.firstname : ''],
-      [this.HEIGHT_FIELD]: [this.user?.height ? this.user.height : ''],
-      [this.WEIGHT_FIELD]: [this.user?.weight ? this.user.weight : ''],
-      [this.GENDER_FIELD]: [this.user?.gender ? this.user.gender : ''],
+      [this.NAME_FIELD]: [this.user ? this.user.name : ''],
+      [this.FIRSTNAME_FIELD]: [this.user ? this.user.firstname : ''],
+      [this.HEIGHT_FIELD]: [this.user ? this.user.height : ''],
+      [this.WEIGHT_FIELD]: [this.user ? this.user.weight : ''],
+      [this.GENDER_FIELD]: [this.user ? this.user.gender : null],
       [this.PASSWORD_FIELD]: [''],
       [this.DATE_CREATION_FIELD]: [
-        this.user?.dateCreation ? this.user.dateCreation : '',
+        this.user ? this.user.dateCreation : '',
         [Validators.required],
       ],
       [this.ID_FIELD]: [
-        this.user?.id ? { value: this.user.id, disabled: true } : '',
+        this.user ? { value: this.user.id, disabled: true } : '',
       ],
-      [this.IS_ACTIVE_FIELD]: [this.user?.isActive ? this.user.isActive : ''],
-      [this.ORIGIN_FIELD]: [this.user?.origin ? this.user.origin : ''],
-      [this.ROLES_FIELD]: [this.selectedRolesNames, [Validators.required]],
-    });
-
-    this.editProfilForm.valueChanges.subscribe(() => {
-      this.selectedRolesCodes = this.roles
-        .filter((role) => this.selectedRolesNames.includes(role.name!))
-        .map((r) => r.code!);
+      [this.IS_ACTIVE_FIELD]: [this.user ? this.user.isActive : ''],
+      [this.ORIGIN_FIELD]: [this.user ? this.user.origin : ''],
+      [this.ROLES_FIELD]: [this.selectedRoles, [Validators.required]],
     });
   }
 
@@ -203,9 +196,7 @@ export class UserEditComponent {
       height: this.heightControl.value,
       weight: this.wieghtControl.value,
       gender: this.genderControl.value,
-      roles: this.roles.filter((role) =>
-        this.selectedRolesNames.includes(role.name!)
-      ),
+      roles: this.rolesControl.value,
       dateCreation: this.dateCreationControl.value,
       origin: this.originControl.value,
       password: this.passwordControl.value,

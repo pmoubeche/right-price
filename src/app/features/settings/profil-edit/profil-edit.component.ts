@@ -121,6 +121,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
         .pipe(
           tap((currentUser) => {
             this.currentUser = currentUser;
+            this.initForm();
           })
         )
         .subscribe()
@@ -129,13 +130,13 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
 
   private initForm() {
     this.editProfilForm = this.formBuilder.group({
-      [this.USERNAME_FIELD]: [this.user.username ? this.user.username : ''],
-      [this.EMAIL_FIELD]: [this.user.email ? this.user.email : ''],
-      [this.NAME_FIELD]: [this.user.name ? this.user.name : ''],
-      [this.FIRSTNAME_FIELD]: [this.user.firstname ? this.user.firstname : ''],
-      [this.HEIGHT_FIELD]: [this.user.height ? this.user.height : ''],
-      [this.WEIGHT_FIELD]: [this.user.weight ? this.user.weight : ''],
-      [this.GENDER_FIELD]: [this.user.gender ? this.user.gender : ''],
+      [this.USERNAME_FIELD]: [this.user ? this.user.username : ''],
+      [this.EMAIL_FIELD]: [this.user ? this.user.email : ''],
+      [this.NAME_FIELD]: [this.user ? this.user.name : ''],
+      [this.FIRSTNAME_FIELD]: [this.user ? this.user.firstname : ''],
+      [this.HEIGHT_FIELD]: [this.user ? this.user.height : ''],
+      [this.WEIGHT_FIELD]: [this.user ? this.user.weight : ''],
+      [this.GENDER_FIELD]: [this.user ? this.user.gender : null],
     });
   }
 

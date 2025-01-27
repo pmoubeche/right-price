@@ -15,10 +15,7 @@ export class AuthServiceFront {
   ) {}
 
   logIn(rtResponse: RefreshTokenResponse): void {
-    this.tokenService.saveAccessToken(rtResponse.accessToken!);
-    this.tokenService.saveRefreshToken(rtResponse.refreshToken!);
-    this.tokenService.saveExpirationDate(rtResponse.expiresAt!);
-
+    this.tokenService.saveRefreshTokenResponseInLocalStorage(rtResponse);
     this.contextService.setCurrentUser(
       this.tokenService.getCurrentUserFromToken()
     );

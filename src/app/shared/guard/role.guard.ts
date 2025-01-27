@@ -9,9 +9,10 @@ import { of } from 'rxjs';
 import { RoleModel } from '../model/role.model';
 import { ContextService } from '../services/context.service';
 import { SnackbarService } from '../services/snackbar.service';
+import { RoleTier2 } from '../constants/role.constant';
 
 // Returns a function which can act as a guard for a route
-export function requireAnyRole(...roles: RoleModel[]): CanActivateFn {
+export function requireAnyRole(...rolesGuard: RoleModel[]): CanActivateFn {
   return (ars: ActivatedRouteSnapshot, rss: RouterStateSnapshot) => {
     const contextService = inject(ContextService);
     const snackbarService = inject(SnackbarService);
@@ -27,7 +28,9 @@ export function requireAnyRole(...roles: RoleModel[]): CanActivateFn {
     });
 
     if (currentUserRoles.length === 0) {
-      router.navigate(['/subscribe']);
+      router.navigate(['/subscribe'], {
+        queryParams: { origin: ars.routeConfig?.path },
+      });
       snackbarService.show(
         'Vous devez être connecté pour acceder à cette page'
       );
@@ -35,8 +38,10 @@ export function requireAnyRole(...roles: RoleModel[]): CanActivateFn {
     }
 
     let isUserRoleInRoleGuard: boolean = false;
-    roles.forEach((role) => {
-      if (currentUserRoles.map((role) => role.id).includes(role.id)) {
+    rolesGuard.forEach((roleGuard) => {
+      if (
+        currentUserRoles.map((roleUser) => roleUser.id).includes(roleGuard.id)
+      ) {
         isUserRoleInRoleGuard = true;
       }
     });
@@ -46,7 +51,9 @@ export function requireAnyRole(...roles: RoleModel[]): CanActivateFn {
     if (isConnected && isUserRoleInRoleGuard) {
       return of(true);
     } else {
-      router.navigate(['/subscribe']);
+      router.navigate(['/subscribe'], {
+        queryParams: { origin: ars.routeConfig?.path },
+      });
       snackbarService.show(
         "Vous n'avez pas les droits pour acceder à cette page"
       );

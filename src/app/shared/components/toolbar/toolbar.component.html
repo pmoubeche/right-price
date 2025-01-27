@@ -12,7 +12,6 @@
       style="height: 40px; margin: 0.5rem"
       src="../../../../assets/svg/logos/logo_primary_datafood.png"
     />
-    <!-- <label style="margin: 0.5rem 0.5rem 2rem 0.5rem">DataFood</label> -->
   </button>
   <span class="example-spacer"></span>
   <app-search-product-autocomplete
@@ -20,7 +19,7 @@
     [isLabelDisplayed]="false"
     [isRedirectOnSelect]="true"
   ></app-search-product-autocomplete>
-  @if(user$ | async; as user){ @if(!isUserSubscribed){
+  @if(user$ | async; as user){ @if(!isRoleInUser(user, roleTier2)){
   <button
     mat-flat-button
     color="primary"
@@ -28,9 +27,14 @@
     [routerLink]="['/subscribe']"
     routerLinkActive="router-link-active"
   >
+    @if(isRoleInUser(user, roleTier1)){
+    <span>Mettre à niveau</span>
+    } @else {
     <span>S'abonner</span>
+    }
   </button>
   }
+
   <app-profile></app-profile>
   } @else {
 

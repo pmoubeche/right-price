@@ -140,7 +140,7 @@ export class SubscriptionService {
             }
         }
 
-        let localVarPath = `/subscribe`;
+        let localVarPath = `/unsubscribe/${this.configuration.encodeParam({name: "userId", value: userId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
