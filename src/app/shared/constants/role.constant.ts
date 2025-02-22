@@ -1,15 +1,15 @@
 import { RoleModel } from '../model/role.model';
 
-export const RoleGuest: RoleModel = {
-  id: '3d29d827-0edc-4388-b772-a2367b30ecc9',
-  name: 'GUEST_0d7fe874-06e6-4b78-9aec-f1c927801118',
-  code: 'GUEST',
-};
-
 export const RoleAdmin: RoleModel = {
   id: 'f127ad09-e7aa-464c-a72e-505960915f9d',
   name: 'ADMIN_ca273fa5-cdad-4959-a5dd-69fac7d51731',
   code: 'ADMIN',
+};
+
+export const RoleGuest: RoleModel = {
+  id: '3d29d827-0edc-4388-b772-a2367b30ecc9',
+  name: 'GUEST_0d7fe874-06e6-4b78-9aec-f1c927801118',
+  code: 'GUEST',
 };
 
 export const RoleTier1: RoleModel = {

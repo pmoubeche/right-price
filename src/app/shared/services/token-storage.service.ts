@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { RolesConstants } from '../constants/role.constant';
-import { UserResponse } from '../../../generated';
+import {
+  RefreshTokenRequest,
+  RefreshTokenResponse,
+  UserResponse,
+} from '../../../generated';
 
 const TOKEN_KEY = 'accesstoken';
 const REFRESH_TOKEN = 'refreshToken';
@@ -64,6 +68,21 @@ export class TokenStorageService {
       image: this.getImageUrlFromToken(),
       username: this.getUsernameFromToken(),
     } as UserResponse;
+  }
+
+  setRefreshTokenRequest(forceRenewal?: boolean): RefreshTokenRequest {
+    return {
+      accessToken: this.getAccessToken()!,
+      refreshToken: this.getRefreshToken()!,
+      accessTokenExpiresAt: this.getExpiresAt()!,
+      forceRenewal: !forceRenewal ? false : forceRenewal,
+    } as RefreshTokenRequest;
+  }
+
+  saveRefreshTokenResponseInLocalStorage(response: RefreshTokenResponse): void {
+    this.saveAccessToken(response.accessToken!);
+    this.saveRefreshToken(response.refreshToken!);
+    this.saveExpirationDate(response.expiresAt!);
   }
 
   public isAccessTokenExpired(): boolean {

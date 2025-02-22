@@ -1,7 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription, switchMap, tap } from 'rxjs';
-import { SubscriptionService } from '../../../../../generated';
+import {
+  RefreshTokenService,
+  SubscriptionService,
+} from '../../../../../generated';
 import { MaterialModule } from '../../../material/material.module';
 import { ContextService } from '../../../services/context.service';
 import { SnackbarService } from '../../../services/snackbar.service';
@@ -10,6 +13,8 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
+import { TokenStorageService } from '../../../services/token-storage.service';
+import { AuthServiceFront } from '../../../services/auth-front.service';
 
 @Component({
   selector: 'app-dialog-unsubscribe',
@@ -43,7 +48,10 @@ export class DialogUnsubscribeComponent implements OnInit {
     private readonly dialogService: DialogGenericService,
     private readonly contextService: ContextService,
     private readonly snackbarService: SnackbarService,
-    private readonly subscriptionService: SubscriptionService
+    private readonly subscriptionService: SubscriptionService,
+    private readonly refreshTokenService: RefreshTokenService,
+    private readonly tokenService: TokenStorageService,
+    private readonly authFrontService: AuthServiceFront
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +67,13 @@ export class DialogUnsubscribeComponent implements OnInit {
             this.subscriptionService.unsubscribe(userRes?.id!).pipe(
               tap(() => {
                 this.dialogService.close(CodeModaleEnum.UNSUBSCRIBE);
+                this.refreshTokenService
+                  .refreshToken(this.tokenService.setRefreshTokenRequest(true))
+                  .pipe(
+                    tap((rtr) => {
+                      this.authFrontService.logIn(rtr);
+                    })
+                  );
                 this.snackbarService.show(
                   'Votre désabonnement à été effectué avec succés'
                 );

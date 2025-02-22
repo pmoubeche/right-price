@@ -13,7 +13,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, Observable, Subscription, catchError, of, tap } from 'rxjs';
 import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
@@ -34,12 +34,7 @@ export enum ChipParamSearch {
 @Component({
   selector: 'app-search-product',
   standalone: true,
-  imports: [
-    MaterialModule,
-    ReactiveFormsModule,
-    CommonModule,
-    NutriscoreUrlFromGradePipe,
-  ],
+  imports: [MaterialModule, ReactiveFormsModule, CommonModule],
   templateUrl: './search-product.component.html',
   styleUrl: './search-product.component.scss',
 })
@@ -69,14 +64,15 @@ export class SearchProductComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly openFoodFactApiService: OpenFoodFactsApiService,
     private readonly cardResultService: CardResultGenericService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
     this.cardResultService.isErrorBs.next(false);
     this.setForm();
     this.switchPage();
-    this.selectFromCardList();
+    // this.selectFromCardList();
     this.searchFromFormField();
   }
 
@@ -130,7 +126,7 @@ export class SearchProductComponent implements OnInit, OnDestroy {
     this.httpProducts = new ResponseProducts();
     switch (this.searchForm?.get(this.CHIP_OPTION)?.value) {
       case ChipParamSearch.BARCODE:
-        this.searchById();
+        this.searchById(this.searchForm?.get(this.INPUT_TEXT)?.value);
         break;
       case ChipParamSearch.BRANDS:
         this.searchByBrand(pageIndex);
@@ -148,19 +144,22 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
   searchById(barcode?: string): void {
-    this.subscription.add(
-      this.openFoodFactApiService
-        .findProductByBarCode(
-          barcode ? barcode : this.searchForm?.get(this.INPUT_TEXT)?.value
-        )
-        .pipe(
-          tap((response: ResponseProduct) => {
-            this.httpProduct = response;
-            this.eventHttpProductChange.emit(this.httpProduct);
-          })
-        )
-        .subscribe()
-    );
+    if (barcode) {
+      this.router.navigate(['/product', barcode]);
+    } else {
+      this.subscription.add(
+        this.openFoodFactApiService
+          .findProductByBarCode(this.searchForm?.get(this.INPUT_TEXT)?.value)
+          .pipe(
+            tap((response: ResponseProduct) => {
+              // this.router.navigate(['/product', response.product?._id]);
+              this.httpProduct = response;
+              this.eventHttpProductChange.emit(this.httpProduct);
+            })
+          )
+          .subscribe()
+      );
+    }
   }
 
   searchByBrand(pageIndex?: number): void {

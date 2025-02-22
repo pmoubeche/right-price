@@ -13,7 +13,7 @@ import { DialogDeleteAccountComponent } from './dialog-delete-account/dialog-del
 import { DialogAvatarComponent } from './dialog-avatars/dialog-avatars.component';
 import { DialogBannerEditComponent } from './dialog-banner-edit/dialog-banner-edit.component';
 import { DialogCsvImportComponent } from './dialog-csv-import/dialog-csv-import.component';
-import { ExternalLinkDialogComponent } from './dialog-susbcribe-tier1/dialog-subscribe-tier1.component';
+import { ExternalLinkDialogComponent } from './dialog-external-link/dialog-external-link.component';
 import { DialogUnsubscribeComponent } from './dialog-unsubscribe/dialog-unsubscribe.component';
 import { DialogDeleteDataCgmComponent } from './dialog-delete-cgm/dialog-delete-cgm.component';
 

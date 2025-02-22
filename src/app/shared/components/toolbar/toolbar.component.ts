@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Subscription, tap } from 'rxjs';
 import { RoleAdmin, RoleTier1, RoleTier2 } from '../../constants/role.constant';
@@ -16,6 +16,7 @@ import {
 import { ProfileComponent } from '../profile/profile.component';
 import { LoginGoogleComponent } from './login-google/login-google.component';
 import { SearchProductAutocompleteComponent } from '../../../features/product/search-product-autocomplete/search-product-autocomplete.component';
+import { RoleModel, UserResponse } from '../../../../generated';
 
 @Component({
   selector: 'app-toolbar',
@@ -32,7 +33,9 @@ import { SearchProductAutocompleteComponent } from '../../../features/product/se
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnDestroy {
+  public roleTier2 = RoleTier2;
+  public roleTier1 = RoleTier1;
   public user$ = this.contextService.getCurrentUser();
   isUserSubscribed = false;
 
@@ -54,6 +57,14 @@ export class ToolbarComponent implements OnInit {
         userInfo?.roles?.map((role) => role.id).includes(RoleTier2.id)! ||
         userInfo?.roles?.map((role) => role.id).includes(RoleAdmin.id)!;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  isRoleInUser(user: UserResponse, role: RoleModel): boolean {
+    return user.roles?.map((r) => r.code).includes(role.code)!;
   }
 
   onClick(): void {

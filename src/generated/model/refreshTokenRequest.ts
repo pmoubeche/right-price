@@ -24,5 +24,9 @@ export interface RefreshTokenRequest {
      * expires at stored in browser cache
      */
     accessTokenExpiresAt?: string;
+    /**
+     * boolean that forces refresh token renewal
+     */
+    forceRenewal?: boolean;
 }
 

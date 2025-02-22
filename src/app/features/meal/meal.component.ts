@@ -13,14 +13,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  DefaultMatCalendarRangeStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatCalendarCellCssClasses,
+} from '@angular/material/datepicker';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription, map, tap } from 'rxjs';
-import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
 import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
 import {
   ButtonAction,
   DialogContentModel,
 } from '../../shared/components/dialogs/dialog-content.model';
-import { DialogInfoComponent } from '../../shared/components/dialogs/dialog-info/dialog-info.component';
 import {
   CodeModaleEnum,
   DialogGenericService,
@@ -38,23 +43,10 @@ import {
 } from '../../shared/model/product.model';
 import { MealProductApiService } from '../../shared/services/meal-product-api.service';
 import { DateUtils } from '../../shared/utils/date.utils';
-import { SearchProductComponent } from '../product/search-product/search-product.component';
+import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
 import { ChartMealProductComponent } from './chart-meal-product/chart-meal-product.component';
 import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
-import {
-  DefaultMatCalendarRangeStrategy,
-  MAT_DATE_RANGE_SELECTION_STRATEGY,
-  MatCalendarCellCssClasses,
-} from '@angular/material/datepicker';
-import { ActivatedRoute } from '@angular/router';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import {
-  NgxMatDatetimePickerModule,
-  NgxMatNativeDateModule,
-  NgxMatTimepickerModule,
-} from '@angular-material-components/datetime-picker';
-import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
 
 @Component({
   selector: 'app-meal',
@@ -64,13 +56,7 @@ import { SearchProductAutocompleteComponent } from '../product/search-product-au
     TableProductMealComponent,
     ChartMealProductComponent,
     ReactiveFormsModule,
-    SearchProductComponent,
-    CardResultGenericComponent,
-    DialogInfoComponent,
     CommonModule,
-    NgxMatDatetimePickerModule,
-    NgxMatTimepickerModule,
-    NgxMatNativeDateModule,
     SearchProductAutocompleteComponent,
   ],
   templateUrl: './meal.component.html',

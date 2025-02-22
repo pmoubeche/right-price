@@ -12,7 +12,7 @@
   </div>
 
   <div style="display: flex; justify-content: center">
-    @for(price of prices$ | async; track $index){
+    @for(price of prices; track $index){
     <mat-card class="card-link" style="margin: 1rem; width: 25%; height: 70vh">
       <mat-card-header style="padding: 1rem 1rem 0rem 1rem">
         <h3>
@@ -59,6 +59,7 @@
           flex-direction: column;
         "
       >
+        @if(price.buttonDisplayed$ |async) {
         <button
           mat-flat-button
           color="primary"
@@ -67,6 +68,7 @@
         >
           <span>{{ price.link }}</span>
         </button>
+        }
       </mat-card-footer>
     </mat-card>
     }

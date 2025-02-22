@@ -38,23 +38,14 @@
           }
         </mat-form-field>
         <mat-form-field class="fields" appearance="outline">
-          <mat-label>Mot de passe</mat-label>
+          <mat-label>Password</mat-label>
           <input
             matInput
-            [type]="isPasswordHidden ? 'password' : 'text'"
+            type="password"
             [formControlName]="PASSWORD_INPUT"
             required
+            (keydown.enter)="signIn()"
           />
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="isPasswordHidden = !isPasswordHidden"
-            [attr.aria-pressed]="!isPasswordHidden"
-          >
-            <mat-icon>{{
-              isPasswordHidden ? "visibility" : "visibility_off"
-            }}</mat-icon>
-          </button>
           @if(passwordControl.invalid){
           <mat-error>Champ obligatoire</mat-error>
           }

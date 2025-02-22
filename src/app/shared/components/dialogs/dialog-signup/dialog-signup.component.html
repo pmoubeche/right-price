@@ -55,8 +55,8 @@
             matInput
             type="password"
             [formControlName]="PASSWORD_INPUT"
-            placeholder="Ex. 100"
             required
+            (keydown.enter)="signUp()"
           />
           @if(passwordControl.invalid){
           <mat-error>Champ obligatoire</mat-error>

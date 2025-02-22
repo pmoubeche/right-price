@@ -55,22 +55,22 @@
     <button mat-fab extended color="accent" (click)="modifyPassword()">
       Modifier mot de passe
     </button>
+    <br />
+    <mat-divider></mat-divider>
+    <br />
+    <mat-form-field appearance="outline" class="fields">
+      <mat-label>Date de création du compte</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [formControlName]="DATE_CREATION"
+        [value]="user.dateCreation"
+        ngDefaultControl
+        readonly
+      />
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
   </form>
-  <br />
-  <mat-divider></mat-divider>
-  <br />
-  <mat-form-field appearance="outline" class="fields">
-    <mat-label>Date de création du compte</mat-label>
-    <input
-      matInput
-      [matDatepicker]="picker"
-      [formControlName]="DATE_CREATION"
-      [value]="user.dateCreation"
-      ngDefaultControl
-      readonly
-    />
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
   <br />
   <mat-divider></mat-divider>
   <br />

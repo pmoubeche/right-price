@@ -17,7 +17,7 @@ import { getListDatesWhereMealsResolver } from './shared/routes/grocery-list-res
 import { GlucoseMonitoringComponent } from './features/glucose-monitoring/glucose-monitoring.component';
 import { getListDatesWhereCgmResolver } from './shared/routes/cmg-dates-resolver.service';
 import { DetailProductComponent } from './features/product/detail-product/detail-product.component';
-import { SubscriptionComponent } from './features/pricing/pricing.component';
+import { SubscriptionComponent } from './features/subscribe/subscribe.component';
 import { authGuard } from './shared/guard/auth.guard';
 import { getUserByIdResolver } from './shared/routes/user-resolver.service';
 
