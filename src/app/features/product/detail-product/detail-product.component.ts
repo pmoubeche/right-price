@@ -48,18 +48,17 @@ export class NutrimentInfoModel {
 }
 
 @Component({
-  selector: 'app-detail-product',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    TableGenericComponent,
-    PercentFormatPipe,
-    UppercaseFirstLetterFormatPipe,
-    ChartComponent,
-    GaugeChartCardComponent,
-  ],
-  templateUrl: './detail-product.component.html',
-  styleUrl: './detail-product.component.scss',
+    selector: 'app-detail-product',
+    imports: [
+        MaterialModule,
+        TableGenericComponent,
+        PercentFormatPipe,
+        UppercaseFirstLetterFormatPipe,
+        ChartComponent,
+        GaugeChartCardComponent,
+    ],
+    templateUrl: './detail-product.component.html',
+    styleUrl: './detail-product.component.scss'
 })
 export class DetailProductComponent implements OnInit, OnDestroy {
   private _httpProduct!: ResponseProduct;

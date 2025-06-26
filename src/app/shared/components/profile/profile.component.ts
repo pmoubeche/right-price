@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AvatarModule } from 'ngx-avatars';
@@ -11,17 +11,15 @@ import { ContextService } from '../../services/context.service';
 import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    AvatarModule,
-    CommonModule,
-    HttpClientModule,
-    RouterLink,
-  ],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
+    selector: 'app-profile',
+    imports: [
+        MaterialModule,
+        AvatarModule,
+        CommonModule,
+        RouterLink,
+    ],
+    templateUrl: './profile.component.html',
+    styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
   public user$ = this.contextService.getCurrentUser();

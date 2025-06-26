@@ -6,11 +6,10 @@ import { AccountEditComponent } from './account-edit/account-edit.component';
 import { ProfilEditComponent } from './profil-edit/profil-edit.component';
 
 @Component({
-  selector: 'app-settings',
-  standalone: true,
-  imports: [MaterialModule, ProfilEditComponent, AccountEditComponent],
-  templateUrl: './settings.component.html',
-  styleUrl: './settings.component.scss',
+    selector: 'app-settings',
+    imports: [MaterialModule, ProfilEditComponent, AccountEditComponent],
+    templateUrl: './settings.component.html',
+    styleUrl: './settings.component.scss'
 })
 export class SettingsComponent implements OnInit {
   public user?: UserModel;

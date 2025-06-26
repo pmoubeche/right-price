@@ -25,16 +25,15 @@ import {
 } from '../../../../../generated';
 
 @Component({
-  selector: 'app-dialog-signup',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    LoginGoogleComponent,
-    ReactiveFormsModule,
-    FormsModule,
-  ],
-  templateUrl: './dialog-signup.component.html',
-  styleUrl: './dialog-signup.component.scss',
+    selector: 'app-dialog-signup',
+    imports: [
+        MaterialModule,
+        LoginGoogleComponent,
+        ReactiveFormsModule,
+        FormsModule,
+    ],
+    templateUrl: './dialog-signup.component.html',
+    styleUrl: './dialog-signup.component.scss'
 })
 export class DialogSignupComponent implements OnInit, OnDestroy {
   readonly USERNAME_INPUT = 'username';

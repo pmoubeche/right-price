@@ -5,10 +5,9 @@ import { DialogContentModel } from '../dialog-content.model';
 import { DialogGenericService } from '../dialog-generic.service';
 
 @Component({
-  selector: 'app-dialog-info',
-  standalone: true,
-  imports: [MaterialModule],
-  templateUrl: './dialog-info.component.html',
+    selector: 'app-dialog-info',
+    imports: [MaterialModule],
+    templateUrl: './dialog-info.component.html'
 })
 export class DialogInfoComponent {
   constructor(

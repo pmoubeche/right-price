@@ -12,17 +12,16 @@ import { ProductUtils } from '../../utils/product.utils';
 import { CardResultGenericService } from './card-result-generic.service';
 
 @Component({
-  selector: 'app-card-result-generic',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    CommonModule,
-    PercentFormatPipe,
-    UppercaseFirstLetterFormatPipe,
-    TrimStringPipe,
-  ],
-  templateUrl: './card-result-generic.component.html',
-  styleUrl: './card-result-generic.component.scss',
+    selector: 'app-card-result-generic',
+    imports: [
+        MaterialModule,
+        CommonModule,
+        PercentFormatPipe,
+        UppercaseFirstLetterFormatPipe,
+        TrimStringPipe,
+    ],
+    templateUrl: './card-result-generic.component.html',
+    styleUrl: './card-result-generic.component.scss'
 })
 export class CardResultGenericComponent implements OnInit {
   public isError$ = this.cardResultGenericService.getIsError();

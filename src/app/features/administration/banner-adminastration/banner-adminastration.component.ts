@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -37,17 +37,15 @@ import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { DateUtils } from '../../../shared/utils/date.utils';
 
 @Component({
-  selector: 'app-banner-adminastration',
-  standalone: true,
-  imports: [
+    selector: 'app-banner-adminastration',
+    imports: [
     MaterialModule,
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    TableGenericComponent,
-  ],
-  templateUrl: './banner-adminastration.component.html',
-  styleUrl: './banner-adminastration.component.scss',
+    TableGenericComponent
+],
+    templateUrl: './banner-adminastration.component.html',
+    styleUrl: './banner-adminastration.component.scss'
 })
 export class BannerAdminastrationComponent implements OnInit, OnDestroy {
   readonly MESSAGE_FIELD = 'message';

@@ -44,22 +44,21 @@ export class PercentCompareModelNumber {
 }
 
 @Component({
-  selector: 'app-compare-products',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    TableGenericComponent,
-    ReactiveFormsModule,
-    SearchProductComponent,
-    CardResultGenericComponent,
-    UppercaseFirstLetterFormatPipe,
-    RoundNumberDecimalPipe,
-    SearchProductAutocompleteComponent,
-    CommonModule,
-    ChartComponent,
-  ],
-  templateUrl: './compare-products.component.html',
-  styleUrl: './compare-products.component.scss',
+    selector: 'app-compare-products',
+    imports: [
+        MaterialModule,
+        TableGenericComponent,
+        ReactiveFormsModule,
+        SearchProductComponent,
+        CardResultGenericComponent,
+        UppercaseFirstLetterFormatPipe,
+        RoundNumberDecimalPipe,
+        SearchProductAutocompleteComponent,
+        CommonModule,
+        ChartComponent,
+    ],
+    templateUrl: './compare-products.component.html',
+    styleUrl: './compare-products.component.scss'
 })
 export class CompareProductsComponent implements OnInit {
   public _productA = new Product();

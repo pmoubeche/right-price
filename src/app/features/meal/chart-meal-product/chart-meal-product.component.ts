@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Subscription, tap } from 'rxjs';
@@ -17,17 +17,15 @@ import { ProductUtils } from '../../../shared/utils/product.utils';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-chart-meal-product',
-  standalone: true,
-  imports: [
+    selector: 'app-chart-meal-product',
+    imports: [
     ChartComponent,
     MaterialModule,
-    CommonModule,
     RoundNumberDecimalPipe,
-    FormsModule,
-  ],
-  templateUrl: './chart-meal-product.component.html',
-  styleUrl: './chart-meal-product.component.scss',
+    FormsModule
+],
+    templateUrl: './chart-meal-product.component.html',
+    styleUrl: './chart-meal-product.component.scss'
 })
 export class ChartMealProductComponent implements OnInit, OnDestroy {
   private _mealProductsBreakfast!: MealProductInfoModel[];

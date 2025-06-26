@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -26,25 +26,23 @@ import {
 import { DateUtils } from '../../shared/utils/date.utils';
 
 @Component({
-  selector: 'app-grocery-list',
-  standalone: true,
-  imports: [
+    selector: 'app-grocery-list',
+    imports: [
     MaterialModule,
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    TableGenericComponent,
-  ],
-  providers: [
-    provideNativeDateAdapter(),
-    {
-      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-      useClass: DefaultMatCalendarRangeStrategy,
-    },
-  ],
-  templateUrl: './grocery-list.component.html',
-  styleUrl: './grocery-list.component.scss',
-  encapsulation: ViewEncapsulation.None,
+    TableGenericComponent
+],
+    providers: [
+        provideNativeDateAdapter(),
+        {
+            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+            useClass: DefaultMatCalendarRangeStrategy,
+        },
+    ],
+    templateUrl: './grocery-list.component.html',
+    styleUrl: './grocery-list.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class GroceryListComponent implements OnInit {
   selectedDateRange: DateRange<Date> | undefined;

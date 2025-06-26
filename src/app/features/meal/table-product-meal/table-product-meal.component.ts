@@ -22,11 +22,10 @@ import { MealProductApiService } from '../../../shared/services/meal-product-api
 import { MealService } from '../meal.service';
 
 @Component({
-  selector: 'app-table-product-meal',
-  standalone: true,
-  imports: [MaterialModule, TableGenericComponent],
-  templateUrl: './table-product-meal.component.html',
-  styleUrl: './table-product-meal.component.scss',
+    selector: 'app-table-product-meal',
+    imports: [MaterialModule, TableGenericComponent],
+    templateUrl: './table-product-meal.component.html',
+    styleUrl: './table-product-meal.component.scss'
 })
 export class TableProductMealComponent implements OnInit, OnDestroy {
   isExpandedBreakfast = false;

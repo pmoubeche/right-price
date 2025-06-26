@@ -9,7 +9,7 @@
 }
 
 :host ::ng-deep .mdc-text-field--outlined {
-  --mdc-outlined-text-field-container-shape: 28px;
+  --mat-form-field-outlined-container-shape: 28px;
 }
 
 .mat-mdc-option .mdc-list-item__primary-text {
@@ -26,7 +26,7 @@
 }
 
 .foe {
-  // --mdc-outlined-text-field-outline-color: white;
+  // --mat-form-field-outlined-outline-color: white;
   background-color: white;
   border-radius: 30px;
   height: 3.5rem;

@@ -49,26 +49,26 @@ import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
 
 @Component({
-  selector: 'app-meal',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    TableProductMealComponent,
-    ChartMealProductComponent,
-    ReactiveFormsModule,
-    CommonModule,
-    SearchProductAutocompleteComponent,
-  ],
-  templateUrl: './meal.component.html',
-  styleUrl: './meal.component.scss',
-  providers: [
-    provideNativeDateAdapter(),
-    {
-      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-      useClass: DefaultMatCalendarRangeStrategy,
-    },
-  ],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-meal',
+    standalone: true,
+    imports: [
+        MaterialModule,
+        TableProductMealComponent,
+        ChartMealProductComponent,
+        ReactiveFormsModule,
+        CommonModule,
+        SearchProductAutocompleteComponent,
+    ],
+    templateUrl: './meal.component.html',
+    styleUrl: './meal.component.scss',
+    providers: [
+        provideNativeDateAdapter(),
+        {
+            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+            useClass: DefaultMatCalendarRangeStrategy,
+        },
+    ],
+    encapsulation: ViewEncapsulation.None
 })
 export class MealComponent implements OnInit, OnDestroy {
   readonly DATE_MEAL_INPUT = 'dateMeal';

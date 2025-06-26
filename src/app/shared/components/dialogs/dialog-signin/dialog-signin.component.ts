@@ -21,16 +21,15 @@ import {
 import { AuthService, RefreshTokenResponse } from '../../../../../generated';
 
 @Component({
-  selector: 'app-dialog-signin',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    LoginGoogleComponent,
-    ReactiveFormsModule,
-    FormsModule,
-  ],
-  templateUrl: './dialog-signin.component.html',
-  styleUrl: './dialog-signin.component.scss',
+    selector: 'app-dialog-signin',
+    imports: [
+        MaterialModule,
+        LoginGoogleComponent,
+        ReactiveFormsModule,
+        FormsModule,
+    ],
+    templateUrl: './dialog-signin.component.html',
+    styleUrl: './dialog-signin.component.scss'
 })
 export class DialogSigninComponent implements OnInit, OnDestroy {
   readonly EMAIL_INPUT = 'email';
