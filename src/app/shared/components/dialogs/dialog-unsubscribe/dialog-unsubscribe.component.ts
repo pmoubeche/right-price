@@ -17,10 +17,9 @@ import { TokenStorageService } from '../../../services/token-storage.service';
 import { AuthServiceFront } from '../../../services/auth-front.service';
 
 @Component({
-  selector: 'app-dialog-unsubscribe',
-  standalone: true,
-  imports: [MaterialModule],
-  templateUrl: './dialog-unsubscribe.component.html',
+    selector: 'app-dialog-unsubscribe',
+    imports: [MaterialModule],
+    templateUrl: './dialog-unsubscribe.component.html'
 })
 export class DialogUnsubscribeComponent implements OnInit {
   subscription = new Subscription();

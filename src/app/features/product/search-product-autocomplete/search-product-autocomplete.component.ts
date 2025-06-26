@@ -38,17 +38,16 @@ export enum ChipParamSearch {
 }
 
 @Component({
-  selector: 'app-search-product-autocomplete',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    ReactiveFormsModule,
-    CommonModule,
-    NutriscoreUrlFromGradePipe,
-  ],
-  templateUrl: './search-product-autocomplete.component.html',
-  styleUrl: './search-product-autocomplete.component.scss',
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-search-product-autocomplete',
+    imports: [
+        MaterialModule,
+        ReactiveFormsModule,
+        CommonModule,
+        NutriscoreUrlFromGradePipe,
+    ],
+    templateUrl: './search-product-autocomplete.component.html',
+    styleUrl: './search-product-autocomplete.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class SearchProductAutocompleteComponent implements OnInit, OnDestroy {
   readonly INPUT_TEXT: string = 'inputText';

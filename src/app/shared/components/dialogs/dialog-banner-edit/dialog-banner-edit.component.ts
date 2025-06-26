@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -33,16 +33,15 @@ import {
 import { CodeLabelModel } from '../../../model/code-label.model';
 
 @Component({
-  selector: 'app-dialog-banner-edit',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, FormsModule, CommonModule],
-  providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-  ],
-  templateUrl: './dialog-banner-edit.component.html',
-  styleUrl: './dialog-banner-edit.component.scss',
+    selector: 'app-dialog-banner-edit',
+    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+    providers: [
+        { provide: DateAdapter, useClass: NativeDateAdapter },
+        { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
+        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    ],
+    templateUrl: './dialog-banner-edit.component.html',
+    styleUrl: './dialog-banner-edit.component.scss'
 })
 export class DialogBannerEditComponent implements OnInit, OnDestroy {
   readonly MESSAGE_INPUT = 'message';

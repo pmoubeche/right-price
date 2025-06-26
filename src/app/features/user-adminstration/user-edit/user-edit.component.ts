@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import {
   FormBuilder,
@@ -23,12 +23,10 @@ import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { GenderEnum } from '../../settings/profil-edit/profil-edit.component';
 
 @Component({
-  selector: 'app-user-edit',
-  standalone: true,
-  imports: [MaterialModule, CommonModule, ReactiveFormsModule, FormsModule],
-
-  templateUrl: './user-edit.component.html',
-  styleUrl: './user-edit.component.scss',
+    selector: 'app-user-edit',
+    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+    templateUrl: './user-edit.component.html',
+    styleUrl: './user-edit.component.scss'
 })
 export class UserEditComponent {
   readonly USERNAME_FIELD = 'username';

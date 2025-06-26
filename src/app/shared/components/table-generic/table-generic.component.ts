@@ -36,19 +36,18 @@ export class UpdateData {
 }
 
 @Component({
-  selector: 'app-table-generic',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    CommonModule,
-    PercentFormatPipe,
-    FormatDatePipe,
-    ReactiveFormsModule,
-    FormsModule,
-    RouterLink,
-  ],
-  templateUrl: './table-generic.component.html',
-  styleUrl: './table-generic.component.scss',
+    selector: 'app-table-generic',
+    imports: [
+        MaterialModule,
+        CommonModule,
+        PercentFormatPipe,
+        FormatDatePipe,
+        ReactiveFormsModule,
+        FormsModule,
+        RouterLink,
+    ],
+    templateUrl: './table-generic.component.html',
+    styleUrl: './table-generic.component.scss'
 })
 export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   readonly EDITABLE_FIELD = 'field';

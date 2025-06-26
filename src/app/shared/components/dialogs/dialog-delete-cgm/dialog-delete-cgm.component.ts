@@ -15,25 +15,24 @@ import {
   DialogGenericService,
 } from '../dialog-generic.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateUtils } from '../../../utils/date.utils';
 import { SnackbarService } from '../../../services/snackbar.service';
 
 @Component({
-  selector: 'app-dialog-delete-account',
-  standalone: true,
-  imports: [MaterialModule, CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './dialog-delete-cgm.component.html',
-  styleUrl: './dialog-delete-cgm.component.scss',
-  providers: [
-    provideNativeDateAdapter(),
-    {
-      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-      useClass: DefaultMatCalendarRangeStrategy,
-    },
-  ],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-dialog-delete-account',
+    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+    templateUrl: './dialog-delete-cgm.component.html',
+    styleUrl: './dialog-delete-cgm.component.scss',
+    providers: [
+        provideNativeDateAdapter(),
+        {
+            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+            useClass: DefaultMatCalendarRangeStrategy,
+        },
+    ],
+    encapsulation: ViewEncapsulation.None
 })
 export class DialogDeleteDataCgmComponent implements OnInit {
   subscription = new Subscription();

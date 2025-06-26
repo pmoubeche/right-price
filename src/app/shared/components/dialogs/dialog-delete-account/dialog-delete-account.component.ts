@@ -13,10 +13,9 @@ import { AuthServiceFront } from '../../../services/auth-front.service';
 import { UserService } from '../../../../../generated';
 
 @Component({
-  selector: 'app-dialog-delete-account',
-  standalone: true,
-  imports: [MaterialModule],
-  templateUrl: './dialog-delete-account.component.html',
+    selector: 'app-dialog-delete-account',
+    imports: [MaterialModule],
+    templateUrl: './dialog-delete-account.component.html'
 })
 export class DialogDeleteAccountComponent implements OnInit {
   subscription = new Subscription();

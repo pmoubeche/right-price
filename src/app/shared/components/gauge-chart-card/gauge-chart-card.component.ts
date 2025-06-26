@@ -17,16 +17,15 @@ export class GaugeCardParams {
 }
 
 @Component({
-  selector: 'app-gauge-chart-card',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    ChartComponent,
-    RoundNumberDecimalPipe,
-    CommonModule,
-  ],
-  templateUrl: './gauge-chart-card.component.html',
-  styleUrl: './gauge-chart-card.component.scss',
+    selector: 'app-gauge-chart-card',
+    imports: [
+        MaterialModule,
+        ChartComponent,
+        RoundNumberDecimalPipe,
+        CommonModule,
+    ],
+    templateUrl: './gauge-chart-card.component.html',
+    styleUrl: './gauge-chart-card.component.scss'
 })
 export class GaugeChartCardComponent implements OnInit {
   @Input() set gaugeCardParam(gaugeCardParam: GaugeCardParams) {

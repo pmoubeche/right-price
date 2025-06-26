@@ -11,10 +11,9 @@ import {
 } from '../dialog-generic.service';
 
 @Component({
-  selector: 'app-dialog-csv-import',
-  standalone: true,
-  imports: [MaterialModule],
-  templateUrl: './dialog-csv-import.component.html',
+    selector: 'app-dialog-csv-import',
+    imports: [MaterialModule],
+    templateUrl: './dialog-csv-import.component.html'
 })
 export class DialogCsvImportComponent implements OnInit {
   subscription = new Subscription();

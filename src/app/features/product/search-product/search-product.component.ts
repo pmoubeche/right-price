@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   EventEmitter,
@@ -32,11 +32,10 @@ export enum ChipParamSearch {
 }
 
 @Component({
-  selector: 'app-search-product',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, CommonModule],
-  templateUrl: './search-product.component.html',
-  styleUrl: './search-product.component.scss',
+    selector: 'app-search-product',
+    imports: [MaterialModule, ReactiveFormsModule],
+    templateUrl: './search-product.component.html',
+    styleUrl: './search-product.component.scss'
 })
 export class SearchProductComponent implements OnInit, OnDestroy {
   readonly INPUT_TEXT: string = 'inputText';

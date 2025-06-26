@@ -25,11 +25,10 @@ export class Sub {
 }
 
 @Component({
-  selector: 'app-pricing',
-  standalone: true,
-  imports: [MaterialModule, CommonModule],
-  templateUrl: './subscribe.component.html',
-  styleUrl: './subscribe.component.scss',
+    selector: 'app-pricing',
+    imports: [MaterialModule, CommonModule],
+    templateUrl: './subscribe.component.html',
+    styleUrl: './subscribe.component.scss'
 })
 export class SubscriptionComponent implements OnInit, OnDestroy {
   readonly GUEST = 'GUEST';

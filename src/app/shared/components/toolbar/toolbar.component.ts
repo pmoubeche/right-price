@@ -19,19 +19,18 @@ import { SearchProductAutocompleteComponent } from '../../../features/product/se
 import { RoleModel, UserResponse } from '../../../../generated';
 
 @Component({
-  selector: 'app-toolbar',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    LoginGoogleComponent,
-    ProfileComponent,
-    BannerComponent,
-    RouterLink,
-    CommonModule,
-    SearchProductAutocompleteComponent,
-  ],
-  templateUrl: './toolbar.component.html',
-  styleUrl: './toolbar.component.scss',
+    selector: 'app-toolbar',
+    imports: [
+        MaterialModule,
+        LoginGoogleComponent,
+        ProfileComponent,
+        BannerComponent,
+        RouterLink,
+        CommonModule,
+        SearchProductAutocompleteComponent,
+    ],
+    templateUrl: './toolbar.component.html',
+    styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   public roleTier2 = RoleTier2;

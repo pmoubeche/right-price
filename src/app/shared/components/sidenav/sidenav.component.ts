@@ -7,11 +7,10 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { SideNavService } from '../../services/sidenav.service';
 
 @Component({
-  selector: 'app-sidenav',
-  standalone: true,
-  imports: [MaterialModule, RouterLink, RouterOutlet],
-  templateUrl: './sidenav.component.html',
-  styleUrl: './sidenav.component.scss',
+    selector: 'app-sidenav',
+    imports: [MaterialModule, RouterLink, RouterOutlet],
+    templateUrl: './sidenav.component.html',
+    styleUrl: './sidenav.component.scss'
 })
 export class SidenavComponent implements OnInit {
   @ViewChild('sidenav') public sidenav?: MatSidenav;

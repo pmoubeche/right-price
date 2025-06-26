@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { ContextService } from '../../../shared/services/context.service';
-import { CommonModule } from '@angular/common';
+
 import { Gender } from '../../../shared/model/gender.model';
 import {
   FormBuilder,
@@ -26,11 +26,10 @@ export enum GenderEnum {
 }
 
 @Component({
-  selector: 'app-profil-edit',
-  standalone: true,
-  imports: [MaterialModule, CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './profil-edit.component.html',
-  styleUrl: './profil-edit.component.scss',
+    selector: 'app-profil-edit',
+    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+    templateUrl: './profil-edit.component.html',
+    styleUrl: './profil-edit.component.scss'
 })
 export class ProfilEditComponent implements OnInit, OnDestroy {
   readonly USERNAME_FIELD = 'username';

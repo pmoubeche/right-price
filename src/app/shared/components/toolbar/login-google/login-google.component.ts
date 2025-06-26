@@ -19,11 +19,10 @@ import { RoleGuest } from '../../../constants/role.constant';
 declare var google: any;
 
 @Component({
-  selector: 'app-login-google',
-  standalone: true,
-  imports: [],
-  templateUrl: './login-google.component.html',
-  styleUrl: './login-google.component.scss',
+    selector: 'app-login-google',
+    imports: [],
+    templateUrl: './login-google.component.html',
+    styleUrl: './login-google.component.scss'
 })
 export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
   @Input() isSignup: boolean = false;

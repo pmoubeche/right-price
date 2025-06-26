@@ -9,16 +9,15 @@ import { ListProductComponent } from './list-product/list-product.component';
 import { SearchProductComponent } from './search-product/search-product.component';
 
 @Component({
-  selector: 'app-product',
-  standalone: true,
-  imports: [
-    SearchProductComponent,
-    DetailProductComponent,
-    ListProductComponent,
-    MaterialModule,
-  ],
-  templateUrl: './product.component.html',
-  styleUrl: './product.component.scss',
+    selector: 'app-product',
+    imports: [
+        SearchProductComponent,
+        DetailProductComponent,
+        ListProductComponent,
+        MaterialModule,
+    ],
+    templateUrl: './product.component.html',
+    styleUrl: './product.component.scss'
 })
 export class ProductComponent {
   public httpProducts: ResponseProducts = new ResponseProducts();

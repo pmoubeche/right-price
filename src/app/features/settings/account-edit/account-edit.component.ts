@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -18,11 +18,10 @@ import { ContextService } from '../../../shared/services/context.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 
 @Component({
-  selector: 'app-account-edit',
-  standalone: true,
-  imports: [MaterialModule, CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './account-edit.component.html',
-  styleUrl: './account-edit.component.scss',
+    selector: 'app-account-edit',
+    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+    templateUrl: './account-edit.component.html',
+    styleUrl: './account-edit.component.scss'
 })
 export class AccountEditComponent implements OnInit {
   readonly NEW_PASSWORD_FIELD = 'newPassword';

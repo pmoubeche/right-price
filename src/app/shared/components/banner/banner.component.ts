@@ -5,11 +5,10 @@ import { BannerInfoModel, BannerService } from '../../../../generated';
 import { MaterialModule } from '../../material/material.module';
 
 @Component({
-  selector: 'app-banner',
-  standalone: true,
-  imports: [MaterialModule, CommonModule],
-  templateUrl: './banner.component.html',
-  styleUrl: './banner.component.scss',
+    selector: 'app-banner',
+    imports: [MaterialModule, CommonModule],
+    templateUrl: './banner.component.html',
+    styleUrl: './banner.component.scss'
 })
 export class BannerComponent implements OnInit, OnDestroy {
   bannerType?: string;

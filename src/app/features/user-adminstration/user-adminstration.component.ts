@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -26,17 +26,15 @@ import {
 import { DateUtils } from '../../shared/utils/date.utils';
 
 @Component({
-  selector: 'app-user-adminstration',
-  standalone: true,
-  imports: [
+    selector: 'app-user-adminstration',
+    imports: [
     MaterialModule,
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TableGenericComponent,
-  ],
-  templateUrl: './user-adminstration.component.html',
-  styleUrl: './user-adminstration.component.scss',
+    TableGenericComponent
+],
+    templateUrl: './user-adminstration.component.html',
+    styleUrl: './user-adminstration.component.scss'
 })
 export class UserAdminstrationComponent implements OnInit, OnDestroy {
   readonly USERNAME_FIELD = 'username';

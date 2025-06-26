@@ -4,10 +4,9 @@ import { ToolbarComponent } from '../../shared/components/toolbar/toolbar.compon
 import { MaterialModule } from '../../shared/material/material.module';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [MaterialModule, ToolbarComponent, SidenavComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+    selector: 'app-home',
+    imports: [MaterialModule, ToolbarComponent, SidenavComponent],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {}

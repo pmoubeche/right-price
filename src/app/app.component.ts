@@ -6,11 +6,10 @@ import { ContextService } from './shared/services/context.service';
 import { TokenStorageService } from './shared/services/token-storage.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, ToolbarComponent, SidenavComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+    selector: 'app-root',
+    imports: [RouterOutlet, ToolbarComponent, SidenavComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
   title = 'datafood_front';

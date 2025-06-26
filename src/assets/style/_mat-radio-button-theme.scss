@@ -6,7 +6,7 @@
     // Unifie la couleur du background du bouton radio
     // afin de supprimer le point blanc visible à un certain niveau de zoom
     .mdc-radio__inner-circle {
-      background-color: var(--mdc-radio-selected-icon-color);
+      background-color: var(--mat-radio-selected-icon-color);
     }
   }
 }

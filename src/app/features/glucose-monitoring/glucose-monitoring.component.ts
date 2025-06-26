@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
@@ -64,26 +64,24 @@ export class CarbsAndSugarsValuesCharts {
 }
 
 @Component({
-  selector: 'app-glucose-monitoring',
-  standalone: true,
-  imports: [
+    selector: 'app-glucose-monitoring',
+    imports: [
     MaterialModule,
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     ChartComponent,
-    TableGenericComponent,
-  ],
-  providers: [
-    provideNativeDateAdapter(),
-    {
-      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-      useClass: DefaultMatCalendarRangeStrategy,
-    },
-  ],
-  templateUrl: './glucose-monitoring.component.html',
-  styleUrl: './glucose-monitoring.component.scss',
-  encapsulation: ViewEncapsulation.None,
+    TableGenericComponent
+],
+    providers: [
+        provideNativeDateAdapter(),
+        {
+            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+            useClass: DefaultMatCalendarRangeStrategy,
+        },
+    ],
+    templateUrl: './glucose-monitoring.component.html',
+    styleUrl: './glucose-monitoring.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   readonly DEVICE_FIELD = 'device';
