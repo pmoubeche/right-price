@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Subscription, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
-import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
 import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
 import { ChartComponent } from '../../shared/components/chart/chart.component';
 import { ChartUtils } from '../../shared/components/chart/chart.utils';
@@ -21,15 +21,12 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
-import { UppercaseFirstLetterFormatPipe } from '../../shared/pipes/uppercase-first-letter-format.pipe';
+import { RoundNumberDecimalPipe } from '../../shared/pipes/round-number-decimal.pipe';
 import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.service';
 import { ProductUtils } from '../../shared/utils/product.utils';
 import { NutrimentInfoModel } from '../product/detail-product/detail-product.component';
 import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
-import { SearchProductComponent } from '../product/search-product/search-product.component';
 import { CompareProductService } from './compare-product.service';
-import { RoundNumberDecimalPipe } from '../../shared/pipes/round-number-decimal.pipe';
-import { Router } from '@angular/router';
 
 export class PercentCompareModel {
   id?: string;
@@ -49,9 +46,6 @@ export class PercentCompareModelNumber {
         MaterialModule,
         TableGenericComponent,
         ReactiveFormsModule,
-        SearchProductComponent,
-        CardResultGenericComponent,
-        UppercaseFirstLetterFormatPipe,
         RoundNumberDecimalPipe,
         SearchProductAutocompleteComponent,
         CommonModule,

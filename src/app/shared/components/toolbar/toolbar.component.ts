@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Subscription, tap } from 'rxjs';
+import { RoleModel, UserResponse } from '../../../../generated';
+import { SearchProductAutocompleteComponent } from '../../../features/product/search-product-autocomplete/search-product-autocomplete.component';
 import { RoleAdmin, RoleTier1, RoleTier2 } from '../../constants/role.constant';
 import { MaterialModule } from '../../material/material.module';
 import { AuthServiceFront } from '../../services/auth-front.service';
@@ -14,15 +16,11 @@ import {
   DialogGenericService,
 } from '../dialogs/dialog-generic.service';
 import { ProfileComponent } from '../profile/profile.component';
-import { LoginGoogleComponent } from './login-google/login-google.component';
-import { SearchProductAutocompleteComponent } from '../../../features/product/search-product-autocomplete/search-product-autocomplete.component';
-import { RoleModel, UserResponse } from '../../../../generated';
 
 @Component({
     selector: 'app-toolbar',
     imports: [
         MaterialModule,
-        LoginGoogleComponent,
         ProfileComponent,
         BannerComponent,
         RouterLink,

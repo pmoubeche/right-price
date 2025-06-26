@@ -1,5 +1,6 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Subscription, tap } from 'rxjs';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
@@ -14,14 +15,12 @@ import {
 import { RoundNumberDecimalPipe } from '../../../shared/pipes/round-number-decimal.pipe';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { ProductUtils } from '../../../shared/utils/product.utils';
-import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-chart-meal-product',
     imports: [
     ChartComponent,
     MaterialModule,
-    RoundNumberDecimalPipe,
     FormsModule
 ],
     templateUrl: './chart-meal-product.component.html',

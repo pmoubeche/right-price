@@ -5,9 +5,7 @@ import { Router } from '@angular/router';
 import { MaterialModule } from '../../material/material.module';
 import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
 import { ResponseProducts } from '../../model/product.model';
-import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { TrimStringPipe } from '../../pipes/trim-string.pipe';
-import { UppercaseFirstLetterFormatPipe } from '../../pipes/uppercase-first-letter-format.pipe';
 import { ProductUtils } from '../../utils/product.utils';
 import { CardResultGenericService } from './card-result-generic.service';
 
@@ -16,8 +14,6 @@ import { CardResultGenericService } from './card-result-generic.service';
     imports: [
         MaterialModule,
         CommonModule,
-        PercentFormatPipe,
-        UppercaseFirstLetterFormatPipe,
         TrimStringPipe,
     ],
     templateUrl: './card-result-generic.component.html',

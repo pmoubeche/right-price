@@ -5,8 +5,6 @@
 @use "normalisation";
 @use "app-utils" as utils;
 
-@import "assets/style/tailwind.scss";
-
 @include mat.elevation-classes();
 @include mat.app-background();
 

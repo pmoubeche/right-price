@@ -24,11 +24,10 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../model/table-column-param.model';
-import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
-import { TableGenericService } from './table-generic.service';
-import { RouterLink } from '@angular/router';
 import { FormatDatePipe } from '../../pipes/format-date.pipe';
+import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { CardResultGenericService } from '../card-result-generic/card-result-generic.service';
+import { TableGenericService } from './table-generic.service';
 
 export class UpdateData {
   element: any;
@@ -44,7 +43,6 @@ export class UpdateData {
         FormatDatePipe,
         ReactiveFormsModule,
         FormsModule,
-        RouterLink,
     ],
     templateUrl: './table-generic.component.html',
     styleUrl: './table-generic.component.scss'

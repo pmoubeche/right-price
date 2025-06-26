@@ -52,7 +52,6 @@ export class NutrimentInfoModel {
     imports: [
         MaterialModule,
         TableGenericComponent,
-        PercentFormatPipe,
         UppercaseFirstLetterFormatPipe,
         ChartComponent,
         GaugeChartCardComponent,
