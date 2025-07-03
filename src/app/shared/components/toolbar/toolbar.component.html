@@ -1,21 +1,15 @@
-<mat-toolbar color="accent" style="position: sticky !important; height: 5rem">
+<mat-toolbar
+  class="app-topstrip bg-light-secondary text-white p-y-16 p-x-24 w-100 d-flex align-items-center justify-content-between position-sticky top-0 z-index-1000"
+>
   <button mat-icon-button (click)="triggerSidenav()">
     <mat-icon>list</mat-icon>
   </button>
-  <button
-    mat-flat-button
-    color="accent"
-    style="border-radius: 20px; height: 50px"
-    (click)="onClick()"
-  >
-    <img
-      style="height: 40px; margin: 0.5rem"
-      src="../../../../assets/svg/logos/logo_primary_datafood.png"
-    />
+  <button mat-icon-button (click)="onClick()">
+    <mat-icon>home</mat-icon>
   </button>
   <span class="example-spacer"></span>
   <app-search-product-autocomplete
-    style="margin-right: 1rem"
+    class="m-t-16"
     [isLabelDisplayed]="false"
     [isRedirectOnSelect]="true"
   ></app-search-product-autocomplete>
@@ -38,23 +32,11 @@
   <app-profile></app-profile>
   } @else {
 
-  <button
-    mat-fab
-    extended
-    color="primary"
-    style="margin: 1rem 1rem 1rem 0rem"
-    (click)="login()"
-  >
+  <button color="danger" mat-button class="m-16" (click)="login()">
     <span>Se connecter</span>
     <mat-icon>person</mat-icon>
   </button>
-  <button
-    mat-fab
-    extended
-    color="primary"
-    style="margin: 1rem 1rem 1rem 0rem"
-    (click)="register()"
-  >
+  <button color="secondary" mat-button class="m-16" (click)="register()">
     <span>S'inscrire</span>
     <mat-icon>person_add</mat-icon>
   </button>

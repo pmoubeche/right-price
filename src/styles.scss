@@ -1,44 +1,50 @@
-/* You can add global styles to this file, and also import other style files */
 
-@use "@angular/material" as mat;
-@use "app-theme";
-@use "normalisation";
-@use "app-utils" as utils;
+// @use "@angular/material" as mat;
+// @use "app-theme";
+// @use "normalisation";
+// @use "app-utils" as utils;
 
-@include mat.elevation-classes();
-@include mat.app-background();
+// @include mat.elevation-classes();
+// @include mat.app-background();
 
-@include app-theme.theme();
+// @include app-theme.theme();
 
-@include normalisation.normalisation();
+// @include normalisation.normalisation();
 
-:root {
-  --couleur-principale: #2b5fad;
-  --couleur-erreur: #d92828;
-}
+// :root {
+//   --couleur-principale: #2b5fad;
+//   --couleur-erreur: #d92828;
+// }
 
-html {
-  overflow: hidden;
-}
+// html {
+//   overflow: hidden;
+// }
+// body {
+//   height: 100%;
+// }
+// body {
+//   margin: 0;
+//   font-family: "Google Sans", arial, sans-serif;
+// }
+
+// .mat-datepicker-content {
+//   box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024, 0 1px 10px #0000001f;
+//   background-color: #fff;
+//   color: #000000de;
+// }
+
+// .mat-calendar-body-selected {
+//   background-color: utils.get-couleur-principale();
+//   color: #fff;
+// }
+
+// .mat-calendar-body-cell-content {
+//   border: none !important;
+// }
+
+
+html,
 body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: "Google Sans", arial, sans-serif;
-}
-
-.mat-datepicker-content {
-  box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024, 0 1px 10px #0000001f;
-  background-color: #fff;
-  color: #000000de;
-}
-
-.mat-calendar-body-selected {
-  background-color: utils.get-couleur-principale();
-  color: #fff;
-}
-
-.mat-calendar-body-cell-content {
-  border: none !important;
+    height: 100%;
+    margin: 0;
 }
