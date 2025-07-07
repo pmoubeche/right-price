@@ -51,6 +51,10 @@ export class ChartUtils {
     );
   }
 
+ static getCssVariableValue(variableName: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+ }
+
   static setDataSetFilledValue(...dataSets: ChartDataset[]): ChartDataset {
     const dailyRecos = Object.values(NutrimentsManConst);
     let valueToAdd = 0;

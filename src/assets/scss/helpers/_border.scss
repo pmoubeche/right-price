@@ -26,7 +26,26 @@ $utilities: (
     class: b-r,
     values: variables.$borders
   ),
-  
+  'border-color': (
+    property: border-color,
+    class: b-c,
+    values: variables.$borders
+  ),
+  'border-width': (
+    property: border-width,
+    class: b-w,
+    values: variables.$borders
+  ),
+  'border-style': (
+    property: border-style,
+    class: b-s,
+    values: variables.$borders
+  ),
+  'border-radius': (
+    property: border-radius,
+    class: b-ra,
+    values: variables.$borders
+  ),
 );
 
 

@@ -63,13 +63,39 @@ body {
   }
 }
 
-.w-100 {
-  width: 100%;
+@for $i from 1 through 1920 {
+  $j: $i * 4;
+  .aw-#{$j} {
+    width: #{$j}px;
+  }
+
+  .ah-#{$j} {
+    height: #{$j}px;
+  }
 }
 
-.h-100 {
-  height: 100%;
-}
+$utilities: (
+  'width': (
+    property: width,
+    class: w,
+    values: $sizes
+  ),
+  'max-width': (
+    property: max-width,
+    class: mw,
+    values: $sizes
+  ),
+  'height': (
+    property: height,
+    class: h,
+    values: $sizes
+  ),
+  'max-height': (
+    property: max-height,
+    class: mh,
+    values: $sizes
+  ),
+);
 
 .shadow-none {
   box-shadow: none !important;

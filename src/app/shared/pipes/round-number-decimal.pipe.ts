@@ -6,6 +6,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class RoundNumberDecimalPipe implements PipeTransform {
   static transform(value: number, decimal: 0 | 1 | 2 | 3): number {
+    if (!value) {
+      return 0;
+    }
     switch (decimal) {
       case 0:
         return Math.round(value);
@@ -15,6 +18,8 @@ export class RoundNumberDecimalPipe implements PipeTransform {
         return Math.round(value * 100) / 100;
       case 3:
         return Math.round(value * 1000) / 1000;
+      default:
+        return 0;
     }
   }
 

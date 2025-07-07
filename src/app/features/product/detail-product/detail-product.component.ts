@@ -28,8 +28,8 @@ import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-
 import { ContextService } from '../../../shared/services/context.service';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { ProductUtils } from '../../../shared/utils/product.utils';
-import { CompareProductService } from '../../compare-products/compare-product.service';
 import { MealService } from '../../meal/meal.service';
+import { CompareProductService } from '../../compare-products/compare-product.service';
 
 export class IngredientInfoModel {
   id?: string;

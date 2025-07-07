@@ -123,6 +123,71 @@ export class ProductUtils {
     }
   }
 
+   static setMacroNutrimentsDefaultValues(): NutrimentInfoModel[] {
+    return [
+      {
+        id: '0',
+        nutriment: 'Energie (kJ)',
+        value: `0 ${this.UNIT_KJ}`,
+        unit: this.UNIT_KJ,
+      },
+      {
+        id: '1',
+        nutriment: 'Energie (kcal)',
+        value: `0 ${this.UNIT_KCAL}`,
+        unit: this.UNIT_KCAL,
+      },
+      {
+        id: '2',
+        nutriment: 'Matières grasses',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '2',
+        nutriment: 'Matières grasses',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '3',
+        nutriment: '--Acides gras saturés',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '4',
+        nutriment: 'Glucides',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '5',
+        nutriment: '--Sucres',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '6',
+        nutriment: '--Fibres alimentaires',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '7',
+        nutriment: 'Protéines',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '8',
+        nutriment: 'Sel',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+    ];
+  }
+
   static setMacroNutrimentsTable(nutriment: Nutriments): NutrimentInfoModel[] {
     return [
       {
@@ -618,7 +683,7 @@ export class ProductUtils {
   }
 
   static setNutrimentChartBarMap(nutriment: Nutriments): Map<string, number> {
-    if (Object.keys(nutriment).length > 0) {
+    if (nutriment && Object.keys(nutriment).length > 0) {
       return new Map<string, number>([
         [
           `${NutrimentsManConst.ENERGY_KJ.label} (${NutrimentsManConst.ENERGY_KJ.unit})`,

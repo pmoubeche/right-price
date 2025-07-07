@@ -26,7 +26,6 @@ import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.
 import { ProductUtils } from '../../shared/utils/product.utils';
 import { NutrimentInfoModel } from '../product/detail-product/detail-product.component';
 import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
-import { CompareProductService } from './compare-product.service';
 
 export class PercentCompareModel {
   id?: string;
@@ -52,12 +51,11 @@ export class PercentCompareModelNumber {
         ChartComponent,
     ],
     templateUrl: './compare-products.component.html',
-    styleUrl: './compare-products.component.scss'
 })
 export class CompareProductsComponent implements OnInit {
   public _productA = new Product();
 
-  public productInfoModelSelected?: ProductInfosModel;
+  public productInfoModelSelected = new ProductInfosModel();
 
   @Input() set productA(productA: Product) {
     this._productA = productA;
@@ -111,8 +109,8 @@ export class CompareProductsComponent implements OnInit {
     return this._productB;
   }
 
-  public macroNutrimentInfoA?: NutrimentInfoModel[] = [];
-  public macroNutrimentInfoB?: NutrimentInfoModel[] = [];
+  public macroNutrimentInfoA: NutrimentInfoModel[] = ProductUtils.setMacroNutrimentsDefaultValues();
+  public macroNutrimentInfoB: NutrimentInfoModel[] = ProductUtils.setMacroNutrimentsDefaultValues();
   public percentCompare: PercentCompareModelNumber[] = [];
 
   macroNutrimentsDataSourcesA = new PaginatedDataSource<NutrimentInfoModel>();
@@ -179,35 +177,26 @@ export class CompareProductsComponent implements OnInit {
   constructor(
     private readonly cardsService: CardResultGenericService,
     private readonly openFoodFactsApiService: OpenFoodFactsApiService,
-    private readonly compareProductService: CompareProductService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
+    this.macroNutrimentsDataSourcesA.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfoA);
+    this.macroNutrimentsDataSourcesB.dataSource =
+      new MatTableDataSource<NutrimentInfoModel>(this.macroNutrimentInfoB);
+    this.setNutrimentsChartsBarsData(
+      this.productA.nutriments!,
+      this.productB.nutriments!
+    );
     ChartUtils.setChartImports();
     this.cardsService.selectItem$.subscribe((item) => {
       this.productInfoModelSelected = item;
     });
-
-    this.setProductAFromProductDetail();
   }
 
   viewProduct(productInfoModel: ProductInfosModel): void {
     this.router.navigate(['/product', productInfoModel.id]);
-  }
-
-  private setProductAFromProductDetail() {
-    this.subscription.add(
-      this.compareProductService.product$
-        .pipe(
-          tap((product) => {
-            this.productInfoModelA =
-              ProductUtils.setProductInfoFromProduct(product);
-            this.productA = product;
-          })
-        )
-        .subscribe()
-    );
   }
 
   addProductToLeft(productInfo: ProductInfosModel): void {
@@ -251,6 +240,7 @@ export class CompareProductsComponent implements OnInit {
     nutrimentProductA: Nutriments,
     nutrimentProductB: Nutriments
   ): void {
+    this.dailyRecommanderIncomeChartsBarData = [];
     let nutrimentChartMapProductA =
       ProductUtils.setNutrimentChartBarMap(nutrimentProductA);
 
@@ -262,7 +252,7 @@ export class CompareProductsComponent implements OnInit {
         label: 'Produit A',
         data: [value / (value + nutrimentChartMapProductB.get(key)!)],
         fill: true,
-        backgroundColor: ['#7fc8c9'],
+        backgroundColor: ['#13deb9'],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -279,7 +269,7 @@ export class CompareProductsComponent implements OnInit {
             (value + nutrimentChartMapProductB.get(key)!),
         ],
         fill: true,
-        backgroundColor: ['#4c7ed0'],
+        backgroundColor: ['#ffae1f'],
         borderRadius: {
           topLeft: 15,
           topRight: 15,

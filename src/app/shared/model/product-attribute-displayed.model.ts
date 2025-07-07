@@ -1,13 +1,14 @@
 import { Observable } from 'rxjs';
+import { EcoscoreLinks, NovagroupLinks, NutriscoreLinks } from '../enum/svg-urls.enum';
 
 export class ProductInfosModel {
   id?: string;
-  image?: string;
+  image?: string = 'assets/svg/no_img.jpg';
   label?: string;
   packagingQuantity?: number;
-  nutriscore?: string;
-  ecoscore?: string;
-  novagroup?: string;
+  nutriscore?: string = NutriscoreLinks.NUTRISCORE_UNKNOWN;
+  ecoscore?: string = EcoscoreLinks.ECOSCORE_UNKNOWN;
+  novagroup?: string = NovagroupLinks.NOVAGROUP_UNKNOWN;
 }
 
 export class MealProductInfoModel {
