@@ -1,4 +1,3 @@
-
 import {
   Component,
   EventEmitter,
@@ -23,6 +22,7 @@ import {
 } from '../../../shared/model/product.model';
 import { NutriscoreUrlFromGradePipe } from '../../../shared/pipes/nutriscore-url-from-grade.pipe';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 export enum ChipParamSearch {
   BARCODE = 'Code barre',
@@ -32,10 +32,9 @@ export enum ChipParamSearch {
 }
 
 @Component({
-    selector: 'app-search-product',
-    imports: [MaterialModule, ReactiveFormsModule],
-    templateUrl: './search-product.component.html',
-    styleUrl: './search-product.component.scss'
+  selector: 'app-search-product',
+  imports: [MaterialModule, ReactiveFormsModule, TablerIconsModule],
+  templateUrl: './search-product.component.html',
 })
 export class SearchProductComponent implements OnInit, OnDestroy {
   readonly INPUT_TEXT: string = 'inputText';

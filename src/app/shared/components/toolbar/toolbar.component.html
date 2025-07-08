@@ -1,23 +1,20 @@
-<mat-toolbar
-  class="app-topstrip bg-light-secondary text-white p-y-16 p-x-24 w-100 d-flex align-items-center justify-content-between position-sticky top-0 z-index-1000"
->
+<mat-toolbar class="topbar bg-light gap-10">
   <button mat-icon-button (click)="triggerSidenav()">
-    <mat-icon>list</mat-icon>
+    <i-tabler name="menu-2"></i-tabler>
   </button>
   <button mat-icon-button (click)="onClick()">
-    <mat-icon>home</mat-icon>
+    <i-tabler name="home"></i-tabler>
   </button>
-  <span class="example-spacer"></span>
+  <span class="flex-1-auto"></span>
   <app-search-product-autocomplete
-    class="m-t-16 m-x-16"
-    [isLabelDisplayed]="false"
+    class="m-t-16 m-x-8"
     [isRedirectOnSelect]="true"
   ></app-search-product-autocomplete>
   @if(user$ | async; as user){ @if(!isRoleInUser(user, roleTier2)){
   <button
     mat-flat-button
-    color="primary"
-    class="m-16 border-radius-20"
+    matButton="filled"
+    class="bg-success m-8"
     [routerLink]="['/subscribe']"
     routerLinkActive="router-link-active"
   >
@@ -32,15 +29,23 @@
   <app-profile></app-profile>
   } @else {
 
-  <button color="danger" mat-button class="m-16" (click)="login()">
-    <span>Se connecter</span>
-    <mat-icon>person</mat-icon>
+  <button mat-fab extended (click)="login()">
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="user-check"></i-tabler
+      ><span class="m-4">Se connecter</span>
+    </div>
   </button>
-  <button color="secondary" mat-button class="m-16" (click)="register()">
-    <span>S'inscrire</span>
-    <mat-icon>person_add</mat-icon>
+  <button
+    mat-fab
+    extended
+    class="bg-light-success text-success"
+    (click)="register()"
+  >
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="user-plus"></i-tabler
+      ><span class="m-4">S'inscrire</span>
+    </div>
   </button>
-
   }
 </mat-toolbar>
 <app-banner></app-banner>

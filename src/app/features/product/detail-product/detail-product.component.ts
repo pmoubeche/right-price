@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { ChartData, ChartOptions } from 'chart.js';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../../shared/common/paginated/paginated-datasource';
@@ -28,8 +29,8 @@ import { UppercaseFirstLetterFormatPipe } from '../../../shared/pipes/uppercase-
 import { ContextService } from '../../../shared/services/context.service';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { ProductUtils } from '../../../shared/utils/product.utils';
-import { MealService } from '../../meal/meal.service';
 import { CompareProductService } from '../../compare-products/compare-product.service';
+import { MealService } from '../../meal/meal.service';
 
 export class IngredientInfoModel {
   id?: string;
@@ -48,16 +49,17 @@ export class NutrimentInfoModel {
 }
 
 @Component({
-    selector: 'app-detail-product',
-    imports: [
-        MaterialModule,
-        TableGenericComponent,
-        UppercaseFirstLetterFormatPipe,
-        ChartComponent,
-        GaugeChartCardComponent,
-    ],
-    templateUrl: './detail-product.component.html',
-    styleUrl: './detail-product.component.scss'
+  selector: 'app-detail-product',
+  imports: [
+    MaterialModule,
+    TableGenericComponent,
+    UppercaseFirstLetterFormatPipe,
+    ChartComponent,
+    GaugeChartCardComponent,
+    TablerIconsModule,
+  ],
+  templateUrl: './detail-product.component.html',
+  styleUrl: './detail-product.component.scss',
 })
 export class DetailProductComponent implements OnInit, OnDestroy {
   private _httpProduct!: ResponseProduct;

@@ -13,7 +13,7 @@ body {
   color: var(--mat-sys-on-background);
 }
 
-.app-topstrip{
+.app-topstrip {
   position: fixed;
   top: 0;
   z-index: 10;
@@ -27,14 +27,14 @@ body {
   margin-top: 72px;
 }
 
-@media (max-width: 991px){
-  .mainWrapper{
+@media (max-width: 991px) {
+  .mainWrapper {
     margin-top: 157px;
   }
 }
 
-@media (max-width: 767px){
-  .mainWrapper{
+@media (max-width: 767px) {
+  .mainWrapper {
     margin-top: 108px;
   }
 }
@@ -63,7 +63,6 @@ body {
   }
 }
 
-
 @for $i from 1 through 1920 {
   $j: $i * 4;
   .aw-#{$j} {
@@ -76,25 +75,25 @@ body {
 }
 
 $utilities: (
-  'width': (
+  "width": (
     property: width,
     class: w,
-    values: $sizes
+    values: $sizes,
   ),
-  'max-width': (
+  "max-width": (
     property: max-width,
     class: mw,
-    values: $sizes
+    values: $sizes,
   ),
-  'height': (
+  "height": (
     property: height,
     class: h,
-    values: $sizes
+    values: $sizes,
   ),
-  'max-height': (
+  "max-height": (
     property: max-height,
     class: mh,
-    values: $sizes
+    values: $sizes,
   ),
 );
 

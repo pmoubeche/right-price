@@ -16,19 +16,20 @@ import {
   DialogGenericService,
 } from '../dialogs/dialog-generic.service';
 import { ProfileComponent } from '../profile/profile.component';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
-    selector: 'app-toolbar',
-    imports: [
-        MaterialModule,
-        ProfileComponent,
-        BannerComponent,
-        RouterLink,
-        CommonModule,
-        SearchProductAutocompleteComponent,
-    ],
-    templateUrl: './toolbar.component.html',
-    styleUrl: './toolbar.component.scss'
+  selector: 'app-toolbar',
+  imports: [
+    MaterialModule,
+    ProfileComponent,
+    BannerComponent,
+    RouterLink,
+    CommonModule,
+    SearchProductAutocompleteComponent,
+    TablerIconsModule,
+  ],
+  templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   public roleTier2 = RoleTier2;

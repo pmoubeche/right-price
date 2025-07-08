@@ -9,36 +9,31 @@
       [matAutocomplete]="auto"
       [formControl]="textInputControl"
     />
-    <mat-autocomplete #auto="matAutocomplete" class="autocomp">
-      @if(isLoading$ | async; as isLoading){
-      <mat-spinner
-        style="
-          display: flex;
-          justify-content: center;
-          width: 2rem;
-          height: auto;
-        "
-      ></mat-spinner>
-      } @else { @for (product of products$ | async; track $index) {
+    <mat-autocomplete
+      class="sidebar-list"
+      #auto="matAutocomplete"
+      (opened)="onAutocompleteOpened()"
+    >
+      @for (product of products$ | async; track $index) {
       <mat-option
         [value]="product.product_name"
         (click)="onSelectItem(product)"
-        style="display: flex; flex-direction: row"
+        class="p-8 d-flex justify-content-between menu-list-item"
       >
-        <div style="width: 20%; display: flex; justify-content: center">
-          <img [src]="product.image_small_url" style="height: 48px" />
-        </div>
-        <div style="width: 60%">
-          <span>{{ product.product_name }}</span>
-        </div>
-        <div style="width: 20%">
+        <span>
+          <strong>
+            {{ product.product_name }}
+          </strong>
+        </span>
+        <div>
           <img
-            style="height: 36px"
-            [src]="product.nutriscore_grade! | nutriscoreUrlFromGrade"
+            mat-card-image
+            class="w-auto ah-48"
+            src="{{ product.image_small_url }}"
           />
         </div>
       </mat-option>
-      } }
+      }
     </mat-autocomplete>
     @if(textInputControl.value){
     <button mat-icon-button matSuffix (click)="resetForm()">

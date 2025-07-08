@@ -24,12 +24,16 @@
       }
     </mat-form-field>
   </form>
+
   <button
-    matButton="filled"
-    class="m-x-8 m-t-16"
+    class="m-x-8 m-t-4"
+    mat-fab
+    extended
     (click)="search(pageIndex, pageSize)"
   >
-    <span>Rechercher</span>
-    <mat-icon>search</mat-icon>
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="search"></i-tabler
+      ><span class="m-4">Rechercher</span>
+    </div>
   </button>
 </div>

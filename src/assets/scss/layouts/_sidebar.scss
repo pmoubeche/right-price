@@ -36,7 +36,6 @@
         z-index: -1;
       }
 
-
       .item-chip {
         height: 18px;
         display: flex;
@@ -46,14 +45,14 @@
       }
 
       &.activeMenu {
-        background-color: var(--mat-sys-primary);
+        background-color: var(--mat-sys-primary-fixed-dim);
 
         .mdc-list-item__primary-text {
-          color: $white !important;
+          color: var(--mat-sys-on-primary-container);
         }
 
         .mat-mdc-list-item-icon {
-          color: $white !important;
+          color: var(--mat-sys-on-primary-container);
         }
       }
 
