@@ -14,39 +14,9 @@
         </span>
       </mat-card-header>
       <mat-card-content class="d-grid justify-items-center p-t-16 m-b--24">
-        <mat-card appearance="outlined" class="m-t-16 overflow-hidden w-webkit">
-          <div class="d-flex flex-direction-column ah-120">
-            <div class="d-grid justify-content-center p-8">
-              <mat-card-title>
-                {{ productInfoModelA.label! }}
-              </mat-card-title>
-              <div class="d-flex justify-content-between p-y-8 m-t-auto">
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto"
-                  src="{{ productInfoModelA.nutriscore }}"
-                />
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto p-x-8"
-                  src="{{ productInfoModelA.ecoscore }}"
-                />
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto"
-                  src="{{ productInfoModelA.novagroup }}"
-                />
-              </div>
-            </div>
-            <div class="d-flex justify-content-center align-items-center">
-              <img
-                mat-card-image
-                class="ah-120 w-auto"
-                src="{{ productInfoModelA.image }}"
-              />
-            </div>
-          </div>
-        </mat-card>
+        <app-card-product
+          [productInfoModel]="productInfoModelA"
+        ></app-card-product>
         <button
           mat-fab
           color="primary"
@@ -71,39 +41,9 @@
         class="d-flex justify-content-center p-t-16"
       ></app-search-product-autocomplete>
       <mat-card-content class="d-grid justify-items-center">
-        <mat-card class="m-t-16 overflow-hidden w-webkit cardWithShadow">
-          <div class="d-flex flex-direction-column ah-120">
-            <div class="d-grid justify-content-center p-8">
-              <mat-card-title>
-                {{ productInfoModelSelected.label! }}
-              </mat-card-title>
-              <div class="d-flex justify-content-between p-y-8 m-t-auto">
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto"
-                  src="{{ productInfoModelSelected.nutriscore }}"
-                />
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto p-x-8"
-                  src="{{ productInfoModelSelected.ecoscore }}"
-                />
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto"
-                  src="{{ productInfoModelSelected.novagroup }}"
-                />
-              </div>
-            </div>
-            <div class="d-flex justify-content-center align-items-center">
-              <img
-                mat-card-image
-                class="ah-120 w-auto"
-                src="{{ productInfoModelSelected.image }}"
-              />
-            </div>
-          </div>
-        </mat-card>
+        <app-card-product
+          [productInfoModel]="productInfoModelSelected"
+        ></app-card-product>
         <div class="d-flex justify-content-center w-100">
           <button
             class="m-x-16"
@@ -174,39 +114,9 @@
         </span>
       </mat-card-header>
       <mat-card-content class="d-grid justify-items-center p-t-16 m-b--24">
-        <mat-card appearance="outlined" class="m-t-16 overflow-hidden w-webkit">
-          <div class="d-flex flex-direction-column ah-120">
-            <div class="d-grid justify-content-center p-8">
-              <mat-card-title>
-                {{ productInfoModelB.label! }}
-              </mat-card-title>
-              <div class="d-flex justify-content-between p-y-8 m-t-auto">
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto"
-                  src="{{ productInfoModelB.nutriscore }}"
-                />
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto p-x-8"
-                  src="{{ productInfoModelB.ecoscore }}"
-                />
-                <img
-                  mat-card-image
-                  class="ah-32 w-auto"
-                  src="{{ productInfoModelB.novagroup }}"
-                />
-              </div>
-            </div>
-            <div class="d-flex justify-content-center align-items-center">
-              <img
-                mat-card-image
-                class="ah-120 w-auto"
-                src="{{ productInfoModelB.image }}"
-              />
-            </div>
-          </div>
-        </mat-card>
+        <app-card-product
+          [productInfoModel]="productInfoModelB"
+        ></app-card-product>
         <button
           mat-fab
           color="primary"

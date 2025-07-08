@@ -1,68 +1,40 @@
-<mat-sidenav-container class="app-container">
-  <mat-sidenav
-    #sidenav
-    opened="true"
-    mode="side"
-    class="app-sidenav"
-    aria-label="Sidebar"
-  >
-    <mat-nav-list>
+<mat-sidenav-container class="blue_theme light-theme" style="height: 100%">
+  <mat-sidenav #sidenav opened="true" mode="side" class="sidebarNav p-y-16">
+    <mat-nav-list class="sidebar-list">
+      @for (item of listItemsGuests; track $index) {
       <a
         mat-list-item
-        [routerLink]="['/product']"
-        routerLinkActive="router-link-active"
+        [ngClass]="{
+          activeMenu: item.route ? router.isActive(item.route, true) : false
+        }"
+        class="menu-list-item"
+        (click)="onItemSelected(item)"
       >
-        <mat-icon matListItemIcon> shopping_cart</mat-icon>
-        <span matListItemTitle>Aliment</span>
+        <i-tabler
+          class="routeIcon"
+          name="{{ item.icon }}"
+          matListItemIcon
+        ></i-tabler>
+        <span class="hide-menu" matListItemTitle>{{ item.title }}</span>
       </a>
-
+      } @for (item of listItemsSuscribers; track $index) {
       <a
         mat-list-item
-        [routerLink]="['/compare']"
-        routerLinkActive="router-link-active"
+        [ngClass]="{
+          activeMenu: item.route ? router.isActive(item.route, true) : false
+        }"
+        class="menu-list-item"
+        (click)="onItemSelected(item)"
+        [disabled]="!item.enabled"
       >
-        <mat-icon matListItemIcon> compare_arrows</mat-icon>
-        <span matListItemTitle>Comparer</span>
+        <i-tabler
+          class="routeIcon"
+          name="{{ !item.enabled ? 'lock' : item.icon }}"
+          matListItemIcon
+        ></i-tabler>
+        <span class="hide-menu" matListItemTitle>{{ item.title }}</span>
       </a>
-      <a
-        mat-list-item
-        [routerLink]="['/meal']"
-        routerLinkActive="router-link-active"
-        [disabled]="!isTier1"
-      >
-        @if(!isTier1){
-        <mat-icon matListItemIcon matSuffix>lock</mat-icon>
-        } @else {
-        <mat-icon matListItemIcon> local_dining</mat-icon>
-        }
-        <span matListItemTitle>Repas</span>
-      </a>
-      <a
-        mat-list-item
-        [routerLink]="['/grocery']"
-        routerLinkActive="router-link-active"
-        [disabled]="!isTier1"
-      >
-        @if(!isTier1){
-        <mat-icon matListItemIcon matSuffix>lock</mat-icon>
-        } @else {
-        <mat-icon matListItemIcon> playlist_add</mat-icon>
-        }
-        <span matListItemTitle>Liste de courses</span>
-      </a>
-      <a
-        mat-list-item
-        [routerLink]="['/cgm']"
-        routerLinkActive="router-link-active"
-        [disabled]="!isTier2"
-      >
-        @if(!isTier2){
-        <mat-icon matListItemIcon matSuffix>lock</mat-icon>
-        } @else {
-        <mat-icon matListItemIcon> show_chart</mat-icon>
-        }
-        <span matListItemTitle>Glycémie</span>
-      </a>
+      }
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content

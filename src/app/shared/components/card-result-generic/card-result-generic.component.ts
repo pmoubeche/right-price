@@ -5,19 +5,14 @@ import { Router } from '@angular/router';
 import { MaterialModule } from '../../material/material.module';
 import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
 import { ResponseProducts } from '../../model/product.model';
-import { TrimStringPipe } from '../../pipes/trim-string.pipe';
 import { ProductUtils } from '../../utils/product.utils';
+import { CardProductComponent } from '../card-product/card-product.component';
 import { CardResultGenericService } from './card-result-generic.service';
 
 @Component({
-    selector: 'app-card-result-generic',
-    imports: [
-        MaterialModule,
-        CommonModule,
-        TrimStringPipe,
-    ],
-    templateUrl: './card-result-generic.component.html',
-    styleUrl: './card-result-generic.component.scss'
+  selector: 'app-card-result-generic',
+  imports: [MaterialModule, CommonModule, CardProductComponent],
+  templateUrl: './card-result-generic.component.html',
 })
 export class CardResultGenericComponent implements OnInit {
   public isError$ = this.cardResultGenericService.getIsError();

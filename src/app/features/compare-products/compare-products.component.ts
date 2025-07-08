@@ -26,6 +26,7 @@ import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.
 import { ProductUtils } from '../../shared/utils/product.utils';
 import { NutrimentInfoModel } from '../product/detail-product/detail-product.component';
 import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
+import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
 
 export class PercentCompareModel {
   id?: string;
@@ -49,6 +50,7 @@ export class PercentCompareModelNumber {
         SearchProductAutocompleteComponent,
         CommonModule,
         ChartComponent,
+        CardProductComponent
     ],
     templateUrl: './compare-products.component.html',
 })

@@ -11,7 +11,6 @@ import { SearchProductComponent } from './search-product/search-product.componen
   selector: 'app-product',
   imports: [SearchProductComponent, ListProductComponent, MaterialModule],
   templateUrl: './product.component.html',
-  styleUrl: './product.component.scss',
 })
 export class ProductComponent {
   public httpProducts: ResponseProducts = new ResponseProducts();

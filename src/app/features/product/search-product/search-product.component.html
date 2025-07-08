@@ -1,29 +1,35 @@
-<form [formGroup]="searchForm!" style="display: grid; justify-content: center">
-  <mat-chip-listbox [formControlName]="CHIP_OPTION">
-    @for (chipParam of chipList; track $index) {
-    <mat-chip-option color="primary" [selected]="selectedChip">{{
-      chipParam
-    }}</mat-chip-option>
-    }
-  </mat-chip-listbox>
-  <br />
-  <mat-form-field appearance="outline">
-    <input
-      matInput
-      type="text"
-      placeholder="Search product"
-      aria-label="Search"
-      [formControlName]="INPUT_TEXT"
-      (keydown.enter)="$event.preventDefault()"
-      (keyup.enter)="search(pageIndex, pageSize)"
-    />
-    @if(textInputControl.value){
-    <button mat-icon-button matSuffix (click)="resetForm()">
-      <mat-icon>close</mat-icon>
-    </button>
-    }
-    <button mat-icon-button matSuffix (click)="search(pageIndex, pageSize)">
-      <mat-icon>search</mat-icon>
-    </button>
-  </mat-form-field>
-</form>
+<div class="d-flex align-items-center justify-content-center">
+  <form [formGroup]="searchForm!" class="d-grid justify-content-center">
+    <mat-chip-listbox [formControlName]="CHIP_OPTION">
+      @for (chipParam of chipList; track $index) {
+      <mat-chip-option color="primary" [selected]="selectedChip">{{
+        chipParam
+      }}</mat-chip-option>
+      }
+    </mat-chip-listbox>
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        type="text"
+        placeholder="Search product"
+        aria-label="Search"
+        [formControlName]="INPUT_TEXT"
+        (keydown.enter)="$event.preventDefault()"
+        (keyup.enter)="search(pageIndex, pageSize)"
+      />
+      @if(textInputControl.value){
+      <button mat-icon-button matSuffix (click)="resetForm()">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
+    </mat-form-field>
+  </form>
+  <button
+    matButton="filled"
+    class="m-x-8 m-t-16"
+    (click)="search(pageIndex, pageSize)"
+  >
+    <span>Rechercher</span>
+    <mat-icon>search</mat-icon>
+  </button>
+</div>

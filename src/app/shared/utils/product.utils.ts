@@ -33,6 +33,18 @@ export class ProductUtils {
 
   constructor() {}
 
+  static setDefaultValuesProductInfos(
+    productInfoModels: ProductInfosModel[]
+  ): ProductInfosModel[] {
+    return productInfoModels.map(() => ({
+      image: '/assets/svg/no_img.jpg',
+      label: '',
+      nutriscore: NutriscoreLinks.NUTRISCORE_UNKNOWN,
+      ecoscore: EcoscoreLinks.ECOSCORE_UNKNOWN,
+      novagroup: NovagroupLinks.NOVAGROUP_UNKNOWN,
+    }));
+  }
+
   static setProductsInfoFromResponseProducts(
     httpProducts: ResponseProducts
   ): ProductInfosModel[] {
@@ -123,7 +135,7 @@ export class ProductUtils {
     }
   }
 
-   static setMacroNutrimentsDefaultValues(): NutrimentInfoModel[] {
+  static setMacroNutrimentsDefaultValues(): NutrimentInfoModel[] {
     return [
       {
         id: '0',
