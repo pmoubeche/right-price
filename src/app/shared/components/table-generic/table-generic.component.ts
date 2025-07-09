@@ -28,6 +28,8 @@ import { FormatDatePipe } from '../../pipes/format-date.pipe';
 import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { CardResultGenericService } from '../card-result-generic/card-result-generic.service';
 import { TableGenericService } from './table-generic.service';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { TableChildrenLinePipe } from '../../pipes/table-children-line.pipe';
 
 export class UpdateData {
   element: any;
@@ -35,17 +37,19 @@ export class UpdateData {
 }
 
 @Component({
-    selector: 'app-table-generic',
-    imports: [
-        MaterialModule,
-        CommonModule,
-        PercentFormatPipe,
-        FormatDatePipe,
-        ReactiveFormsModule,
-        FormsModule,
-    ],
-    templateUrl: './table-generic.component.html',
-    styleUrl: './table-generic.component.scss'
+  selector: 'app-table-generic',
+  imports: [
+    MaterialModule,
+    CommonModule,
+    PercentFormatPipe,
+    FormatDatePipe,
+    TableChildrenLinePipe,
+    ReactiveFormsModule,
+    FormsModule,
+    TablerIconsModule,
+  ],
+  templateUrl: './table-generic.component.html',
+  styleUrl: './table-generic.component.scss',
 })
 export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   readonly EDITABLE_FIELD = 'field';

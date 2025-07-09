@@ -1,4 +1,4 @@
-<mat-sidenav-container class="blue_theme light-theme" style="height: 100%">
+<mat-sidenav-container class="blue_theme light-theme" style="height: 94%">
   <mat-sidenav #sidenav opened="true" mode="side" class="sidebarNav p-y-16">
     <mat-nav-list class="sidebar-list">
       @for (item of listItemsGuests; track $index) {
@@ -37,9 +37,7 @@
       }
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content
-    style="padding: 1rem 1rem 1rem 2rem; height: -webkit-fill-available"
-  >
+  <mat-sidenav-content class="pageWrapper">
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

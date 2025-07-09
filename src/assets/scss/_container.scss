@@ -54,13 +54,6 @@ body {
 
 .pageWrapper {
   padding: 24px;
-  min-height: calc(100vh - 70px);
-
-  margin: 0 auto;
-
-  &.maxWidth {
-    max-width: $boxedWidth;
-  }
 }
 
 @for $i from 1 through 1920 {

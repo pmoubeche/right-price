@@ -17,15 +17,14 @@ export class GaugeCardParams {
 }
 
 @Component({
-    selector: 'app-gauge-chart-card',
-    imports: [
-        MaterialModule,
-        ChartComponent,
-        RoundNumberDecimalPipe,
-        CommonModule,
-    ],
-    templateUrl: './gauge-chart-card.component.html',
-    styleUrl: './gauge-chart-card.component.scss'
+  selector: 'app-gauge-chart-card',
+  imports: [
+    MaterialModule,
+    ChartComponent,
+    RoundNumberDecimalPipe,
+    CommonModule,
+  ],
+  templateUrl: './gauge-chart-card.component.html',
 })
 export class GaugeChartCardComponent implements OnInit {
   @Input() set gaugeCardParam(gaugeCardParam: GaugeCardParams) {
@@ -41,7 +40,9 @@ export class GaugeChartCardComponent implements OnInit {
 
   gaugeChartData?: ChartData;
 
-  options: ChartOptions = {
+  options: ChartOptions<'doughnut'> = {
+    cutout: '70%',
+    maintainAspectRatio: false,
     responsive: true,
     plugins: {
       legend: {
@@ -64,7 +65,10 @@ export class GaugeChartCardComponent implements OnInit {
             gaugeCardParam.value!,
             gaugeCardParam.valueMax! - gaugeCardParam.value!,
           ],
-          backgroundColor: [this.gaugeCardParam.color, '#F0EBE3'],
+          backgroundColor: [
+            this.gaugeCardParam.color,
+            ChartUtils.getCssVariableValue('light'),
+          ],
           rotation: 270,
           circumference: 180,
         },

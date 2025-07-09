@@ -2,11 +2,9 @@
   <mat-card-header>
     <mat-card-title class="m-b-0">Comparer des produits</mat-card-title>
   </mat-card-header>
-  <mat-card-content
-    class="b-t-1 d-flex flex-direction-column justify-content-evenly"
-  >
-    <div>
-      <mat-card-header class="d-flex p-16">
+  <mat-card-content class="b-t-1 d-flex hstack justify-content-evenly">
+    <div class="d-flex flex-column align-items-center">
+      <mat-card-header class="p-16">
         <span
           class="bg-light-success text-success rounded f-w-600 p-6 p-y-4 f-s-16"
         >
@@ -36,7 +34,7 @@
       </mat-card-actions>
     </div>
     <mat-divider [vertical]="true" class="m-x-16"></mat-divider>
-    <div>
+    <div class="d-flex flex-column align-items-center">
       <app-search-product-autocomplete
         class="d-flex justify-content-center p-t-16"
       ></app-search-product-autocomplete>
@@ -105,7 +103,7 @@
       </mat-card-actions>
     </div>
     <mat-divider [vertical]="true" class="m-x-16"></mat-divider>
-    <div>
+    <div class="d-flex flex-column align-items-center">
       <mat-card-header class="d-flex p-16">
         <span
           class="bg-light-warning text-warning rounded f-w-600 p-6 p-y-4 f-s-16"

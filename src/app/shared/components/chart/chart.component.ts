@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -9,7 +9,6 @@ import {
   NgZone,
   OnChanges,
   PLATFORM_ID,
-  Renderer2,
   ViewChild,
 } from '@angular/core';
 import type {

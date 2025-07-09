@@ -74,7 +74,10 @@
           [ngStyle]="{ height: rowHeight }"
           style="display: flex; align-items: center"
         >
-          {{ element[column.columDef!] }}
+          @if(element[column.columDef!].startsWith('--')){
+          <i-tabler class="icon-20 m-r-8" name="corner-down-right"></i-tabler>
+          }
+          {{ element[column.columDef!] | tableChildrenLine }}
         </div>
         } @else if(column.type! === columnTypeEnum.DATE) {
         {{ element[column.columDef!] | formatDate }}

@@ -1,251 +1,202 @@
-<div>
-  <button mat-fab extended (click)="backToSearch()">
-    <i-tabler name="chevron-left"></i-tabler>
-    <span>Retour</span>
-  </button>
-  <button
-    mat-fab
-    extended
-    color="primary"
-    style="margin: 1rem 1rem 1rem 0rem"
-    (click)="redirectAndAddToCompare()"
-  >
-    <span>Comparer</span>
-    <mat-icon>compare_arrows</mat-icon>
-  </button>
-  @if(isTier1){
-  <button
-    mat-fab
-    extended
-    color="primary"
-    style="margin: 1rem 1rem 1rem 0rem"
-    (click)="redirectAndAddToMeal()"
-  >
-    <span>Ajouter à un repas</span>
-    <mat-icon>local_dining</mat-icon>
-  </button>
-  }
-</div>
-<div style="display: flex; flex-direction: row">
-  <mat-card style="width: 16%; margin-right: 0.5rem; border-radius: 15px">
-    <mat-card-header>
-      <mat-card-title>{{
-        product?.product_name! | uppercaseFirstLetterFormat
-      }}</mat-card-title>
-    </mat-card-header>
-    <div style="display: flex; align-items: center; justify-content: center">
-      <img
-        mat-card-image
-        src="{{ product?.image_front_url }}"
-        style="max-width: 90%; padding: 0.5rem"
-      />
-    </div>
-    <mat-card-actions style="margin-top: auto">
-      <img
-        mat-card-image
-        class="product-score"
-        src="{{ nutriscoreImageUrl }}"
-      />
-      <img mat-card-image class="product-score" src="{{ ecoscoreImageUrl }}" />
-      <img mat-card-image class="product-score" src="{{ novagroupImageUrl }}" />
-    </mat-card-actions>
-  </mat-card>
-
-  <br />
-
-  <mat-card
-    style="
-      width: 16%;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-      border-radius: 15px;
-    "
-  >
-    <mat-card-header>
-      <mat-card-title>Informations</mat-card-title>
-    </mat-card-header>
-    <section class="example-container" tabindex="0">
-      <div style="padding: 1rem 1rem 1rem 1rem">
-        <p>
-          <strong>Code barre :</strong>
-          {{ product?._id }}
-        </p>
-        <p><strong> Nom :</strong> {{ product?.product_name }}</p>
-        <p>
-          <strong>Quantité :</strong>
-          {{ product?.product_quantity }}
-          {{ product?.product_quantity_unit }}
-        </p>
-        <p><strong> Marques :</strong> {{ product?.brands }}</p>
-        <p><strong> Catégories :</strong> {{ product?.categories }}</p>
-        <p><strong> Emballages:</strong> {{ product?.packaging }}</p>
-        <br />
-      </div>
-    </section>
-  </mat-card>
-
-  <mat-card
-    style="
-      width: 16%;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-      border-radius: 15px;
-    "
-  >
-    <mat-card-header>
-      <mat-card-title>Ingrédients</mat-card-title>
-    </mat-card-header>
-    <app-table-generic
-      [columns]="columnParamsIngredients"
-      [isPaginated]="false"
-      [isSection]="true"
-      [paginatedDataSource]="ingredientDataSources"
-      [rowHeight]="'2rem'"
-      style="padding: 1rem"
-    >
-    </app-table-generic>
-  </mat-card>
-
-  <div
-    style="
-      display: flex;
-      flex-direction: column;
-      width: 16%;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-    "
-  >
-    <app-gauge-chart-card
-      style="margin-bottom: 0.25rem"
-      [gaugeCardParam]="gaugeChartParamCal"
-    ></app-gauge-chart-card>
-    <app-gauge-chart-card
-      style="margin-bottom: 0.25rem; margin-top: 0.25rem"
-      [gaugeCardParam]="gaugeChartParamProt"
-    ></app-gauge-chart-card>
-    <app-gauge-chart-card
-      style="margin-bottom: 0.25rem; margin-top: 0.25rem"
-      [gaugeCardParam]="gaugeChartParamGluc"
-    ></app-gauge-chart-card>
-    <app-gauge-chart-card
-      style="margin-top: 0.25rem"
-      [gaugeCardParam]="gaugeChartParamLip"
-    ></app-gauge-chart-card>
-  </div>
-
-  <mat-card
-    style="
-      width: 16%;
-      margin-left: 0.5rem;
-      margin-right: 0.5rem;
-      border-radius: 15px;
-    "
-  >
-    <mat-card-header>
-      <mat-card-title>Tableau nutritionnel</mat-card-title>
-    </mat-card-header>
-    <app-table-generic
-      [columns]="columnParamsMacroNutriments"
-      [isPaginated]="false"
-      [paginatedDataSource]="macroNutrimentsDataSources"
-      [rowHeight]="'2rem'"
-      style="padding: 0.5rem"
-    >
-    </app-table-generic>
-  </mat-card>
-  <mat-card style="width: 16%; margin-left: 0.5rem; border-radius: 15px">
-    <mat-card-header>
-      <mat-card-title>Proportions Nutriments</mat-card-title>
-    </mat-card-header>
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0">Détail du produit</mat-card-title>
     <div>
-      <app-chart
-        type="doughnut"
-        [data]="macroNutrimentschartPieData!"
-        [options]="chartOptions"
-      ></app-chart>
-    </div>
-  </mat-card>
-</div>
-<br />
-@if(product?.nutriments_estimated){
-<div style="display: flex">
-  <mat-card style="width: 33%; margin-right: 0.5rem; border-radius: 15px">
-    <mat-card-header>
-      <mat-card-title>Tableau Micro-Nutriments</mat-card-title>
-    </mat-card-header>
-    <div style="display: flex">
-      <app-table-generic
-        style="padding: 1rem"
-        [columns]="columnParamsMicroNutriments"
-        [isPaginated]="false"
-        [paginatedDataSource]="microNutrimentsDataSources"
-        [rowHeight]="'1.5rem'"
+      <button class="m-r-8" mat-fab extended (click)="backToSearch()">
+        <div class="d-flex align-items-center">
+          <i-tabler class="icon-20 m-r-4" name="arrow-left"></i-tabler
+          ><span class="m-4">Retour</span>
+        </div>
+      </button>
+      <button
+        class="m-x-8"
+        mat-fab
+        extended
+        (click)="redirectAndAddToCompare()"
       >
-      </app-table-generic>
+        <div class="d-flex align-items-center">
+          <i-tabler class="icon-20 m-r-4" name="arrows-left-right"></i-tabler
+          ><span class="m-4">Comparer</span>
+        </div>
+      </button>
+
+      @if(isTier1){
+      <button class="m-l-8" mat-fab extended (click)="redirectAndAddToMeal()">
+        <div class="d-flex align-items-center">
+          <i-tabler class="icon-20 m-r-4" name="tools-kitchen-2"></i-tabler
+          ><span class="m-4">Ajouter à un repas</span>
+        </div>
+      </button>
+      }
     </div>
-  </mat-card>
-  <mat-card
-    style="
-      width: 33%;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-      border-radius: 15px;
-    "
-  >
-    <mat-card-header>
-      <mat-card-title>AJR Micro-Nutriments</mat-card-title>
-    </mat-card-header>
-    <app-chart
-      style="padding: 1rem"
-      type="bar"
-      [data]="microNutrimentschartPieData!"
-      [options]="optionsBar"
-      [width]="600"
-      [height]="500"
-    ></app-chart>
-  </mat-card>
-  <mat-card
-    style="
-      width: 16%;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-      border-radius: 15px;
-    "
-  >
-    <mat-card-header>
-      <mat-card-title>Tableau Sucres</mat-card-title>
-    </mat-card-header>
-    <app-table-generic
-      [columns]="columnParamsSugars"
-      [isPaginated]="false"
-      [paginatedDataSource]="sugarsDataSources"
-      [rowHeight]="'1.5rem'"
-      style="padding: 1rem"
-    >
-    </app-table-generic>
-  </mat-card>
-  <mat-card style="width: 16%; margin-left: 0.5rem; border-radius: 15px">
-    <mat-card-header>
-      <mat-card-title>Proportions Sucres</mat-card-title>
-    </mat-card-header>
-    <app-chart
-      style="height: 300px; display: flex; justify-content: center"
-      type="doughnut"
-      [data]="sugarsChartPieData!"
-      [options]="chartOptions"
-      [height]="100"
-    ></app-chart>
-  </mat-card>
-</div>
-}
-<br />
-<footer class="footer">
-  <div style="display: flex; justify-content: center; align-items: center">
-    <span>Plus d'infos sur :</span>
-    <button mat-button (click)="redirectToOpenFoodFacts()">
-      <img
-        src="https://static.openfoodfacts.org/images/logos/off-logo-horizontal-light.svg"
-      />
-    </button>
-  </div>
-</footer>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    <div class="d-flex hstack justify-content-center">
+      <mat-card class="cardWithShadow theme-card shadow">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Informations</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-grid">
+          <div class="d-flex hstack">
+            <div>
+              <div class="d-flex justify-content-center align-items-center">
+                <img
+                  mat-card-image
+                  src="{{ product?.image_front_url }}"
+                  class="ah-200"
+                />
+              </div>
+              <div class="m-t-auto">
+                <img
+                  mat-card-image
+                  class="p-16"
+                  height="90"
+                  src="{{ nutriscoreImageUrl }}"
+                />
+                <img
+                  mat-card-image
+                  class="p-16"
+                  height="90"
+                  src="{{ ecoscoreImageUrl }}"
+                />
+                <img
+                  mat-card-image
+                  class="p-16"
+                  height="90"
+                  src="{{ novagroupImageUrl }}"
+                />
+              </div>
+            </div>
+            <section tabindex="0" class="m-x-16 aw-500">
+              <div>
+                <h3>{{ product?.product_name }}</h3>
+                <p>
+                  <strong>Code barre :</strong>
+                  {{ product?._id }}
+                </p>
+                <p><strong> Nom :</strong> {{ product?.generic_name_fr }}</p>
+                <p>
+                  <strong>Quantité :</strong>
+                  {{ product?.product_quantity }}
+                  {{ product?.product_quantity_unit }}
+                </p>
+                <p><strong> Marques :</strong> {{ product?.brands }}</p>
+                <p><strong> Catégories :</strong> {{ product?.categories }}</p>
+                <p><strong> Emballages:</strong> {{ product?.packaging }}</p>
+                <br />
+              </div>
+            </section>
+          </div>
+          <app-table-generic
+            [columns]="columnParamsIngredients"
+            [isPaginated]="false"
+            [paginatedDataSource]="ingredientDataSources"
+            [rowHeight]="'2rem'"
+          >
+          </app-table-generic>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="cardWithShadow theme-card shadow m-x-8">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Valeurs nutritionnelles</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-grid">
+          <div class="d-flex hstack align-items-center">
+            <app-gauge-chart-card
+              class="m-x-8"
+              [gaugeCardParam]="gaugeChartParamCal"
+            ></app-gauge-chart-card>
+            <app-gauge-chart-card
+              class="m-x-8"
+              [gaugeCardParam]="gaugeChartParamProt"
+            ></app-gauge-chart-card>
+            <app-gauge-chart-card
+              class="m-x-8"
+              [gaugeCardParam]="gaugeChartParamGluc"
+            ></app-gauge-chart-card>
+            <app-gauge-chart-card
+              class="m-x-8"
+              [gaugeCardParam]="gaugeChartParamLip"
+            ></app-gauge-chart-card>
+          </div>
+          <div class="d-flex hstack justify-content-center align-items-center">
+            <app-chart
+              type="doughnut"
+              [data]="macroNutrimentschartPieData!"
+              [options]="chartOptions"
+              [height]="180"
+            ></app-chart>
+            <app-table-generic
+              [columns]="columnParamsMacroNutriments"
+              [isPaginated]="false"
+              [paginatedDataSource]="macroNutrimentsDataSources"
+              [rowHeight]="'2rem'"
+            >
+            </app-table-generic>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <br />
+    @if(product?.nutriments_estimated){
+    <div class="d-flex hstack justify-content-center">
+      <mat-card class="cardWithShadow theme-card shadow m-x-8">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Valeurs micronutriments</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-flex hstack">
+          <app-table-generic
+            class="p-24"
+            [columns]="columnParamsMicroNutriments"
+            [isPaginated]="false"
+            [paginatedDataSource]="microNutrimentsDataSources"
+            [rowHeight]="'1.5rem'"
+          >
+          </app-table-generic>
+          <app-chart
+            class="p-24"
+            type="bar"
+            [data]="microNutrimentschartPieData!"
+            [options]="optionsBar"
+            [width]="600"
+            [height]="500"
+          ></app-chart>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="cardWithShadow theme-card shadow m-x-8">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Décomposition sucres</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-grid">
+          <app-chart
+            type="doughnut"
+            [data]="sugarsChartPieData!"
+            [options]="chartOptions"
+            [height]="180"
+          ></app-chart>
+          <app-table-generic
+            [columns]="columnParamsSugars"
+            [isPaginated]="false"
+            [paginatedDataSource]="sugarsDataSources"
+            [rowHeight]="'1.5rem'"
+          >
+          </app-table-generic>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    }
+    <br />
+    <footer class="footer">
+      <div class="d-flex justify-content-center align-items-center">
+        <span>Plus d'infos sur :</span>
+        <button mat-button (click)="redirectToOpenFoodFacts()">
+          <img
+            src="https://static.openfoodfacts.org/images/logos/off-logo-horizontal-light.svg"
+          />
+        </button>
+      </div>
+    </footer>
+  </mat-card-content>
+</mat-card>
