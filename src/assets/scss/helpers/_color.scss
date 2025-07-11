@@ -10,10 +10,18 @@
     html .text-#{$name} {
       color: $color !important;
     }
+
+    // Pour mat-chip-option par exemple
+    html .mat-chip.text-#{$name},
+    html .mat-chip-option.text-#{$name} {
+      color: $color !important;
+      border-color: $color !important;
+    }
   }
 }
 
-@include syntax-colors($primary: var(--mat-sys-primary),
+@include syntax-colors(
+  $primary: var(--mat-sys-primary),
   $secondary: var(--mat-sys-secondary),
   $success: $success,
   $warning: $warning,
@@ -25,7 +33,8 @@
   $light-secondary: var(--mat-sys-secondary-fixed-dim),
   $light-success: $light-success,
   $light-warning: $light-warning,
-  $light-primary: var(--mat-sys-primary-fixed-dim));
+  $light-primary: var(--mat-sys-primary-fixed-dim)
+);
 
 .fill-warning svg {
   fill: $warning;

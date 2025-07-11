@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
+  LOCALE_ID,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -13,7 +16,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  MAT_DATE_LOCALE,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
 import {
   DefaultMatCalendarRangeStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
@@ -47,70 +53,90 @@ import { SearchProductAutocompleteComponent } from '../product/search-product-au
 import { ChartMealProductComponent } from './chart-meal-product/chart-meal-product.component';
 import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
+import { MealModel, MealsService } from '../../../generated';
 
 @Component({
-    selector: 'app-meal',
-    standalone: true,
-    imports: [
-        MaterialModule,
-        TableProductMealComponent,
-        ChartMealProductComponent,
-        ReactiveFormsModule,
-        CommonModule,
-        SearchProductAutocompleteComponent,
-    ],
-    templateUrl: './meal.component.html',
-    styleUrl: './meal.component.scss',
-    providers: [
-        provideNativeDateAdapter(),
-        {
-            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-            useClass: DefaultMatCalendarRangeStrategy,
-        },
-    ],
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-meal',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    TableProductMealComponent,
+    ChartMealProductComponent,
+    ReactiveFormsModule,
+    CommonModule,
+    SearchProductAutocompleteComponent,
+    TablerIconsModule,
+    CardProductComponent,
+  ],
+  templateUrl: './meal.component.html',
+  styleUrl: './meal.component.scss',
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: DefaultMatCalendarRangeStrategy,
+    },
+    { provide: LOCALE_ID, useValue: 'fr-FR' },
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
+  ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MealComponent implements OnInit, OnDestroy {
   readonly DATE_MEAL_INPUT = 'dateMeal';
-  readonly TIME_MEAL_INPUT = 'timeMeal';
+  readonly TIME_CREATE_MEAL_INPUT = 'timeCreateMeal';
+  readonly MEAL_CREATE_CHIPS_SELECT = 'mealCreate';
+  readonly TIME_EDIT_MEAL_INPUT = 'timeEditMeal';
+  readonly MEAL_EDIT_CHIPS_SELECT = 'mealEdit';
+  readonly MEAL_DELETE_SELECT_CHIP = 'mealDeleteSelect';
+
   readonly QUANTITY_FORM = 'quantity';
-  readonly MEAL_FORM = 'meal';
+  readonly MEAL_ADD_PRODUCT_SELECT_CHIP = 'mealAddProductSelect';
   readonly PRODUCT_INFO_FORM = 'productInfo';
 
-  private _mealProductsBreakfast!: MealProductInfoModel[];
+  public mealsDefault: Meal[] = [
+    {
+      id: 'breakfast',
+      label: "P'tit déj",
+      class: 'bg-light-success text-success',
+      disabled: false,
+    },
+    {
+      id: 'lunch',
+      label: 'Déjeuner',
 
-  set mealProductsBreakfast(mealProductsBreakfast: MealProductInfoModel[]) {
-    this._mealProductsBreakfast = mealProductsBreakfast;
-  }
-
-  get mealProductsBreakfast() {
-    return this._mealProductsBreakfast;
-  }
-
-  private _mealProductsLunch!: MealProductInfoModel[];
-
-  set mealProductsLunch(mealProductsLunch: MealProductInfoModel[]) {
-    this._mealProductsLunch = mealProductsLunch;
-  }
-
-  get mealProductsLunch() {
-    return this._mealProductsLunch;
-  }
-
-  private _mealProductsDinner!: MealProductInfoModel[];
-
-  set mealProductsDinner(mealProductsDinner: MealProductInfoModel[]) {
-    this._mealProductsDinner = mealProductsDinner;
-  }
-
-  get mealProductsDinner() {
-    return this._mealProductsDinner;
-  }
+      class: 'bg-light-primary text-primary',
+      disabled: false,
+    },
+    {
+      id: 'dinner',
+      label: 'Dinner',
+      class: 'bg-light-warning text-warning',
+      disabled: false,
+    },
+  ];
 
   public meals: Meal[] = [
-    { id: 'breakfast', label: "P'tit déj" },
-    { id: 'lunch', label: 'Déjeuner' },
-    { id: 'dinner', label: 'Dinner' },
+    {
+      id: 'breakfast',
+      label: "P'tit déj",
+      class: 'bg-light-success text-success',
+      disabled: true,
+    },
+    {
+      id: 'lunch',
+      label: 'Déjeuner',
+
+      class: 'bg-light-primary text-primary',
+      disabled: true,
+    },
+    {
+      id: 'dinner',
+      label: 'Dinner',
+      class: 'bg-light-warning text-warning',
+      disabled: true,
+    },
   ];
 
   private buttonsDialog: ButtonAction[] = [
@@ -127,43 +153,24 @@ export class MealComponent implements OnInit, OnDestroy {
     buttons: this.buttonsDialog,
   };
 
+  private _mealProductsBreakfast!: MealProductInfoModel[];
+  private _mealProductsLunch!: MealProductInfoModel[];
+  private _mealProductsDinner!: MealProductInfoModel[];
+
   mealSelected?: Meal;
-
+  allMealsSelected?: boolean;
   public httpProduct?: ResponseProduct;
-
   httpProducts!: ResponseProducts;
-
+  mealCreateForm!: FormGroup;
+  mealEditForm!: FormGroup;
+  mealDeleteForm!: FormGroup;
   mealProductForm!: FormGroup;
-
   public mealProduct: MealProductInfoModel = new MealProductInfoModel();
-
   public productInfoModelSelected?: ProductInfosModel;
-
   allMealsProduct: MealProductInfoModel[] = [];
-
-  get quantityControl(): FormControl {
-    return this.mealProductForm?.get(this.QUANTITY_FORM) as FormControl;
-  }
-  get mealControl(): FormControl {
-    return this.mealProductForm?.get(this.MEAL_FORM) as FormControl;
-  }
-
-  get productInfoControl(): FormControl {
-    return this.mealProductForm?.get(this.PRODUCT_INFO_FORM) as FormControl;
-  }
-
-  get dateControl(): FormControl {
-    return this.mealProductForm?.get(this.DATE_MEAL_INPUT) as FormControl;
-  }
-
-  get timeControl(): FormControl {
-    return this.mealProductForm?.get(this.TIME_MEAL_INPUT) as FormControl;
-  }
-
+  timeCreate?: { hours: number; minutes: number };
+  timeEdit?: { hours: number; minutes: number };
   selectedDate?: string;
-  public selDate!: Date | null;
-
-  subscription = new Subscription();
 
   @ViewChild('tableProductMealComponent')
   tableProductMealComponent!: TableProductMealComponent;
@@ -172,22 +179,127 @@ export class MealComponent implements OnInit, OnDestroy {
     map((data) => data['dates'])
   );
 
+  subscription = new Subscription();
+
+  set mealProductsBreakfast(mealProductsBreakfast: MealProductInfoModel[]) {
+    this._mealProductsBreakfast = mealProductsBreakfast;
+    this.getMealChipsValue();
+  }
+
+  get mealProductsBreakfast() {
+    return this._mealProductsBreakfast;
+  }
+
+  set mealProductsLunch(mealProductsLunch: MealProductInfoModel[]) {
+    this._mealProductsLunch = mealProductsLunch;
+    this.getMealChipsValue();
+  }
+
+  get mealProductsLunch() {
+    return this._mealProductsLunch;
+  }
+
+  set mealProductsDinner(mealProductsDinner: MealProductInfoModel[]) {
+    this._mealProductsDinner = mealProductsDinner;
+    this.getMealChipsValue();
+  }
+
+  get mealProductsDinner() {
+    return this._mealProductsDinner;
+  }
+
+  get mealCreateChipsControl(): FormControl {
+    return this.mealCreateForm?.get(
+      this.MEAL_CREATE_CHIPS_SELECT
+    ) as FormControl;
+  }
+  get timeCreateMealControl(): FormControl {
+    return this.mealCreateForm?.get(this.TIME_CREATE_MEAL_INPUT) as FormControl;
+  }
+
+  get mealEditChipsControl(): FormControl {
+    return this.mealEditForm?.get(this.MEAL_EDIT_CHIPS_SELECT) as FormControl;
+  }
+
+  get timeEditMealControl(): FormControl {
+    return this.mealEditForm?.get(this.TIME_EDIT_MEAL_INPUT) as FormControl;
+  }
+
+  get quantityControl(): FormControl {
+    return this.mealProductForm?.get(this.QUANTITY_FORM) as FormControl;
+  }
+
+  get mealDeleteChipControl(): FormControl {
+    return this.mealDeleteForm?.get(
+      this.MEAL_DELETE_SELECT_CHIP
+    ) as FormControl;
+  }
+
+  get mealAddProdcutChipControl(): FormControl {
+    return this.mealProductForm?.get(
+      this.MEAL_ADD_PRODUCT_SELECT_CHIP
+    ) as FormControl;
+  }
+
+  get productInfoControl(): FormControl {
+    return this.mealProductForm?.get(this.PRODUCT_INFO_FORM) as FormControl;
+  }
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cardsService: CardResultGenericService,
     private readonly mealService: MealService,
     private readonly mealProductApiService: MealProductApiService,
+    private readonly mealApiService: MealsService,
     private readonly popInService: DialogGenericService,
     private readonly activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.selectedDate = DateUtils.formatDate(new Date());
     this.initForm();
+
+    this.getMealsByDate();
     this.cardsService.selectItem$.subscribe((item) => {
       this.productInfoModelSelected = item;
     });
 
     this.setProductInfoSelectedFromProductDetail();
+  }
+
+  getMealChipsValue(): void {
+    const mealProductsMap: { [key: string]: any[] | undefined } = {
+      breakfast: this.mealProductsBreakfast,
+      lunch: this.mealProductsLunch,
+      dinner: this.mealProductsDinner,
+    };
+
+    this.meals = this.meals.map((meal) => ({
+      ...meal,
+      disabled: !(
+        Array.isArray(mealProductsMap[meal.id!]) &&
+        mealProductsMap[meal.id!]!.length > 0
+      ),
+    }));
+  }
+
+  getMealsByDate(): void {
+    this.subscription.add(
+      this.mealApiService
+        .getMealsByDate(this.selectedDate!)
+        .pipe(
+          tap((meals) => {
+            if (meals && meals.length > 0) {
+              meals.forEach((meal) => {
+                this.mealsDefault
+                  .filter((md) => md.id === meal.id)
+                  .map((m) => (m.disabled = true));
+              });
+            }
+          })
+        )
+        .subscribe()
+    );
   }
 
   private setProductInfoSelectedFromProductDetail() {
@@ -203,15 +315,40 @@ export class MealComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    this.mealProductForm = this.formBuilder.group({
+    this.mealCreateForm = this.formBuilder.group({
       [this.DATE_MEAL_INPUT]: [new Date(), [Validators.required]],
-      [this.TIME_MEAL_INPUT]: ['', [Validators.required]],
+      [this.TIME_CREATE_MEAL_INPUT]: ['', [Validators.required]],
+      [this.MEAL_DELETE_SELECT_CHIP]: ['', [Validators.required]],
+      [this.MEAL_CREATE_CHIPS_SELECT]: ['', [Validators.required]],
+    });
+    this.mealEditForm = this.formBuilder.group({
+      [this.TIME_EDIT_MEAL_INPUT]: ['', [Validators.required]],
+      [this.MEAL_EDIT_CHIPS_SELECT]: ['', [Validators.required]],
+    });
+    this.mealDeleteForm = this.formBuilder.group({
+      [this.MEAL_DELETE_SELECT_CHIP]: ['', [Validators.required]],
+    });
+    this.mealProductForm = this.formBuilder.group({
       [this.QUANTITY_FORM]: ['', [Validators.required]],
-      [this.MEAL_FORM]: new FormControl('', [Validators.required]),
+      [this.MEAL_ADD_PRODUCT_SELECT_CHIP]: ['', [Validators.required]],
       [this.PRODUCT_INFO_FORM]: [
         this.productInfoModelSelected,
         [Validators.required],
       ],
+    });
+
+    this.timeCreateMealControl.valueChanges.subscribe((timeCreate) => {
+      this.timeCreate = {
+        hours: timeCreate.getHours(),
+        minutes: timeCreate.getMinutes(),
+      };
+    });
+
+    this.timeEditMealControl.valueChanges.subscribe((timeEdit) => {
+      this.timeEdit = {
+        hours: timeEdit.getHours(),
+        minutes: timeEdit.getMinutes(),
+      };
     });
   }
 
@@ -246,8 +383,8 @@ export class MealComponent implements OnInit, OnDestroy {
     this.productInfoControl.markAsTouched();
   }
 
-  onDateChange(event: any) {
-    this.dateControl.setValue(event);
+  onDateChange(event: Date) {
+    this.selectedDate = DateUtils.formatDate(event);
     this.mealService.dateSelectedBs.next(DateUtils.formatDate(event));
   }
 
@@ -263,12 +400,82 @@ export class MealComponent implements OnInit, OnDestroy {
     this.mealProductsDinner = mealProducts;
   }
 
+  addMeal(): void {
+    this.meals = this.meals.map((meal) =>
+      meal.id === this.mealCreateChipsControl.value.id
+        ? {
+            ...meal,
+            disabled: false,
+          }
+        : meal
+    );
+
+    this.mealsDefault = this.mealsDefault.map((meal) =>
+      meal.id === this.mealCreateChipsControl.value.id
+        ? {
+            ...meal,
+            disabled: true,
+          }
+        : meal
+    );
+
+    const baseDate = DateUtils.parseDateFromString(this.selectedDate!);
+    baseDate.setHours(
+      this.timeCreate?.hours || 0,
+      this.timeCreate?.minutes || 0
+    );
+
+    const req: MealModel = {
+      mealType: this.mealCreateChipsControl.value.id,
+      dateCreation: DateUtils.dateStringWithoutOffesetTimeZone(baseDate),
+    };
+
+    this.subscription.add(
+      this.mealApiService
+        .createMeal(req)
+        .pipe(
+          tap((mealCreated) => {
+            this.mealCreateChipsControl.setValue('');
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  deleteMeal(): void {
+    this.meals = this.meals.map((meal) =>
+      meal.id === this.mealDeleteChipControl.value.id
+        ? {
+            ...meal,
+            disabled: true,
+            timeHour: '',
+            label: this.mealsDefault.find((md) => md.id === meal.id)?.label,
+          }
+        : meal
+    );
+
+    this.mealsDefault = this.mealsDefault.map((meal) =>
+      meal.id === this.mealCreateChipsControl.value.id
+        ? {
+            ...meal,
+            disabled: false,
+          }
+        : meal
+    );
+
+    this.mealDeleteChipControl.setValue('');
+
+    this.subscription.add();
+  }
+
   addMealProductToResult(): void {
-    let time = DateUtils.fromTimeStringToMapTime(this.timeControl.value);
+    let time = DateUtils.fromTimeStringToMapTime(
+      this.timeCreateMealControl.value
+    );
     let quantity = this.quantityControl!.value;
     let meal = this.mealSelected;
 
-    let myDate = new Date(this.dateControl.value).setHours(
+    let myDate = new Date(this.selectedDate!).setHours(
       time.hours,
       time.minutes
     );
@@ -279,8 +486,8 @@ export class MealComponent implements OnInit, OnDestroy {
       imageProduct: this.productInfoModelSelected?.image,
       nutriscore: this.productInfoModelSelected?.nutriscore,
       quantity: Number.parseFloat(quantity),
-      packagingQuantity: this.productInfoModelSelected?.packagingQuantity,
       mealType: meal?.id,
+      packagingQuantity: this.productInfoModelSelected?.packagingQuantity,
       date: DateUtils.dateStringWithoutOffesetTimeZone(new Date(myDate)),
     };
 

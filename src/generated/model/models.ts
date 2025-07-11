@@ -7,6 +7,7 @@ export * from './cgmInfoModel';
 export * from './dateRangeFilter';
 export * from './getBannerResponseModel';
 export * from './getUserResponseModel';
+export * from './mealModel';
 export * from './mealProductInfoGenModel';
 export * from './passwordUpdate';
 export * from './refreshTokenRequest';

@@ -1,142 +1,255 @@
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header> Jour :</mat-expansion-panel-header>
-  <form
-    [formGroup]="mealProductForm"
-    style="display: flex; align-items: center"
-  >
-    <mat-card style="width: 300px">
-      <mat-calendar
-        (selectedChange)="onDateChange($event!)"
-        [dateClass]="dateClass"
-      >
-      </mat-calendar>
-    </mat-card>
-    <mat-divider
-      [vertical]="true"
-      style="padding: 1rem; height: 35vh"
-    ></mat-divider>
-    <div style="display: grid; margin: 1rem">
-      <mat-form-field class="fields" appearance="outline">
-        <mat-label>Repas</mat-label>
-        <mat-select
-          [formControlName]="MEAL_FORM"
-          [compareWith]="compareCategoryObjects"
-          (selectionChange)="onSelectMeal($event)"
-          required
-        >
-          @for (meal of meals; track $index) {
-          <mat-option [value]="meal">{{ meal.label }}</mat-option>
-          }
-        </mat-select>
-        @if(!mealSelected){
-        <mat-error>Champ obligatoire</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field class="fields" appearance="outline">
-        <mat-label>Heure du repas</mat-label>
-        <input
-          matInput
-          type="time"
-          [formControlName]="TIME_MEAL_INPUT"
-          [value]="timeControl.value"
-        />
-      </mat-form-field>
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0">Faire mes repas</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1 d-grid">
+    <div class="m-16">
+      <h3>Journée du {{ selectedDate }}</h3>
     </div>
-    <div style="display: grid; padding-bottom: 1.5rem">
-      <div>
-        <mat-card
-          class="fields"
-          [ngClass]="!productInfoModelSelected?.id ? 'product-mandatory' : ''"
-          style="
-            max-height: 3.5rem;
-            min-width: 100%;
-            margin-bottom: 1.8rem;
-            border-radius: 30px;
-          "
+    <div class="d-flex gap-24">
+      <mat-card class="cardWithShadow theme-card aw-400 shadow">
+        <mat-calendar
+          (selectedChange)="onDateChange($event!)"
+          [dateClass]="dateClass"
         >
-          @if(productInfoModelSelected!.id !== undefined){
-          <mat-card-actions class="mat-card-actions">
-            <img
-              mat-card-image
-              src="{{ productInfoModelSelected?.image }}"
-              style="max-height: 2.25rem; display: flex; margin-top: 1.25rem"
-            />
-            <div style="margin-top: 1.25rem; padding: 1rem">
-              {{ productInfoModelSelected?.label }}
+        </mat-calendar>
+      </mat-card>
+      <mat-card class="cardWithShadow theme-card shadow">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Gérer mes repas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          class="b-t-1 d-flex flex-column gap-16 justify-content-between h-webkit"
+        >
+          <form
+            class="d-flex gap-16 align-items-end"
+            [formGroup]="mealCreateForm"
+          >
+            <div class="d-flex flex-column gap-16">
+              <mat-chip-listbox [formControlName]="MEAL_CREATE_CHIPS_SELECT">
+                @for (meal of mealsDefault; track $index) {
+                <mat-chip-option
+                  [ngClass]="meal.disabled ? '' : meal.class"
+                  [value]="meal"
+                  [disabled]="meal.disabled!"
+                  >{{ meal.label }}</mat-chip-option
+                >
+                }
+              </mat-chip-listbox>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Heure du repas</mat-label>
+                <input
+                  matInput
+                  [formControlName]="TIME_CREATE_MEAL_INPUT"
+                  [matTimepicker]="pickerCreate"
+                />
+                <mat-timepicker-toggle matIconSuffix [for]="pickerCreate" />
+                <mat-timepicker #pickerCreate />
+              </mat-form-field>
             </div>
-            <img
-              mat-card-image
-              class="product-score"
-              src="{{ productInfoModelSelected?.nutriscore }}"
-              style="height: 4rem; padding-top: 1rem"
-            />
-          </mat-card-actions>
-          } @else {
-          <p>Rechercher et selectionner un aliment dans la liste *</p>
-          }
-        </mat-card>
 
-        @if(!productInfoModelSelected?.id){
-        <p style="font-size: 12px; color: #d92828; margin-top: -1.5rem">
-          &nbsp;&nbsp;&nbsp;&nbsp;Champ obligatoire
-        </p>
-        }
-      </div>
-      <app-search-product-autocomplete></app-search-product-autocomplete>
+            <button
+              mat-fab
+              extended
+              class="m-b-16"
+              [ngClass]="
+                this.mealCreateChipsControl.value &&
+                this.timeCreateMealControl.value
+                  ? 'bg-light-success text-success'
+                  : 'bg-light text-dark'
+              "
+              (click)="addMeal()"
+              [disabled]="
+                !(
+                  this.mealCreateChipsControl.value &&
+                  this.timeCreateMealControl.value
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <i-tabler class="icon-20 m-r-4" name="bowl-spoon"></i-tabler
+                ><span class="m-4">Ajouter un repas</span>
+              </div>
+            </button>
+          </form>
+          <mat-divider></mat-divider>
+          <form
+            class="d-flex gap-16 align-items-end"
+            [formGroup]="mealEditForm"
+          >
+            <div class="d-flex flex-column gap-16">
+              <mat-chip-listbox [formControlName]="MEAL_EDIT_CHIPS_SELECT">
+                @for (meal of meals; track $index) {
+                <mat-chip-option
+                  [ngClass]="meal.disabled ? '' : meal.class"
+                  [value]="meal"
+                  [disabled]="meal.disabled!"
+                  >{{ meal.label }}</mat-chip-option
+                >
+                }
+              </mat-chip-listbox>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Heure du repas</mat-label>
+                <input
+                  matInput
+                  [formControlName]="TIME_EDIT_MEAL_INPUT"
+                  [matTimepicker]="pickerEdit"
+                />
+                <mat-timepicker-toggle matIconSuffix [for]="pickerEdit" />
+                <mat-timepicker #pickerEdit />
+              </mat-form-field>
+            </div>
+            <button
+              mat-fab
+              extended
+              class="m-b-16"
+              [ngClass]="
+                this.mealEditChipsControl.value &&
+                this.timeEditMealControl.value
+                  ? ''
+                  : 'bg-light text-dark'
+              "
+              [disabled]="
+                !(
+                  this.mealEditChipsControl.value &&
+                  this.timeEditMealControl.value
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <i-tabler class="icon-20 m-r-4" name="bowl-spoon"></i-tabler
+                ><span class="m-4">Modifier un repas</span>
+              </div>
+            </button>
+          </form>
+          <mat-divider></mat-divider>
+          <form
+            class="d-flex align-items-center gap-16"
+            [formGroup]="mealDeleteForm"
+          >
+            <mat-chip-listbox [formControlName]="MEAL_DELETE_SELECT_CHIP">
+              @for (meal of meals; track $index) {
+              <mat-chip-option
+                [ngClass]="meal.disabled ? '' : meal.class"
+                [value]="meal"
+                [disabled]="meal.disabled!"
+                >{{ meal.label }}</mat-chip-option
+              >
+              }
+            </mat-chip-listbox>
+            <button
+              mat-fab
+              extended
+              [ngClass]="
+                this.mealDeleteChipControl.value
+                  ? 'bg-light-error text-error'
+                  : 'bg-light text-dark'
+              "
+              (click)="deleteMeal()"
+              [disabled]="!this.mealDeleteChipControl.value"
+            >
+              <div class="d-flex align-items-center">
+                <i-tabler class="icon-20 m-r-4" name="soup-off"></i-tabler
+                ><span class="m-4">Supprimer un repas</span>
+              </div>
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="cardWithShadow theme-card shadow">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0"
+            >Ajouter un aliment au repas</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-flex gap-24">
+          <form
+            [formGroup]="mealProductForm"
+            class="d-flex align-items-center gap-24"
+          >
+            <div class="d-flex flex-column justify-content-center">
+              <app-search-product-autocomplete></app-search-product-autocomplete>
+              <div>
+                <app-card-product
+                  [productInfoModel]="productInfoModelSelected!"
+                ></app-card-product>
+                @if(!productInfoModelSelected?.id){
+                <p class="f-s-12 text-error m-8 m-t--16">
+                  &nbsp;&nbsp;&nbsp;&nbsp;Champ obligatoire
+                </p>
+                }
+              </div>
+            </div>
+            <div class="d-flex flex-column gap-24">
+              <mat-chip-listbox
+                [formControlName]="MEAL_ADD_PRODUCT_SELECT_CHIP"
+              >
+                @for (meal of meals; track $index) {
+                <mat-chip-option
+                  [ngClass]="meal.disabled ? '' : meal.class"
+                  [value]="meal"
+                  [disabled]="meal.disabled!"
+                  >{{ meal.label }}</mat-chip-option
+                >
+                }
+              </mat-chip-listbox>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Quantité (g)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  [formControlName]="QUANTITY_FORM"
+                  placeholder="Ex. 100"
+                  required
+                />
+                @if(quantityControl.invalid){
+                <mat-error>Champ obligatoire</mat-error>
+                }
+              </mat-form-field>
+
+              <button
+                mat-fab
+                extended
+                class="bg-light-success text-success"
+                (click)="addMealProductToResult()"
+                [disabled]=""
+              >
+                <div class="d-flex align-items-center">
+                  <i-tabler
+                    class="icon-20 m-r-4"
+                    name="shopping-cart-plus"
+                  ></i-tabler
+                  ><span class="m-4">Ajouter au repas</span>
+                </div>
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
     </div>
-    <div style="display: grid; margin: 1rem">
-      <mat-form-field class="fields" appearance="outline">
-        <mat-label>Quantité (g)</mat-label>
-        <input
-          matInput
-          type="number"
-          [formControlName]="QUANTITY_FORM"
-          placeholder="Ex. 100"
-          required
-        />
-        @if(quantityControl.invalid){
-        <mat-error>Champ obligatoire</mat-error>
-        }
-      </mat-form-field>
+    <br />
 
-      <div
-        class="fields"
-        style="
-          margin-bottom: 2rem;
-          display: flex;
-          justify-content: center;
-          flex-direction: column;
-        "
-      >
-        <button
-          mat-fab
-          extended
-          color="accent"
-          (click)="addMealProductToResult()"
-        >
-          <mat-icon>add_shopping_cart</mat-icon>
-          Ajouter au repas
-        </button>
-      </div>
+    <div
+      style="display: flex; justify-content: space-evenly; align-items: stretch"
+    >
+      <app-table-product-meal
+        style="width: 50%; padding-right: 1rem"
+        #tableProductMealComponent
+        [mealProduct]="mealProduct"
+        (eventMealProductsBreakfast)="onMealProductsBreakfastChange($event)"
+        (eventMealProductsLunch)="onMealProductsLunchChange($event)"
+        (eventMealProductsDinner)="onMealProductsDinnerChange($event)"
+      ></app-table-product-meal>
+
+      <app-chart-meal-product
+        style="width: 50%"
+        [mealProductsBreakfast]="mealProductsBreakfast"
+        [mealProductsLunch]="mealProductsLunch"
+        [mealProductsDinner]="mealProductsDinner"
+      ></app-chart-meal-product>
     </div>
-  </form>
-</mat-expansion-panel>
-<br />
-
-<div style="display: flex; justify-content: space-evenly; align-items: stretch">
-  <app-table-product-meal
-    style="width: 50%; padding-right: 1rem"
-    #tableProductMealComponent
-    [mealProduct]="mealProduct"
-    (eventMealProductsBreakfast)="onMealProductsBreakfastChange($event)"
-    (eventMealProductsLunch)="onMealProductsLunchChange($event)"
-    (eventMealProductsDinner)="onMealProductsDinnerChange($event)"
-  ></app-table-product-meal>
-
-  <app-chart-meal-product
-    style="width: 50%"
-    [mealProductsBreakfast]="mealProductsBreakfast"
-    [mealProductsLunch]="mealProductsLunch"
-    [mealProductsDinner]="mealProductsDinner"
-  ></app-chart-meal-product>
-</div>
+  </mat-card-content>
+</mat-card>

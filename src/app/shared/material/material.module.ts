@@ -48,6 +48,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 
 @NgModule({
   exports: [
@@ -95,6 +96,8 @@ import { MatTreeModule } from '@angular/material/tree';
     PortalModule,
     ScrollingModule,
     MatFormFieldModule,
+    MatTimepickerModule,
+    MatDatepickerModule,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })

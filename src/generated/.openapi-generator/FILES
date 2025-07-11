@@ -23,6 +23,7 @@ model/cgmInfoModel.ts
 model/dateRangeFilter.ts
 model/getBannerResponseModel.ts
 model/getUserResponseModel.ts
+model/mealModel.ts
 model/mealProductInfoGenModel.ts
 model/models.ts
 model/passwordUpdate.ts

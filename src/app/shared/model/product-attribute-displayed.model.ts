@@ -1,5 +1,9 @@
 import { Observable } from 'rxjs';
-import { EcoscoreLinks, NovagroupLinks, NutriscoreLinks } from '../enum/svg-urls.enum';
+import {
+  EcoscoreLinks,
+  NovagroupLinks,
+  NutriscoreLinks,
+} from '../enum/svg-urls.enum';
 
 export class ProductInfosModel {
   id?: string;
@@ -41,4 +45,7 @@ export class MealProductParam {
 export class Meal {
   id?: string;
   label?: string;
+  timeHour?: string;
+  disabled?: boolean;
+  class?: string;
 }

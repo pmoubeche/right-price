@@ -1,40 +1,6 @@
-@use "app-utils" as utils;
-
-.mat-card-actions {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 2rem;
-}
-
-.fields {
-  display: inline-flex;
-  justify-content: center;
-  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-}
-
-.product-mandatory {
-  border-color: #d92828;
-  border-width: thin;
-  margin-top: 0.4rem;
-}
+@use "variables" as *;
 
 .highlight-date {
-  background-color: utils.get-couleur-secondaire() !important;
-  opacity: 50%;
-  border-radius: 3rem;
-}
-
-::ng-deep {
-  ngx-mat-datepicker-content {
-    background-color: white !important;
-    position: absolute;
-  }
-
-  mat-icon {
-    font-family: "Material Icons" !important;
-  }
-}
-
-.mat-mdc-input-element::-webkit-calendar-picker-indicator {
-  display: block;
+  background-color: $light-success !important;
+  border-radius: 25px;
 }

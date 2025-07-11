@@ -39,4 +39,9 @@ export class DateUtils {
       date.getTime() - date.getTimezoneOffset() * 60000
     ).toISOString();
   }
+
+  static parseDateFromString(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
 }
