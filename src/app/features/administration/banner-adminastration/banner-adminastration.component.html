@@ -75,15 +75,13 @@
     >Resultats de la recherche</mat-expansion-panel-header
   >
   <app-table-generic
+    [buttons]="buttonsParams"
     [isPaginated]="true"
     [columns]="paramsColums"
     [paginatedDataSource]="bannersPaginated!"
-    [isEditOnTable]="false"
     [pageSizeOptions]="[10, 20, 50]"
     (eventPageSizeChange)="changePageSize($event)"
     (eventPageIndexChange)="changePageIndex($event)"
-    (onDeleteItem)="deleteBanner($event)"
-    (onEditItem)="updateBanner($event)"
     [rowHeight]="'4rem'"
   ></app-table-generic>
 </mat-expansion-panel>

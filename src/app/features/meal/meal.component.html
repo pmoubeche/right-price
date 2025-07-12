@@ -6,7 +6,7 @@
     <div class="m-16">
       <h3>Journée du {{ selectedDate }}</h3>
     </div>
-    <div class="d-flex gap-24">
+    <div class="d-flex justify-content-center gap-24">
       <mat-card class="cardWithShadow theme-card aw-400 shadow">
         <mat-calendar
           (selectedChange)="onDateChange($event!)"
@@ -16,7 +16,9 @@
       </mat-card>
       <mat-card class="cardWithShadow theme-card shadow">
         <mat-card-header class="d-flex justify-content-between">
-          <mat-card-title class="m-b-0">Gérer mes repas</mat-card-title>
+          <mat-card-title class="m-b-0"
+            >A quelle heure j'ai mangé ?</mat-card-title
+          >
         </mat-card-header>
         <mat-card-content
           class="b-t-1 d-flex flex-column gap-16 justify-content-between h-webkit"
@@ -27,7 +29,7 @@
           >
             <div class="d-flex flex-column gap-16">
               <mat-chip-listbox [formControlName]="MEAL_CREATE_CHIPS_SELECT">
-                @for (meal of mealsDefault; track $index) {
+                @for (meal of mealsCreate; track $index) {
                 <mat-chip-option
                   [ngClass]="meal.disabled ? '' : meal.class"
                   [value]="meal"
@@ -82,11 +84,24 @@
               <mat-chip-listbox [formControlName]="MEAL_EDIT_CHIPS_SELECT">
                 @for (meal of meals; track $index) {
                 <mat-chip-option
+                  class="custom-chip"
                   [ngClass]="meal.disabled ? '' : meal.class"
                   [value]="meal"
                   [disabled]="meal.disabled!"
-                  >{{ meal.label }}</mat-chip-option
                 >
+                  <div
+                    class="chip-content d-flex flex-column align-content-center"
+                  >
+                    <span class="chip-label d-flex justify-content-center">{{
+                      meal.label
+                    }}</span>
+                    @if(meal.timeHour){
+                    <span class="chip-time d-flex justify-content-center">{{
+                      meal.timeHour
+                    }}</span>
+                    }
+                  </div>
+                </mat-chip-option>
                 }
               </mat-chip-listbox>
 
@@ -108,7 +123,7 @@
               [ngClass]="
                 this.mealEditChipsControl.value &&
                 this.timeEditMealControl.value
-                  ? ''
+                  ? 'bg-light-success text-success'
                   : 'bg-light text-dark'
               "
               [disabled]="
@@ -117,6 +132,7 @@
                   this.timeEditMealControl.value
                 )
               "
+              (click)="editMeal()"
             >
               <div class="d-flex align-items-center">
                 <i-tabler class="icon-20 m-r-4" name="bowl-spoon"></i-tabler
@@ -132,10 +148,22 @@
             <mat-chip-listbox [formControlName]="MEAL_DELETE_SELECT_CHIP">
               @for (meal of meals; track $index) {
               <mat-chip-option
+                class="custom-chip"
                 [ngClass]="meal.disabled ? '' : meal.class"
                 [value]="meal"
                 [disabled]="meal.disabled!"
-                >{{ meal.label }}</mat-chip-option
+                ><div
+                  class="chip-content d-flex flex-column align-content-center"
+                >
+                  <span class="chip-label d-flex justify-content-center">{{
+                    meal.label
+                  }}</span>
+                  @if(meal.timeHour){
+                  <span class="chip-time d-flex justify-content-center">{{
+                    meal.timeHour
+                  }}</span>
+                  }
+                </div></mat-chip-option
               >
               }
             </mat-chip-listbox>
@@ -160,17 +188,17 @@
       </mat-card>
       <mat-card class="cardWithShadow theme-card shadow">
         <mat-card-header class="d-flex justify-content-between">
-          <mat-card-title class="m-b-0"
-            >Ajouter un aliment au repas</mat-card-title
-          >
+          <mat-card-title class="m-b-0">J'ai mangé quoi ?</mat-card-title>
         </mat-card-header>
         <mat-card-content class="b-t-1 d-flex gap-24">
           <form
             [formGroup]="mealProductForm"
-            class="d-flex align-items-center gap-24"
+            class="d-flex flex-column align-items-center gap-24"
           >
             <div class="d-flex flex-column justify-content-center">
-              <app-search-product-autocomplete></app-search-product-autocomplete>
+              <app-search-product-autocomplete
+                class="d-flex justify-content-center"
+              ></app-search-product-autocomplete>
               <div>
                 <app-card-product
                   [productInfoModel]="productInfoModelSelected!"
@@ -188,10 +216,22 @@
               >
                 @for (meal of meals; track $index) {
                 <mat-chip-option
+                  class="custom-chip"
                   [ngClass]="meal.disabled ? '' : meal.class"
                   [value]="meal"
                   [disabled]="meal.disabled!"
-                  >{{ meal.label }}</mat-chip-option
+                  ><div
+                    class="chip-content d-flex flex-column align-content-center"
+                  >
+                    <span class="chip-label d-flex justify-content-center">{{
+                      meal.label
+                    }}</span>
+                    @if(meal.timeHour){
+                    <span class="chip-time d-flex justify-content-center">{{
+                      meal.timeHour
+                    }}</span>
+                    }
+                  </div></mat-chip-option
                 >
                 }
               </mat-chip-listbox>
@@ -213,9 +253,21 @@
               <button
                 mat-fab
                 extended
-                class="bg-light-success text-success"
+                [ngClass]="
+                  this.mealAddProdcutChipControl.value &&
+                  this.quantityControl.value &&
+                  productInfoModelSelected
+                    ? 'bg-light-success text-success'
+                    : 'bg-light text-dark'
+                "
                 (click)="addMealProductToResult()"
-                [disabled]=""
+                [disabled]="
+                  !(
+                    this.mealAddProdcutChipControl.value &&
+                    this.quantityControl.value &&
+                    productInfoModelSelected
+                  )
+                "
               >
                 <div class="d-flex align-items-center">
                   <i-tabler
@@ -230,26 +282,21 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <br />
 
-    <div
-      style="display: flex; justify-content: space-evenly; align-items: stretch"
-    >
-      <app-table-product-meal
-        style="width: 50%; padding-right: 1rem"
-        #tableProductMealComponent
-        [mealProduct]="mealProduct"
-        (eventMealProductsBreakfast)="onMealProductsBreakfastChange($event)"
-        (eventMealProductsLunch)="onMealProductsLunchChange($event)"
-        (eventMealProductsDinner)="onMealProductsDinnerChange($event)"
-      ></app-table-product-meal>
+    <app-table-product-meal
+      class="d-flex justify-content-center gap-16"
+      #tableProductMealComponent
+      [mealProduct]="mealProduct!"
+      (eventMealProductsBreakfast)="onMealProductsBreakfastChange($event)"
+      (eventMealProductsLunch)="onMealProductsLunchChange($event)"
+      (eventMealProductsDinner)="onMealProductsDinnerChange($event)"
+    ></app-table-product-meal>
 
-      <app-chart-meal-product
-        style="width: 50%"
-        [mealProductsBreakfast]="mealProductsBreakfast"
-        [mealProductsLunch]="mealProductsLunch"
-        [mealProductsDinner]="mealProductsDinner"
-      ></app-chart-meal-product>
-    </div>
+    <app-chart-meal-product
+      class="d-flex justify-content-center"
+      [mealProductsBreakfast]="mealProductsBreakfast"
+      [mealProductsLunch]="mealProductsLunch"
+      [mealProductsDinner]="mealProductsDinner"
+    ></app-chart-meal-product>
   </mat-card-content>
 </mat-card>

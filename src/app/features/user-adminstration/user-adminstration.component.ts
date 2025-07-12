@@ -1,4 +1,3 @@
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -24,17 +23,18 @@ import {
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
 import { DateUtils } from '../../shared/utils/date.utils';
+import { ButtonParam } from '../../shared/model/button-param';
 
 @Component({
-    selector: 'app-user-adminstration',
-    imports: [
+  selector: 'app-user-adminstration',
+  imports: [
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    TableGenericComponent
-],
-    templateUrl: './user-adminstration.component.html',
-    styleUrl: './user-adminstration.component.scss'
+    TableGenericComponent,
+  ],
+  templateUrl: './user-adminstration.component.html',
+  styleUrl: './user-adminstration.component.scss',
 })
 export class UserAdminstrationComponent implements OnInit, OnDestroy {
   readonly USERNAME_FIELD = 'username';
@@ -133,6 +133,21 @@ export class UserAdminstrationComponent implements OnInit, OnDestroy {
       label: 'Actions',
       columDef: ColumnTypeParamEnum.ACTIONS,
       type: ColumnTypeParamEnum.ACTIONS,
+    },
+  ];
+
+  buttonsParams: ButtonParam[] = [
+    {
+      label: 'Modifier',
+      icon: 'edit',
+      color: 'success',
+      action: (row: any) => this.updateUser(row),
+    },
+    {
+      label: 'Supprimer',
+      icon: 'trash-x',
+      color: 'error',
+      action: (row: any) => this.deleteUser(row),
     },
   ];
 

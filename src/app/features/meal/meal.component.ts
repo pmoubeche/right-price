@@ -39,15 +39,12 @@ import {
 import { MaterialModule } from '../../shared/material/material.module';
 import {
   Meal,
-  MealProductInfoModel,
-  MealProductParam,
   ProductInfosModel,
 } from '../../shared/model/product-attribute-displayed.model';
 import {
   ResponseProduct,
   ResponseProducts,
 } from '../../shared/model/product.model';
-import { MealProductApiService } from '../../shared/services/meal-product-api.service';
 import { DateUtils } from '../../shared/utils/date.utils';
 import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
 import { ChartMealProductComponent } from './chart-meal-product/chart-meal-product.component';
@@ -55,7 +52,13 @@ import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
-import { MealModel, MealsService } from '../../../generated';
+import {
+  LProductMealService,
+  MealModel,
+  MealProductParam,
+  MealsService,
+  ProductMealInfoModel,
+} from '../../../generated';
 
 @Component({
   selector: 'app-meal',
@@ -97,42 +100,44 @@ export class MealComponent implements OnInit, OnDestroy {
 
   public mealsDefault: Meal[] = [
     {
-      id: 'breakfast',
+      mealType: 'breakfast',
       label: "P'tit déj",
       class: 'bg-light-success text-success',
       disabled: false,
     },
     {
-      id: 'lunch',
+      mealType: 'lunch',
       label: 'Déjeuner',
 
       class: 'bg-light-primary text-primary',
       disabled: false,
     },
     {
-      id: 'dinner',
+      mealType: 'dinner',
       label: 'Dinner',
       class: 'bg-light-warning text-warning',
       disabled: false,
     },
   ];
 
+  public mealsCreate = this.mealsDefault;
+
   public meals: Meal[] = [
     {
-      id: 'breakfast',
+      mealType: 'breakfast',
       label: "P'tit déj",
       class: 'bg-light-success text-success',
       disabled: true,
     },
     {
-      id: 'lunch',
+      mealType: 'lunch',
       label: 'Déjeuner',
 
       class: 'bg-light-primary text-primary',
       disabled: true,
     },
     {
-      id: 'dinner',
+      mealType: 'dinner',
       label: 'Dinner',
       class: 'bg-light-warning text-warning',
       disabled: true,
@@ -153,11 +158,10 @@ export class MealComponent implements OnInit, OnDestroy {
     buttons: this.buttonsDialog,
   };
 
-  private _mealProductsBreakfast!: MealProductInfoModel[];
-  private _mealProductsLunch!: MealProductInfoModel[];
-  private _mealProductsDinner!: MealProductInfoModel[];
+  private _mealProductsBreakfast!: ProductMealInfoModel[];
+  private _mealProductsLunch!: ProductMealInfoModel[];
+  private _mealProductsDinner!: ProductMealInfoModel[];
 
-  mealSelected?: Meal;
   allMealsSelected?: boolean;
   public httpProduct?: ResponseProduct;
   httpProducts!: ResponseProducts;
@@ -165,9 +169,9 @@ export class MealComponent implements OnInit, OnDestroy {
   mealEditForm!: FormGroup;
   mealDeleteForm!: FormGroup;
   mealProductForm!: FormGroup;
-  public mealProduct: MealProductInfoModel = new MealProductInfoModel();
+  public mealProduct?: ProductMealInfoModel;
   public productInfoModelSelected?: ProductInfosModel;
-  allMealsProduct: MealProductInfoModel[] = [];
+  allMealsProduct: ProductMealInfoModel[] = [];
   timeCreate?: { hours: number; minutes: number };
   timeEdit?: { hours: number; minutes: number };
   selectedDate?: string;
@@ -181,27 +185,24 @@ export class MealComponent implements OnInit, OnDestroy {
 
   subscription = new Subscription();
 
-  set mealProductsBreakfast(mealProductsBreakfast: MealProductInfoModel[]) {
+  set mealProductsBreakfast(mealProductsBreakfast: ProductMealInfoModel[]) {
     this._mealProductsBreakfast = mealProductsBreakfast;
-    this.getMealChipsValue();
   }
 
   get mealProductsBreakfast() {
     return this._mealProductsBreakfast;
   }
 
-  set mealProductsLunch(mealProductsLunch: MealProductInfoModel[]) {
+  set mealProductsLunch(mealProductsLunch: ProductMealInfoModel[]) {
     this._mealProductsLunch = mealProductsLunch;
-    this.getMealChipsValue();
   }
 
   get mealProductsLunch() {
     return this._mealProductsLunch;
   }
 
-  set mealProductsDinner(mealProductsDinner: MealProductInfoModel[]) {
+  set mealProductsDinner(mealProductsDinner: ProductMealInfoModel[]) {
     this._mealProductsDinner = mealProductsDinner;
-    this.getMealChipsValue();
   }
 
   get mealProductsDinner() {
@@ -213,6 +214,7 @@ export class MealComponent implements OnInit, OnDestroy {
       this.MEAL_CREATE_CHIPS_SELECT
     ) as FormControl;
   }
+
   get timeCreateMealControl(): FormControl {
     return this.mealCreateForm?.get(this.TIME_CREATE_MEAL_INPUT) as FormControl;
   }
@@ -249,10 +251,11 @@ export class MealComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly cardsService: CardResultGenericService,
     private readonly mealService: MealService,
-    private readonly mealProductApiService: MealProductApiService,
+    private readonly lProductMealApiService: LProductMealService,
     private readonly mealApiService: MealsService,
     private readonly popInService: DialogGenericService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -267,33 +270,35 @@ export class MealComponent implements OnInit, OnDestroy {
     this.setProductInfoSelectedFromProductDetail();
   }
 
-  getMealChipsValue(): void {
-    const mealProductsMap: { [key: string]: any[] | undefined } = {
-      breakfast: this.mealProductsBreakfast,
-      lunch: this.mealProductsLunch,
-      dinner: this.mealProductsDinner,
-    };
-
-    this.meals = this.meals.map((meal) => ({
-      ...meal,
-      disabled: !(
-        Array.isArray(mealProductsMap[meal.id!]) &&
-        mealProductsMap[meal.id!]!.length > 0
-      ),
-    }));
-  }
-
   getMealsByDate(): void {
+    this.meals.forEach((meal) => {
+      (meal.disabled = true), (meal.timeHour = '');
+    });
+    this.mealsCreate.forEach((meal) => (meal.disabled = false));
+
     this.subscription.add(
       this.mealApiService
         .getMealsByDate(this.selectedDate!)
         .pipe(
           tap((meals) => {
             if (meals && meals.length > 0) {
-              meals.forEach((meal) => {
-                this.mealsDefault
-                  .filter((md) => md.id === meal.id)
-                  .map((m) => (m.disabled = true));
+              meals.forEach((apiMeal) => {
+                const matchDefault = this.mealsCreate.find(
+                  (m) => m.mealType === apiMeal.mealType
+                );
+                if (matchDefault) {
+                  matchDefault.disabled = true;
+                }
+                const matchMeal = this.meals.find(
+                  (m) => m.mealType === apiMeal.mealType
+                );
+                if (matchMeal) {
+                  matchMeal.disabled = false;
+                  matchMeal.id = apiMeal.id;
+                  matchMeal.timeHour = DateUtils.getHoursMinutesFromDateString(
+                    apiMeal.dateCreation!
+                  );
+                }
               });
             }
           })
@@ -331,10 +336,7 @@ export class MealComponent implements OnInit, OnDestroy {
     this.mealProductForm = this.formBuilder.group({
       [this.QUANTITY_FORM]: ['', [Validators.required]],
       [this.MEAL_ADD_PRODUCT_SELECT_CHIP]: ['', [Validators.required]],
-      [this.PRODUCT_INFO_FORM]: [
-        this.productInfoModelSelected,
-        [Validators.required],
-      ],
+      [this.PRODUCT_INFO_FORM]: [null, [Validators.required]],
     });
 
     this.timeCreateMealControl.valueChanges.subscribe((timeCreate) => {
@@ -378,47 +380,25 @@ export class MealComponent implements OnInit, OnDestroy {
     this.httpProduct = httpProduct;
   }
 
-  onSelectMeal(meal: any) {
-    this.mealSelected = meal.value;
-    this.productInfoControl.markAsTouched();
-  }
-
   onDateChange(event: Date) {
     this.selectedDate = DateUtils.formatDate(event);
+    this.getMealsByDate();
     this.mealService.dateSelectedBs.next(DateUtils.formatDate(event));
   }
 
-  onMealProductsBreakfastChange(mealProducts: MealProductInfoModel[]): void {
+  onMealProductsBreakfastChange(mealProducts: ProductMealInfoModel[]): void {
     this.mealProductsBreakfast = mealProducts;
   }
 
-  onMealProductsLunchChange(mealProducts: MealProductInfoModel[]): void {
+  onMealProductsLunchChange(mealProducts: ProductMealInfoModel[]): void {
     this.mealProductsLunch = mealProducts;
   }
 
-  onMealProductsDinnerChange(mealProducts: MealProductInfoModel[]): void {
+  onMealProductsDinnerChange(mealProducts: ProductMealInfoModel[]): void {
     this.mealProductsDinner = mealProducts;
   }
 
   addMeal(): void {
-    this.meals = this.meals.map((meal) =>
-      meal.id === this.mealCreateChipsControl.value.id
-        ? {
-            ...meal,
-            disabled: false,
-          }
-        : meal
-    );
-
-    this.mealsDefault = this.mealsDefault.map((meal) =>
-      meal.id === this.mealCreateChipsControl.value.id
-        ? {
-            ...meal,
-            disabled: true,
-          }
-        : meal
-    );
-
     const baseDate = DateUtils.parseDateFromString(this.selectedDate!);
     baseDate.setHours(
       this.timeCreate?.hours || 0,
@@ -426,7 +406,7 @@ export class MealComponent implements OnInit, OnDestroy {
     );
 
     const req: MealModel = {
-      mealType: this.mealCreateChipsControl.value.id,
+      mealType: this.mealCreateChipsControl.value.mealType,
       dateCreation: DateUtils.dateStringWithoutOffesetTimeZone(baseDate),
     };
 
@@ -434,8 +414,34 @@ export class MealComponent implements OnInit, OnDestroy {
       this.mealApiService
         .createMeal(req)
         .pipe(
-          tap((mealCreated) => {
+          tap((_) => {
+            this.getMealsByDate();
             this.mealCreateChipsControl.setValue('');
+            this.timeCreateMealControl.reset();
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  editMeal(): void {
+    const baseDate = DateUtils.parseDateFromString(this.selectedDate!);
+    baseDate.setHours(this.timeEdit?.hours || 0, this.timeEdit?.minutes || 0);
+
+    const req: MealModel = {
+      id: this.mealEditChipsControl.value.id,
+      mealType: this.mealEditChipsControl.value.mealType,
+      dateCreation: DateUtils.dateStringWithoutOffesetTimeZone(baseDate),
+    };
+
+    this.subscription.add(
+      this.mealApiService
+        .updateMeal(req)
+        .pipe(
+          tap((_) => {
+            this.getMealsByDate();
+            this.mealEditChipsControl.setValue('');
+            this.timeEditMealControl.reset();
           })
         )
         .subscribe()
@@ -443,60 +449,32 @@ export class MealComponent implements OnInit, OnDestroy {
   }
 
   deleteMeal(): void {
-    this.meals = this.meals.map((meal) =>
-      meal.id === this.mealDeleteChipControl.value.id
-        ? {
-            ...meal,
-            disabled: true,
-            timeHour: '',
-            label: this.mealsDefault.find((md) => md.id === meal.id)?.label,
-          }
-        : meal
+    this.subscription.add(
+      this.mealApiService
+        .deleteMeal(this.mealDeleteChipControl.value.id)
+        .pipe(
+          tap((_) => {
+            this.getMealsByDate();
+            this.mealDeleteChipControl.setValue('');
+          })
+        )
+        .subscribe()
     );
-
-    this.mealsDefault = this.mealsDefault.map((meal) =>
-      meal.id === this.mealCreateChipsControl.value.id
-        ? {
-            ...meal,
-            disabled: false,
-          }
-        : meal
-    );
-
-    this.mealDeleteChipControl.setValue('');
-
-    this.subscription.add();
   }
 
   addMealProductToResult(): void {
-    let time = DateUtils.fromTimeStringToMapTime(
-      this.timeCreateMealControl.value
-    );
-    let quantity = this.quantityControl!.value;
-    let meal = this.mealSelected;
-
-    let myDate = new Date(this.selectedDate!).setHours(
-      time.hours,
-      time.minutes
-    );
-
     const mealProductParam: MealProductParam = {
       barcodeProduct: this.productInfoModelSelected?.id,
       nameProduct: this.productInfoModelSelected?.label,
       imageProduct: this.productInfoModelSelected?.image,
       nutriscore: this.productInfoModelSelected?.nutriscore,
-      quantity: Number.parseFloat(quantity),
-      mealType: meal?.id,
       packagingQuantity: this.productInfoModelSelected?.packagingQuantity,
-      date: DateUtils.dateStringWithoutOffesetTimeZone(new Date(myDate)),
+      quantity: Number.parseFloat(this.quantityControl!.value),
+      mealId: this.mealAddProdcutChipControl?.value.id,
     };
 
     this.mealProductForm.markAllAsTouched();
-    if (
-      this.mealSelected &&
-      this.quantityControl.valid &&
-      this.productInfoModelSelected
-    ) {
+    if (this.quantityControl.valid && this.productInfoModelSelected) {
       if (this.isProductExistInList(mealProductParam)) {
         this.popInService.openDialog(
           CodeModaleEnum.INFORMATION,
@@ -504,8 +482,8 @@ export class MealComponent implements OnInit, OnDestroy {
         );
       } else {
         this.subscription.add(
-          this.mealProductApiService
-            .addMealProduct(mealProductParam)
+          this.lProductMealApiService
+            .createProductOnMeal(mealProductParam)
             .pipe(
               tap((mealProductInfo) => {
                 this.mealProduct = mealProductInfo;
@@ -530,7 +508,7 @@ export class MealComponent implements OnInit, OnDestroy {
     return allMealsProduct.find(
       (mealProduct) =>
         mealProductParam.barcodeProduct === mealProduct.idProduct &&
-        mealProductParam.mealType === mealProduct.mealType
+        this.mealAddProdcutChipControl.value.mealType === mealProduct.mealType
     )?.idProduct
       ? true
       : false;

@@ -1,4 +1,3 @@
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -35,17 +34,18 @@ import {
 } from '../../../shared/model/table-column-param.model';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 import { DateUtils } from '../../../shared/utils/date.utils';
+import { ButtonParam } from '../../../shared/model/button-param';
 
 @Component({
-    selector: 'app-banner-adminastration',
-    imports: [
+  selector: 'app-banner-adminastration',
+  imports: [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    TableGenericComponent
-],
-    templateUrl: './banner-adminastration.component.html',
-    styleUrl: './banner-adminastration.component.scss'
+    TableGenericComponent,
+  ],
+  templateUrl: './banner-adminastration.component.html',
+  styleUrl: './banner-adminastration.component.scss',
 })
 export class BannerAdminastrationComponent implements OnInit, OnDestroy {
   readonly MESSAGE_FIELD = 'message';
@@ -111,6 +111,21 @@ export class BannerAdminastrationComponent implements OnInit, OnDestroy {
       label: 'Actions',
       columDef: ColumnTypeParamEnum.ACTIONS,
       type: ColumnTypeParamEnum.ACTIONS,
+    },
+  ];
+
+  buttonsParams: ButtonParam[] = [
+    {
+      label: 'Modifier',
+      icon: 'edit',
+      color: 'success',
+      action: (row: any) => this.updateBanner(row),
+    },
+    {
+      label: 'Supprimer',
+      icon: 'trash-x',
+      color: 'error',
+      action: (row: any) => this.deleteBanner(row),
     },
   ];
 

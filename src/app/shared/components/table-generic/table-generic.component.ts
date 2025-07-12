@@ -30,6 +30,7 @@ import { CardResultGenericService } from '../card-result-generic/card-result-gen
 import { TableGenericService } from './table-generic.service';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { TableChildrenLinePipe } from '../../pipes/table-children-line.pipe';
+import { ButtonParam } from '../../model/button-param';
 
 export class UpdateData {
   element: any;
@@ -71,16 +72,14 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   displayedColumns: (string | undefined)[] = [];
   @Input() paginatedDataSource = new PaginatedDataSource<T>();
+  @Input() buttons?: ButtonParam[];
   @Input() rowHeight?: string;
   @Input() isRowCentered = false;
   @Input() isPaginated = true;
   @Input() isClickable = false;
   @Input() pageSizeOptions: number[] = [24];
-  @Input() isEditOnTable = true;
   @Input() isSection = false;
 
-  @Output() onDeleteItem = new EventEmitter<T>();
-  @Output() onEditItem = new EventEmitter<T>();
   @Output() onValidateUpdateItem = new EventEmitter<UpdateData>();
   @Output() eventSelectLine = new EventEmitter<T>();
   @Output() eventPageSizeChange = new EventEmitter<number>();
@@ -167,10 +166,6 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     line.isEditable$ = of(line.isEditable);
   }
 
-  onEdit(event: any) {
-    this.onEditItem.emit(event);
-  }
-
   onValidateUpdateField(line: T, event: any): void {
     event.stopPropagation();
     const data: UpdateData = {
@@ -178,9 +173,5 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
       formInputValue: this.editForm?.get(this.EDITABLE_FIELD)!.value,
     };
     this.onValidateUpdateItem.next(data);
-  }
-
-  deleteElement(ligne: T): void {
-    this.onDeleteItem.emit(ligne);
   }
 }

@@ -18,14 +18,15 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../../shared/model/table-column-param.model';
-import { MealProductApiService } from '../../../shared/services/meal-product-api.service';
 import { MealService } from '../meal.service';
+import { LProductMealService } from '../../../../generated';
+import { ButtonParam } from '../../../shared/model/button-param';
 
 @Component({
-    selector: 'app-table-product-meal',
-    imports: [MaterialModule, TableGenericComponent],
-    templateUrl: './table-product-meal.component.html',
-    styleUrl: './table-product-meal.component.scss'
+  selector: 'app-table-product-meal',
+  imports: [MaterialModule, TableGenericComponent],
+  templateUrl: './table-product-meal.component.html',
+  styleUrl: './table-product-meal.component.scss',
 })
 export class TableProductMealComponent implements OnInit, OnDestroy {
   isExpandedBreakfast = false;
@@ -65,6 +66,27 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
     MealProductInfoModel[]
   >();
 
+  buttonsParams: ButtonParam[] = [
+    {
+      label: 'Modifier',
+      icon: 'edit',
+      color: 'success',
+      isEditField: true,
+    },
+    {
+      label: 'Supprimer',
+      icon: 'trash-x',
+      color: 'error',
+      action: (row: any) => this.deleteLProductMeal(row),
+    },
+    {
+      label: 'Voir',
+      icon: 'eye',
+      color: 'primary',
+      action: (row: any) => this.viewProduct(row),
+    },
+  ];
+
   columnParamsMeal: TableColumnParamModel[] = [
     {
       id: '1',
@@ -73,6 +95,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       type: ColumnTypeParamEnum.IMAGE,
       applyStyleWithImage: true,
       colWidth: '6rem',
+      sortable: false,
     },
     {
       id: '2',
@@ -105,6 +128,8 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       columDef: ColumnTypeParamEnum.ACTIONS,
       type: ColumnTypeParamEnum.ACTIONS,
       colWidth: '6rem',
+      padding: '0px',
+      sortable: false,
     },
   ];
 
@@ -115,7 +140,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
 
   constructor(
-    private readonly mealProductApiService: MealProductApiService,
+    private readonly lProductMealApiService: LProductMealService,
     private readonly mealService: MealService,
     private readonly tableGenericService: TableGenericService,
     private readonly router: Router
@@ -130,13 +155,13 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       this.mealService.dateSelected$
         .pipe(
           switchMap((selectedDate) =>
-            this.mealProductApiService.getMealProducts(selectedDate).pipe(
+            this.lProductMealApiService.getProductsOnMeal(selectedDate).pipe(
               tap((mealProductInfosList) => {
                 this.resetDatasOnChange();
                 if (mealProductInfosList.length > 0) {
                   mealProductInfosList.forEach((productInfo) => {
                     this.addProductToRightList(productInfo);
-                    productInfo.isEditable = false;
+                    // productInfo.isEditable = false;
                   });
                 }
                 this.eventMealProductsBreakfast.emit(
@@ -251,8 +276,8 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
   deleteLProductMeal(mealProductInfoParam: any): void {
     const param: MealProductInfoModel = mealProductInfoParam;
     this.subscription.add(
-      this.mealProductApiService
-        .deleteMealProduct(param.idLProductMeal!)
+      this.lProductMealApiService
+        .deleteProductOnMeal(param.idLProductMeal!)
         .pipe(
           tap(() => {
             this.deleteProductFromRightList(param);
@@ -268,8 +293,8 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
     const quantity: number = event.formInputValue;
     mealProduct.quantity = quantity;
     this.subscription.add(
-      this.mealProductApiService
-        .updateMealProduct(mealProduct)
+      this.lProductMealApiService
+        .updateProductOnMeal(mealProduct)
         .pipe(
           tap(() => {
             this.initDataMealsOnInitAndDateChange();
@@ -277,6 +302,10 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
+  }
+
+  viewProduct(line: any) {
+    this.router.navigate([`/product`, line.idProduct!]);
   }
 
   onSelectLine(line: MealProductInfoModel): void {

@@ -88,15 +88,13 @@
     >Resultats de la recherche</mat-expansion-panel-header
   >
   <app-table-generic
+    [buttons]="buttonsParams"
     [isPaginated]="true"
     [columns]="paramsColums"
     [paginatedDataSource]="usersPaginated!"
-    [isEditOnTable]="false"
     [pageSizeOptions]="[10, 20, 50]"
     (eventPageSizeChange)="changePageSize($event)"
     (eventPageIndexChange)="changePageIndex($event)"
-    (onDeleteItem)="deleteUser($event)"
-    (onEditItem)="updateUser($event)"
     [rowHeight]="'4rem'"
   ></app-table-generic>
 </mat-expansion-panel>

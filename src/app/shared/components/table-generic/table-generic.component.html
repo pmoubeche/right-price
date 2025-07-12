@@ -16,8 +16,6 @@
       <th
         mat-header-cell
         *matHeaderCellDef
-        mat-sort-header
-        sortActionDescription="Sort by {{ column.columDef }}"
         [ngStyle]="{
           'min-width': column.colWidth,
           padding: column.padding ? column.padding : ''
@@ -87,24 +85,20 @@
           [matMenuTriggerFor]="menu"
           (click)="onClickMoreActions($event)"
         >
-          <mat-icon>more_vert</mat-icon>
+          <i-tabler class="icon-20 m-r-8" name="dots-vertical"></i-tabler>
         </button>
         <mat-menu #menu="matMenu">
-          @if (isEditOnTable) {
+          @for (button of buttons; track $index) { @if (button.isEditField) {
           <button mat-menu-item (click)="onEditFieldOnTable(element, columns)">
-            <mat-icon color="primary">edit</mat-icon>
+            <i-tabler class="icon-20 m-r-8" name="edit"></i-tabler>
             <span>Modifier</span>
           </button>
           } @else {
-          <button mat-menu-item (click)="onEdit(element)">
-            <mat-icon color="primary">edit</mat-icon>
-            <span>Modifier</span>
+          <button mat-menu-item (click)="button?.action(element, columns)">
+            <i-tabler class="icon-20 m-r-8" name="{{ button.icon }}"></i-tabler>
+            <span>{{ button.label }}</span>
           </button>
-          }
-          <button mat-menu-item (click)="deleteElement(element)">
-            <mat-icon color="warn">delete_forever</mat-icon>
-            <span>Supprimer</span>
-          </button>
+          } }
         </mat-menu>
         } @else { @if(column.isEditable && element.isEditable$ | async ){
         <form

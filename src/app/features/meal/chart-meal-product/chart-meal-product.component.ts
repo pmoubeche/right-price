@@ -1,7 +1,12 @@
-
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
+import {
+  ChartConfiguration,
+  ChartData,
+  ChartDataset,
+  ChartOptions,
+  plugins,
+} from 'chart.js';
 import { Subscription, tap } from 'rxjs';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
 import { ChartUtils } from '../../../shared/components/chart/chart.utils';
@@ -15,20 +20,17 @@ import {
 import { RoundNumberDecimalPipe } from '../../../shared/pipes/round-number-decimal.pipe';
 import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 import { ProductUtils } from '../../../shared/utils/product.utils';
+import { title } from 'process';
+import { text } from 'stream/consumers';
 
 @Component({
-    selector: 'app-chart-meal-product',
-    imports: [
-    ChartComponent,
-    MaterialModule,
-    FormsModule
-],
-    templateUrl: './chart-meal-product.component.html',
-    styleUrl: './chart-meal-product.component.scss'
+  selector: 'app-chart-meal-product',
+  imports: [ChartComponent, MaterialModule, FormsModule],
+  templateUrl: './chart-meal-product.component.html',
 })
 export class ChartMealProductComponent implements OnInit, OnDestroy {
   private _mealProductsBreakfast!: MealProductInfoModel[];
-  public isMaleReco = true;
+  public isMaleReco: boolean = true;
 
   @Input() set mealProductsBreakfast(
     mealProductsBreakfast: MealProductInfoModel[]
@@ -101,21 +103,37 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
 
   public isDisplayedLegend: boolean = true;
 
-  dailyRecommanderIncomeChartsBarData?: { label: string; chart: ChartData }[];
+  dailyRecommanderIncomeChartsBarData?: {
+    label: string;
+    chart: ChartData;
+    optionsBar?: ChartOptions;
+  }[];
 
-  optionsBar: ChartOptions = {
-    indexAxis: 'y',
+  optionsDefaultBar: ChartOptions = {
+    maintainAspectRatio: false,
+    indexAxis: 'x',
     responsive: true,
     scales: {
-      x: {
+      y: {
         beginAtZero: true,
         stacked: true,
+        title: {
+          display: false,
+        },
       },
-      y: { stacked: true, display: false },
+      x: { stacked: true, display: false },
     },
     plugins: {
       legend: {
         display: false,
+      },
+      title: {
+        display: true,
+        text: '',
+        position: 'bottom',
+        font: {
+          size: 14,
+        },
       },
     },
   };
@@ -276,7 +294,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         label: "P'tit déj",
         data: [value],
         fill: true,
-        backgroundColor: ['#7fc8c9'],
+        backgroundColor: [ChartUtils.getCssVariableValue('success')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -291,7 +309,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         label: 'Déjeuner',
         data: [nutrimentChartMapLunch.get(key)!],
         fill: true,
-        backgroundColor: ['#4c7ed0'],
+        backgroundColor: [ChartUtils.getCssVariableValue('primary')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -306,7 +324,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         label: 'Dinner',
         data: [nutrimentChartMapDinner.get(key)!],
         fill: true,
-        backgroundColor: ['#ffc30f'],
+        backgroundColor: [ChartUtils.getCssVariableValue('warning')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -321,7 +339,7 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
         label: 'AJR',
         data: [ChartUtils.setValueFillerFull(this.isMaleReco, key)],
         fill: true,
-        backgroundColor: ['#f1f1f1'],
+        backgroundColor: [ChartUtils.getCssVariableValue('light')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -341,9 +359,35 @@ export class ChartMealProductComponent implements OnInit, OnDestroy {
           dataSetFiller,
         ],
       };
+
+      const chartOptions = {
+        ...this.optionsDefaultBar,
+        scales: {
+          ...this.optionsDefaultBar.scales,
+          y: {
+            beginAtZero: true,
+            stacked: true,
+            max: Math.max(
+              ChartUtils.setValueFillerFull(this.isMaleReco, key),
+              nutrimentChartMapBreakfast.get(key)! +
+                nutrimentChartMapLunch.get(key)! +
+                nutrimentChartMapDinner.get(key)!
+            ),
+          },
+        },
+        plugins: {
+          ...this.optionsDefaultBar.plugins,
+          title: {
+            ...this.optionsDefaultBar.plugins?.title,
+            text: key,
+          },
+        },
+      };
+
       this.dailyRecommanderIncomeChartsBarData?.push({
         label: key,
         chart: chartData,
+        optionsBar: chartOptions,
       });
     });
   }

@@ -1,4 +1,3 @@
-
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
@@ -27,14 +26,17 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { CgmImportService, CgmInfoModel } from '../../../generated';
+import {
+  CgmImportService,
+  CgmInfoModel,
+  LProductMealService,
+} from '../../../generated';
 import { ChartComponent } from '../../shared/components/chart/chart.component';
 import { ChartUtils } from '../../shared/components/chart/chart.utils';
 import { MaterialModule } from '../../shared/material/material.module';
 import { CodeLabelModel } from '../../shared/model/code-label.model';
 import { DateUtils } from '../../shared/utils/date.utils';
 import { SnackbarService } from '../../shared/services/snackbar.service';
-import { MealProductApiService } from '../../shared/services/meal-product-api.service';
 import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.service';
 import { MealProductInfoModel } from '../../shared/model/product-attribute-displayed.model';
 import {
@@ -64,24 +66,24 @@ export class CarbsAndSugarsValuesCharts {
 }
 
 @Component({
-    selector: 'app-glucose-monitoring',
-    imports: [
+  selector: 'app-glucose-monitoring',
+  imports: [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
     ChartComponent,
-    TableGenericComponent
-],
-    providers: [
-        provideNativeDateAdapter(),
-        {
-            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-            useClass: DefaultMatCalendarRangeStrategy,
-        },
-    ],
-    templateUrl: './glucose-monitoring.component.html',
-    styleUrl: './glucose-monitoring.component.scss',
-    encapsulation: ViewEncapsulation.None
+    TableGenericComponent,
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: DefaultMatCalendarRangeStrategy,
+    },
+  ],
+  templateUrl: './glucose-monitoring.component.html',
+  styleUrl: './glucose-monitoring.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   readonly DEVICE_FIELD = 'device';
@@ -235,7 +237,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cgmImportServiceApi: CgmImportService,
-    private readonly mealService: MealProductApiService,
+    private readonly lProductMealApiService: LProductMealService,
     private readonly openFoodFactApi: OpenFoodFactsApiService,
     private readonly snackbarService: SnackbarService,
     private readonly roundNumberPipe: RoundNumberDecimalPipe,
@@ -343,15 +345,15 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
   getMealProductsInfos(date: Date): void {
     this.subscription.add(
-      this.mealService
-        .getMealProducts(DateUtils.formatDate(date))
+      this.lProductMealApiService
+        .getProductsOnMeal(DateUtils.formatDate(date))
         .pipe(
           tap((mealProductsInfos) => {
             if (mealProductsInfos.length > 0) {
               this.getHttpProductsFromOFF(mealProductsInfos);
               mealProductsInfos.forEach((productInfo) => {
                 this.addProductToRightList(productInfo);
-                productInfo.isEditable = false;
+                // productInfo.isEditable = false;
               });
             }
           })

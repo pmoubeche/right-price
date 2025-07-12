@@ -22,7 +22,7 @@ export const MicroNutrimentsConst = {
   POTASSIUM: { label: 'Potassium', value: 2000, unit: 'mg' },
   CHLORURE: { label: 'Chlore', value: 800, unit: 'mg' },
   COPPER: { label: 'Cuivre', value: 1, unit: 'mg' },
-  MANGANESE: { label: 'Manganèse', value: 2, unit: 'mg' },
+  MANGANESE: { label: 'Manganèse', value: 3, unit: 'mg' },
   FLUORURE: { label: 'Fluor', value: 3.5, unit: 'mg' },
   CHROME: { label: 'Chrome', value: 40, unit: 'μg' },
   MOLYBDENE: { label: 'Molybdène', value: 50, unit: 'μg' },

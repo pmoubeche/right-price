@@ -3,12 +3,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, tap } from 'rxjs';
 import { BannerInfoModel, BannerService } from '../../../../generated';
 import { MaterialModule } from '../../material/material.module';
+import { ButtonParam } from '../../model/button-param';
 
 @Component({
-    selector: 'app-banner',
-    imports: [MaterialModule, CommonModule],
-    templateUrl: './banner.component.html',
-    styleUrl: './banner.component.scss'
+  selector: 'app-banner',
+  imports: [MaterialModule, CommonModule],
+  templateUrl: './banner.component.html',
+  styleUrl: './banner.component.scss',
 })
 export class BannerComponent implements OnInit, OnDestroy {
   bannerType?: string;

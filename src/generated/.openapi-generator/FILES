@@ -5,6 +5,7 @@ api/api.ts
 api/auth.service.ts
 api/banner.service.ts
 api/cgmImport.service.ts
+api/lProductMeal.service.ts
 api/meals.service.ts
 api/products.service.ts
 api/refreshToken.service.ts
@@ -25,8 +26,10 @@ model/getBannerResponseModel.ts
 model/getUserResponseModel.ts
 model/mealModel.ts
 model/mealProductInfoGenModel.ts
+model/mealProductParam.ts
 model/models.ts
 model/passwordUpdate.ts
+model/productMealInfoModel.ts
 model/refreshTokenRequest.ts
 model/refreshTokenResponse.ts
 model/roleModel.ts
