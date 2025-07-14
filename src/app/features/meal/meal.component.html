@@ -2,29 +2,40 @@
   <mat-card-header class="d-flex justify-content-between">
     <mat-card-title class="m-b-0">Faire mes repas</mat-card-title>
   </mat-card-header>
-  <mat-card-content class="b-t-1 d-grid">
+  <mat-card-content class="b-t-1 d-flex flex-column">
     <div class="m-16">
       <h3>Journée du {{ selectedDate }}</h3>
     </div>
-    <div class="d-flex justify-content-center gap-24">
-      <mat-card class="cardWithShadow theme-card aw-400 shadow">
+    <div class="d-flex justify-content-center align-items-center gap-24 hstack">
+      <mat-card class="cardWithShadow theme-card shadow aw-300 h-fit-content">
         <mat-calendar
           (selectedChange)="onDateChange($event!)"
           [dateClass]="dateClass"
+          [selected]="selectedDateDate!"
         >
         </mat-calendar>
       </mat-card>
-      <mat-card class="cardWithShadow theme-card shadow">
-        <mat-card-header class="d-flex justify-content-between">
+      <mat-card class="cardWithShadow theme-card shadow h-webkit">
+        <mat-card-header
+          class="d-flex justify-content-between align-items-center"
+        >
           <mat-card-title class="m-b-0"
             >A quelle heure j'ai mangé ?</mat-card-title
           >
+          <button mat-icon-button (click)="expandEdit = !expandEdit">
+            @if(expandEdit){
+            <i-tabler name="layout-sidebar-right-expand"></i-tabler>
+            } @else {
+
+            <i-tabler name="layout-sidebar-left-expand"></i-tabler>
+            }
+          </button>
         </mat-card-header>
         <mat-card-content
           class="b-t-1 d-flex flex-column gap-16 justify-content-between h-webkit"
         >
           <form
-            class="d-flex gap-16 align-items-end"
+            class="d-flex flex-column gap-16 align-items-end"
             [formGroup]="mealCreateForm"
           >
             <div class="d-flex flex-column gap-16">
@@ -75,9 +86,18 @@
               </div>
             </button>
           </form>
-          <mat-divider></mat-divider>
+        </mat-card-content>
+      </mat-card>
+      @if(expandEdit){
+      <mat-card class="cardWithShadow theme-card shadow">
+        <mat-card-header
+          class="d-flex justify-content-between align-items-center"
+        >
+          <mat-card-title class="m-b-0">Gérer les repas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 w-max-content">
           <form
-            class="d-flex gap-16 align-items-end"
+            class="d-flex flex-column align-items-end"
             [formGroup]="mealEditForm"
           >
             <div class="d-flex flex-column gap-16">
@@ -119,7 +139,6 @@
             <button
               mat-fab
               extended
-              class="m-b-16"
               [ngClass]="
                 this.mealEditChipsControl.value &&
                 this.timeEditMealControl.value
@@ -140,9 +159,9 @@
               </div>
             </button>
           </form>
-          <mat-divider></mat-divider>
+          <mat-divider class="m-y-16"></mat-divider>
           <form
-            class="d-flex align-items-center gap-16"
+            class="d-flex flex-column align-items-end gap-16"
             [formGroup]="mealDeleteForm"
           >
             <mat-chip-listbox [formControlName]="MEAL_DELETE_SELECT_CHIP">
@@ -175,7 +194,7 @@
                   ? 'bg-light-error text-error'
                   : 'bg-light text-dark'
               "
-              (click)="deleteMeal()"
+              (click)="openDeletePopIn()"
               [disabled]="!this.mealDeleteChipControl.value"
             >
               <div class="d-flex align-items-center">
@@ -186,14 +205,15 @@
           </form>
         </mat-card-content>
       </mat-card>
-      <mat-card class="cardWithShadow theme-card shadow">
+      }
+      <mat-card class="cardWithShadow theme-card shadow h-webkit">
         <mat-card-header class="d-flex justify-content-between">
           <mat-card-title class="m-b-0">J'ai mangé quoi ?</mat-card-title>
         </mat-card-header>
-        <mat-card-content class="b-t-1 d-flex gap-24">
+        <mat-card-content class="b-t-1 d-flex gap-24 w-max-content">
           <form
             [formGroup]="mealProductForm"
-            class="d-flex flex-column align-items-center gap-24"
+            class="d-flex align-items-center gap-24"
           >
             <div class="d-flex flex-column justify-content-center">
               <app-search-product-autocomplete
@@ -284,8 +304,9 @@
     </div>
 
     <app-table-product-meal
-      class="d-flex justify-content-center gap-16"
+      class="d-flex justify-content-center gap-16 hstack"
       #tableProductMealComponent
+      [meal]="selectedDeleteMeal!"
       [mealProduct]="mealProduct!"
       (eventMealProductsBreakfast)="onMealProductsBreakfastChange($event)"
       (eventMealProductsLunch)="onMealProductsLunchChange($event)"

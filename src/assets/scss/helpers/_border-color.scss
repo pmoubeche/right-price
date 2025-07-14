@@ -11,8 +11,12 @@
 }
 
 // Including the mixin with variables and CSS variables
-@include syntax-colors2($primary: var(--mat-sys-primary),
+@include syntax-colors2(
+  $primary: var(--mat-sys-primary),
   $secondary: var(--mat-sys-secondary),
   $success: $success,
   $warning: $warning,
-  $error: var(--mat-sys-error));
+  $error: var(--mat-sys-error),
+  $dark: $dark,
+  $light: $light
+);

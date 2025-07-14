@@ -19,20 +19,17 @@ import {
   TableColumnParamModel,
 } from '../../../shared/model/table-column-param.model';
 import { MealService } from '../meal.service';
-import { LProductMealService } from '../../../../generated';
+import { LProductMealService, MealModel } from '../../../../generated';
 import { ButtonParam } from '../../../shared/model/button-param';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-table-product-meal',
-  imports: [MaterialModule, TableGenericComponent],
+  imports: [MaterialModule, TableGenericComponent, CommonModule],
   templateUrl: './table-product-meal.component.html',
   styleUrl: './table-product-meal.component.scss',
 })
 export class TableProductMealComponent implements OnInit, OnDestroy {
-  isExpandedBreakfast = false;
-  isExpandedLunch = false;
-  isExpandedDinner = false;
-
   dateBreakfast?: string;
   dateLunch?: string;
   dateDinner?: string;
@@ -50,6 +47,16 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
 
   get mealProduct() {
     return this._mealProduct!;
+  }
+
+  @Input() set meal(meal: MealModel) {
+    this.initDataMealsOnInitAndDateChange();
+  }
+
+  _meal?: MealModel;
+
+  get meal() {
+    return this._meal!;
   }
 
   public mealProductsBreakfast: MealProductInfoModel[] = [];
@@ -115,7 +122,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
     },
     {
       id: '4',
-      label: 'Quantité (g)',
+      label: 'Qté (g)',
       columDef: 'quantity',
       type: ColumnTypeParamEnum.NUMBER,
       colWidth: '6rem',
@@ -127,7 +134,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       label: 'Actions',
       columDef: ColumnTypeParamEnum.ACTIONS,
       type: ColumnTypeParamEnum.ACTIONS,
-      colWidth: '6rem',
+      colWidth: '3rem',
       padding: '0px',
       sortable: false,
     },
@@ -151,6 +158,9 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
   }
 
   private initDataMealsOnInitAndDateChange() {
+    this.dateBreakfast = '';
+    this.dateLunch = '';
+    this.dateDinner = '';
     this.subscription.add(
       this.mealService.dateSelected$
         .pipe(
@@ -199,7 +209,6 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
           new MatTableDataSource<MealProductInfoModel>(
             this.mealProductsBreakfast
           );
-        this.isExpandedBreakfast = true;
         this.dateBreakfast = date
           .getUTCHours()
           .toString()
@@ -212,7 +221,6 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
         this.mealProductsLunch.push(mealProduct);
         this.dataSourceLunch.dataSource =
           new MatTableDataSource<MealProductInfoModel>(this.mealProductsLunch);
-        this.isExpandedLunch = true;
         this.dateLunch = date
           .getUTCHours()
           .toString()
@@ -225,7 +233,6 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
         this.mealProductsDinner.push(mealProduct);
         this.dataSourceDinner.dataSource =
           new MatTableDataSource<MealProductInfoModel>(this.mealProductsDinner);
-        this.isExpandedDinner = true;
         this.dateDinner = date
           .getUTCHours()
           .toString()
@@ -247,7 +254,6 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
             mealProduct.idProduct !== mealProductFromList.idProduct
         );
         if (this.mealProductsBreakfast.length === 0) {
-          this.isExpandedBreakfast = false;
         }
         break;
       case 'lunch':
@@ -256,7 +262,6 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
             mealProduct.idProduct !== mealProductFromList.idProduct
         );
         if (this.mealProductsLunch.length === 0) {
-          this.isExpandedLunch = false;
         }
         break;
       case 'dinner':
@@ -265,7 +270,6 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
             mealProduct.idProduct !== mealProductFromList.idProduct
         );
         if (this.mealProductsDinner.length === 0) {
-          this.isExpandedDinner = false;
         }
         break;
       default:

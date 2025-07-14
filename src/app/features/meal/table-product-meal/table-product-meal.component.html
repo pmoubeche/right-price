@@ -1,8 +1,14 @@
-<mat-card class="cardWithShadow theme-card border-success shadow">
+<mat-card
+  class="cardWithShadow theme-card shadow"
+  [ngClass]="
+    mealProductsBreakfast.length > 0 ? 'border-success ' : 'border-light'
+  "
+>
   <mat-card-header class="d-flex justify-content-between">
-    <mat-card-title class="m-b-0"
-      >Petit déjeuner ({{ dateBreakfast ?? "No time" }})</mat-card-title
-    >
+    <mat-card-title class="m-b-0">Petit déjeuner </mat-card-title>
+    @if(dateBreakfast){
+    <mat-card-title class="m-b-0"> {{ dateBreakfast }}</mat-card-title>
+    }
   </mat-card-header>
   <mat-card-content class="b-t-1 d-grid">
     <app-table-generic
@@ -16,11 +22,15 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card class="cardWithShadow theme-card border-primary shadow">
+<mat-card
+  class="cardWithShadow theme-card shadow"
+  [ngClass]="mealProductsLunch.length > 0 ? 'border-primary ' : 'border-light'"
+>
   <mat-card-header class="d-flex justify-content-between">
-    <mat-card-title class="m-b-0"
-      >Déjeuner ({{ dateLunch ?? "No time" }})</mat-card-title
-    >
+    <mat-card-title class="m-b-0">Déjeuner </mat-card-title>
+    @if(dateLunch){
+    <mat-card-title class="m-b-0"> {{ dateLunch }}</mat-card-title>
+    }
   </mat-card-header>
   <mat-card-content class="b-t-1 d-grid">
     <app-table-generic
@@ -34,11 +44,15 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card class="cardWithShadow theme-card border-warning shadow">
+<mat-card
+  class="cardWithShadow theme-card shadow"
+  [ngClass]="mealProductsDinner.length > 0 ? 'border-warning ' : 'border-light'"
+>
   <mat-card-header class="d-flex justify-content-between">
-    <mat-card-title class="m-b-0"
-      >Diner ({{ dateDinner ?? "No time" }})</mat-card-title
-    >
+    <mat-card-title class="m-b-0">Diner </mat-card-title>
+    @if(dateDinner){
+    <mat-card-title class="m-b-0"> {{ dateDinner }}</mat-card-title>
+    }
   </mat-card-header>
   <mat-card-content class="b-t-1 d-flex flex-column">
     <app-table-generic

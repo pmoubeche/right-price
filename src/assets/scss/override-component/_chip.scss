@@ -1,8 +1,31 @@
 @use "sass:map";
 @use "@angular/material" as mat;
+@use "variables" as *;
 
 @include mat.chips-overrides(
   (
     focus-state-layer-color: var(--mat-option-focus-state-layer-color),
   )
 );
+
+.custom-chip {
+  height: auto !important;
+  padding: 8px 0px !important;
+
+  .chip-content {
+    line-height: 1.2;
+  }
+
+  .chip-label {
+    font-weight: 600;
+  }
+
+  .chip-time {
+    font-size: 0.75rem;
+    color: gray;
+  }
+}
+
+.mdc-evolution-chip-set__chips {
+  flex-wrap: nowrap;
+}

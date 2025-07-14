@@ -85,7 +85,7 @@
           [matMenuTriggerFor]="menu"
           (click)="onClickMoreActions($event)"
         >
-          <i-tabler class="icon-20 m-r-8" name="dots-vertical"></i-tabler>
+          <i-tabler name="dots-vertical"></i-tabler>
         </button>
         <mat-menu #menu="matMenu">
           @for (button of buttons; track $index) { @if (button.isEditField) {

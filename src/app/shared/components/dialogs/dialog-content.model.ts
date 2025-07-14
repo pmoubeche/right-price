@@ -5,6 +5,7 @@ export class DialogContentModel extends MatDialogConfig {
   component?: Component;
   title?: string;
   message?: string;
+  confirm?: () => void;
   buttons?: ButtonAction[];
 }
 

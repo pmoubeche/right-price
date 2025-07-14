@@ -74,7 +74,6 @@ import {
     CardProductComponent,
   ],
   templateUrl: './meal.component.html',
-  styleUrl: './meal.component.scss',
   providers: [
     provideNativeDateAdapter(),
     {
@@ -175,6 +174,10 @@ export class MealComponent implements OnInit, OnDestroy {
   timeCreate?: { hours: number; minutes: number };
   timeEdit?: { hours: number; minutes: number };
   selectedDate?: string;
+  selectedDateDate?: Date;
+  //only for table-meal-prodcut updates
+  selectedDeleteMeal?: MealModel;
+  expandEdit = false;
 
   @ViewChild('tableProductMealComponent')
   tableProductMealComponent!: TableProductMealComponent;
@@ -254,8 +257,7 @@ export class MealComponent implements OnInit, OnDestroy {
     private readonly lProductMealApiService: LProductMealService,
     private readonly mealApiService: MealsService,
     private readonly popInService: DialogGenericService,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly cd: ChangeDetectorRef
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -364,7 +366,7 @@ export class MealComponent implements OnInit, OnDestroy {
       );
       if (index > -1) {
         if (meDates[index]) {
-          classApplied = 'highlight-date';
+          classApplied = 'highlight-date-success';
         }
       }
       return classApplied;
@@ -372,16 +374,10 @@ export class MealComponent implements OnInit, OnDestroy {
     return classApplied;
   };
 
-  onHttpProductsChange(httpProducts: ResponseProducts): void {
-    this.httpProducts = httpProducts;
-  }
-
-  onHttpProductChange(httpProduct: ResponseProduct): void {
-    this.httpProduct = httpProduct;
-  }
-
   onDateChange(event: Date) {
     this.selectedDate = DateUtils.formatDate(event);
+    this.selectedDateDate = event;
+    this.selectedDeleteMeal = {};
     this.getMealsByDate();
     this.mealService.dateSelectedBs.next(DateUtils.formatDate(event));
   }
@@ -416,8 +412,9 @@ export class MealComponent implements OnInit, OnDestroy {
         .pipe(
           tap((_) => {
             this.getMealsByDate();
-            this.mealCreateChipsControl.setValue('');
+            this.mealCreateChipsControl.reset();
             this.timeCreateMealControl.reset();
+            this.timeCreateMealControl.untouched;
           })
         )
         .subscribe()
@@ -440,12 +437,38 @@ export class MealComponent implements OnInit, OnDestroy {
         .pipe(
           tap((_) => {
             this.getMealsByDate();
-            this.mealEditChipsControl.setValue('');
+            this.mealEditChipsControl.reset();
             this.timeEditMealControl.reset();
+            this.timeEditMealControl.untouched;
           })
         )
         .subscribe()
     );
+  }
+
+  openDeletePopIn(): void {
+    const meals = [
+      this.mealProductsBreakfast,
+      this.mealProductsLunch,
+      this.mealProductsDinner,
+    ];
+
+    const hasSelectedMealProductsInIt = meals.some(
+      (mp) =>
+        mp.length > 0 &&
+        mp[0].mealType === this.mealDeleteChipControl.value.mealType
+    );
+
+    const messagePopIn =
+      'En supprimant le repas, tous les aliments qui y sont contenus le seront également, continuer ?';
+
+    if (hasSelectedMealProductsInIt) {
+      this.popInService.openConfirmDialog('Attention', messagePopIn, () =>
+        this.deleteMeal()
+      );
+    } else {
+      this.deleteMeal();
+    }
   }
 
   deleteMeal(): void {
@@ -454,8 +477,9 @@ export class MealComponent implements OnInit, OnDestroy {
         .deleteMeal(this.mealDeleteChipControl.value.id)
         .pipe(
           tap((_) => {
+            this.selectedDeleteMeal = this.mealDeleteChipControl.value;
             this.getMealsByDate();
-            this.mealDeleteChipControl.setValue('');
+            this.mealDeleteChipControl.reset();
           })
         )
         .subscribe()
@@ -491,6 +515,7 @@ export class MealComponent implements OnInit, OnDestroy {
                   this.productInfoModelSelected?.image;
                 this.mealProduct.nutriscore =
                   this.productInfoModelSelected?.nutriscore;
+                this.mealAddProdcutChipControl.reset();
               })
             )
             .subscribe()

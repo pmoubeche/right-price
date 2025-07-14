@@ -10,11 +10,7 @@
         class="menu-list-item"
         (click)="onItemSelected(item)"
       >
-        <i-tabler
-          class="routeIcon"
-          name="{{ item.icon }}"
-          matListItemIcon
-        ></i-tabler>
+        <i-tabler name="{{ item.icon }}" matListItemIcon></i-tabler>
         <span class="hide-menu" matListItemTitle>{{ item.title }}</span>
       </a>
       } @for (item of listItemsSuscribers; track $index) {
@@ -28,7 +24,6 @@
         [disabled]="!item.enabled"
       >
         <i-tabler
-          class="routeIcon"
           name="{{ !item.enabled ? 'lock' : item.icon }}"
           matListItemIcon
         ></i-tabler>

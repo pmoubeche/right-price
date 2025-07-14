@@ -94,6 +94,21 @@ html {
   }
 
   .shadow {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .highlight-date-success {
+    background-color: $light-success !important;
+    border-radius: 25px;
+  }
+
+  .highlight-date-primary {
+    background-color: $light-primary !important;
+    border-radius: 25px;
+  }
+
+  .highlight-date-warning {
+    background-color: $light-warning !important;
+    border-radius: 25px;
   }
 }

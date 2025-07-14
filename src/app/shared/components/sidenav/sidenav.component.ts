@@ -111,7 +111,7 @@ export class SidenavComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
-
+    this.sidenav?.toggle();
     this.sideNavService.sideNavToggleSubject.subscribe(() => {
       this.sidenav?.toggle();
     });
