@@ -27,7 +27,6 @@ import { CommonModule } from '@angular/common';
   selector: 'app-table-product-meal',
   imports: [MaterialModule, TableGenericComponent, CommonModule],
   templateUrl: './table-product-meal.component.html',
-  styleUrl: './table-product-meal.component.scss',
 })
 export class TableProductMealComponent implements OnInit, OnDestroy {
   dateBreakfast?: string;

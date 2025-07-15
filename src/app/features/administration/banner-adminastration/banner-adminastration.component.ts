@@ -34,6 +34,7 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../../shared/model/table-column-param.model';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
   selector: 'app-banner-adminastration',
@@ -42,6 +43,7 @@ import {
     ReactiveFormsModule,
     FormsModule,
     TableGenericComponent,
+    TablerIconsModule,
   ],
   templateUrl: './banner-adminastration.component.html',
   styleUrl: './banner-adminastration.component.scss',

@@ -24,6 +24,7 @@ $spacers: (
   30: 30px,
   32: $spacer * 2,
   48: $spacer * 3,
+  60: $spacer * 4,
 ) !default;
 $negative-spacers: negativify-map($spacers) !default;
 
@@ -47,6 +48,7 @@ $radius: (
   8: $radius-base * 2,
   12: $radius-base * 3,
   16: $radius-base * 4,
+  20: $radius-base * 5,
   full: 9999px,
 ) !default;
 

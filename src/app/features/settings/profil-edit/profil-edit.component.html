@@ -1,38 +1,39 @@
-<div style="display: flex">
-  <mat-expansion-panel style="width: 25%; margin: 1rem" [expanded]="true">
-    <br />
-    <br />
-    <div style="display: grid; justify-items: center">
-      @if(user.image){
-      <img [src]="user.image" style="height: 10rem; border-radius: 5rem" />
-      } @else {
-      <button
-        mat-fab
-        color="accent"
-        [disabled]="true"
-        style="height: 10rem; width: 10rem"
-      >
-        <mat-icon style="height: 5rem; width: 5rem">person</mat-icon>
-      </button>
-      }
-      <button
-        mat-mini-fab
-        color="accent"
-        style="margin-left: 6rem; margin-top: -2rem"
-        (click)="openPopInAvatar()"
-      >
-        <mat-icon>edit</mat-icon>
-      </button>
-      <br />
-      <span>{{ user.username }}</span>
-    </div>
-  </mat-expansion-panel>
-  <mat-divider [vertical]="true"></mat-divider>
-  <mat-expansion-panel style="width: 70%; margin: 1rem" [expanded]="true">
-    <br />
-    <br />
-    <form [formGroup]="editProfilForm!" style="display: grid">
-      <mat-form-field class="fields" appearance="outline">
+<mat-card class="shadow aw-540 position-absolute">
+  <mat-card-header class="d-flex justify-content-between p-0 m-0">
+    <img
+      class="aw-540 m-l--24 m-t--24 r-t-r-7 r-t-l-7"
+      mat-card-image
+      src="../../../../assets/svg/profilebg.jpg"
+    />
+  </mat-card-header>
+  <div
+    class="d-flex justify-content-center align-items-end m-t--60 position-relative"
+  >
+    @if(user.image){
+    <img
+      [src]="user.image"
+      class="aw-100 rounded-circle border-primary bg-light"
+    />
+    } @else {
+    <button
+      mat-fab
+      color="accent"
+      [disabled]="true"
+      style="height: 10rem; width: 10rem"
+    >
+      <mat-icon style="height: 5rem; width: 5rem">person</mat-icon>
+    </button>
+    }
+    <button class="m-l--24" mat-mini-fab (click)="openPopInAvatar()">
+      <i-tabler class="icon-20 m-r-4" name="pencil-bolt"></i-tabler>
+    </button>
+  </div>
+  <mat-card-content class="m-t--48">
+    <form
+      [formGroup]="editProfilForm!"
+      class="m-t-60 gap-16 d-flex flex-wrap-wrap"
+    >
+      <mat-form-field appearance="outline">
         <mat-label>Nom</mat-label>
         <input
           matInput
@@ -41,8 +42,7 @@
           [value]="user.name"
         />
       </mat-form-field>
-      <br />
-      <mat-form-field class="fields" appearance="outline">
+      <mat-form-field appearance="outline">
         <mat-label>Prenom</mat-label>
         <input
           matInput
@@ -51,8 +51,7 @@
           [value]="user.firstname"
         />
       </mat-form-field>
-      <br />
-      <mat-form-field class="fields" appearance="outline">
+      <mat-form-field appearance="outline">
         <mat-label>Nom d'utilisateur</mat-label>
         <input
           matInput
@@ -61,8 +60,7 @@
           [value]="user.username"
         />
       </mat-form-field>
-      <br />
-      <mat-form-field class="fields" appearance="outline">
+      <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input
           matInput
@@ -71,8 +69,7 @@
           [value]="user.email"
         />
       </mat-form-field>
-      <br />
-      <mat-form-field class="fields" appearance="outline">
+      <mat-form-field appearance="outline">
         <mat-label>Taille</mat-label>
         <input
           matInput
@@ -81,8 +78,7 @@
           [value]="user.height"
         />
       </mat-form-field>
-      <br />
-      <mat-form-field class="fields" appearance="outline">
+      <mat-form-field appearance="outline">
         <mat-label>Poids</mat-label>
         <input
           matInput
@@ -91,7 +87,6 @@
           [value]="user.name"
         />
       </mat-form-field>
-      <br />
       <mat-form-field appearance="outline">
         <mat-label>Genre</mat-label>
         <mat-select
@@ -104,10 +99,15 @@
         </mat-select>
       </mat-form-field>
     </form>
-    <br />
-    <button mat-flat-button color="accent" (click)="updateUser()">
-      <mat-icon>person</mat-icon>
-      Modifier
+    <button
+      class="m-r-8 text-success bg-light-success"
+      mat-flat-button
+      (click)="updateUser()"
+    >
+      <div class="d-flex align-items-center">
+        <i-tabler class="icon-20 m-r-4" name="user-edit"></i-tabler
+        ><span class="m-4">Modifier</span>
+      </div>
     </button>
-  </mat-expansion-panel>
-</div>
+  </mat-card-content>
+</mat-card>

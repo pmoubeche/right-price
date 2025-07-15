@@ -18,6 +18,8 @@ import {
 } from '../../../shared/components/dialogs/dialog-generic.service';
 import { Gender } from '../../../shared/model/gender.model';
 import { AuthServiceFront } from '../../../shared/services/auth-front.service';
+import { CommonModule } from '@angular/common';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 export enum GenderEnum {
   MALE = 'male',
@@ -27,9 +29,14 @@ export enum GenderEnum {
 
 @Component({
   selector: 'app-profil-edit',
-  imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    TablerIconsModule,
+  ],
   templateUrl: './profil-edit.component.html',
-  styleUrl: './profil-edit.component.scss',
 })
 export class ProfilEditComponent implements OnInit, OnDestroy {
   readonly USERNAME_FIELD = 'username';

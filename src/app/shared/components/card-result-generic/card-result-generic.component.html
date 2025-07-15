@@ -9,12 +9,8 @@
   </p>
 </div>
 } @else {
-<div class="d-grid justify-items-center">
-  <div
-    class="position-relative"
-    [ngClass]="isLineDisposal ? 'card-wrapper-line' : 'card-wrapper-table'"
-    style="--nb: {{ countProductPerLine }}"
-  >
+<div class="d-flex flex-column justify-items-center">
+  <div class="position-relative d-flex flex-wrap-wrap justify-content-center">
     @if(isLoading$ | async){
     <div class="spinner-overlay">
       <mat-spinner diameter="50"></mat-spinner>

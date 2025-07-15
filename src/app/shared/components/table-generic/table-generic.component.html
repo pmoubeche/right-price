@@ -72,7 +72,8 @@
           [ngStyle]="{ height: rowHeight }"
           style="display: flex; align-items: center"
         >
-          @if(element[column.columDef!].startsWith('--')){
+          @if(element[column.columDef!] &&
+          element[column.columDef!].startsWith('--')){
           <i-tabler class="icon-20 m-r-8" name="corner-down-right"></i-tabler>
           }
           {{ element[column.columDef!] | tableChildrenLine }}

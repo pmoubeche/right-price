@@ -30,3 +30,10 @@ export const RolesConstants: RoleModel[] = [
   RoleTier2,
   RoleAdmin,
 ];
+
+export const RolesConstantsHierachy: RoleModel[] = [
+  RoleAdmin,
+  RoleTier2,
+  RoleTier1,
+  RoleGuest,
+];

@@ -36,8 +36,12 @@ $utilities: (
   ),
   "flex-wrap": (
     property: flex-wrap,
-    class: flex,
-    values: wrap nowrap wrap-reverse,
+    class: flex-wrap,
+    values: (
+      wrap: wrap,
+      nowrap: nowrap,
+      wrap-reverse: wrap-reverse,
+    ),
   ),
   "justify-content": (
     property: justify-content,

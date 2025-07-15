@@ -229,6 +229,8 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   cgmChartLineData?: ChartData;
 
   public selectedDate!: Date | null;
+  public selectedDateString?: string;
+
   public deviceSelected!: string;
   public deviceForm!: FormGroup;
 
@@ -319,6 +321,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   };
 
   onSelectedDate(date: Date): void {
+    this.selectedDateString = DateUtils.formatDate(date);
     this.resetDatasOnChange();
     this.getCgmData(date);
     this.getMealProductsInfos(date);
@@ -577,68 +580,38 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
       this.cgmImportServiceApi
         .existDataInDbFromCsv(this.deviceSelected, this.fileSelected)
         .pipe(
-          switchMap(
-            (res) => {
-              if (res) {
-                this.dialogService.openDialog(CodeModaleEnum.CSV_IMPORT, [
-                  this.fileSelected,
-                  this.deviceSelected,
-                ]);
-                return EMPTY;
-              } else {
-                this.glucoseMonitoringService.isImportButtonLoadingBs.next(
-                  true
+          switchMap((res) => {
+            if (res) {
+              this.dialogService.openDialog(CodeModaleEnum.CSV_IMPORT, [
+                this.fileSelected,
+                this.deviceSelected,
+              ]);
+              return EMPTY;
+            } else {
+              this.glucoseMonitoringService.isImportButtonLoadingBs.next(true);
+              return this.cgmImportServiceApi
+                .importGgmFromOrigin(this.deviceSelected, this.fileSelected)
+                .pipe(
+                  tap(() => {
+                    this.snackbarService.success(
+                      'Import de données effectué avec succès'
+                    );
+                    this.glucoseMonitoringService.isImportButtonLoadingBs.next(
+                      false
+                    );
+                  }),
+                  catchError(() => {
+                    this.snackbarService.error(
+                      "Une erreur est survenue lors de l'import"
+                    );
+                    this.glucoseMonitoringService.isImportButtonLoadingBs.next(
+                      false
+                    );
+                    return EMPTY;
+                  })
                 );
-                return this.cgmImportServiceApi
-                  .importGgmFromOrigin(this.deviceSelected, this.fileSelected)
-                  .pipe(
-                    tap(() => {
-                      this.snackbarService.success(
-                        'Import de données effectué avec succès'
-                      );
-                      this.glucoseMonitoringService.isImportButtonLoadingBs.next(
-                        false
-                      );
-                    }),
-                    catchError(() => {
-                      this.snackbarService.error(
-                        "Une erreur est survenue lors de l'import"
-                      );
-                      this.glucoseMonitoringService.isImportButtonLoadingBs.next(
-                        false
-                      );
-                      return EMPTY;
-                    })
-                  );
-              }
             }
-            // res
-            //   ? of(true).pipe(
-            //       tap(() =>
-            //         this.dialogService.openDialog(CodeModaleEnum.CSV_IMPORT, [
-            //           this.fileSelected,
-            //           this.deviceSelected,
-            //         ])
-            //       )
-            //     )
-            //   : this.cgmImportServiceApi
-            //       .importGgmFromOrigin(this.deviceSelected, this.fileSelected)
-            //       .pipe(
-            //         tap(() => {
-            //           this.snackbarService.success(
-            //             'Import de données effectué avec succès'
-            //           );
-            //           this.isImportButtonLoadingBs.next(false);
-            //         }),
-            //         catchError(() => {
-            //           this.snackbarService.error(
-            //             "Une erreur est survenue lors de l'import"
-            //           );
-            //           this.isImportButtonLoadingBs.next(false);
-            //           return EMPTY;
-            //         })
-            //       )
-          )
+          })
         )
         .subscribe()
     );

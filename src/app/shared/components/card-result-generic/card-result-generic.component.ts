@@ -19,7 +19,6 @@ export class CardResultGenericComponent implements OnInit {
   public isLoading$ = this.cardResultGenericService.getIsLoading();
 
   @Input() isLineDisposal = false;
-  @Input() countProductPerLine = 6;
   productsAttributesToDisplay: ProductInfosModel[] = [];
 
   private _httpProducts!: ResponseProducts;

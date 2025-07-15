@@ -20,12 +20,19 @@ import { MaterialModule } from '../../../shared/material/material.module';
 import { Gender } from '../../../shared/model/gender.model';
 import { RoleModel } from '../../../shared/model/role.model';
 import { GenderEnum } from '../../settings/profil-edit/profil-edit.component';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-edit',
-  imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    TablerIconsModule,
+  ],
   templateUrl: './user-edit.component.html',
-  styleUrl: './user-edit.component.scss',
 })
 export class UserEditComponent {
   readonly USERNAME_FIELD = 'username';

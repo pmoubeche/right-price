@@ -9,12 +9,18 @@ import { MaterialModule } from '../../material/material.module';
 import { RoleModel } from '../../model/role.model';
 import { AuthServiceFront } from '../../services/auth-front.service';
 import { ContextService } from '../../services/context.service';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
   selector: 'app-profile',
-  imports: [MaterialModule, AvatarModule, CommonModule, RouterLink],
+  imports: [
+    MaterialModule,
+    AvatarModule,
+    CommonModule,
+    RouterLink,
+    TablerIconsModule,
+  ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
 })
 export class ProfileComponent {
   public user$ = this.contextService.getCurrentUser();

@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TableChildrenLinePipe implements PipeTransform {
   transform(value: string): string {
-    if (value.startsWith('--')) {
+    if (value && value.startsWith('--')) {
       return value.replace('--', '');
     }
 

@@ -1,87 +1,88 @@
-<div style="display: flex; justify-content: end">
-  <button
-    mat-fab
-    extended
-    color="accent"
-    style="display: flex; justify-content: end"
-    (click)="createBanner()"
-  >
-    <mat-icon>library_add</mat-icon>
-    Créer une bannière
-  </button>
-</div>
-<br />
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header>
-    Filtres de recherche de bannières
-  </mat-expansion-panel-header>
-  <form
-    [formGroup]="filterForm!"
-    style="display: flex; justify-content: space-evenly; flex-wrap: wrap"
-  >
-    <mat-form-field class="fields" appearance="outline">
-      <mat-label>Message</mat-label>
-      <input matInput type="text" [formControlName]="MESSAGE_FIELD" />
-    </mat-form-field>
-    <mat-form-field class="fields" appearance="outline">
-      <mat-label>Plage de dates</mat-label>
-      <mat-date-range-input [rangePicker]="picker">
-        <input matStartDate [formControlName]="DATE_CREATION_START_FIELD" />
-        <input matEndDate [formControlName]="DATE_CREATION_END_FIELD" />
-      </mat-date-range-input>
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
-    <mat-form-field class="fields" appearance="outline">
-      <mat-label>Statut</mat-label>
-      <mat-select
-        [formControlName]="TYPE_FIELD"
-        [compareWith]="compareCategoryObjects"
-        ngDefaultControl
-      >
-        @for (option of typesCodeLabels; track $index) {
-        <mat-option [value]="option.code">{{ option.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="fields" appearance="outline">
-      <mat-label>Statut</mat-label>
-      <mat-select
-        [formControlName]="STATUS_BANNER_FIELD"
-        [compareWith]="compareCategoryObjects"
-        ngDefaultControl
-      >
-        @for (option of statusCodeLabels; track $index) {
-        <mat-option [value]="option.value">{{ option.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-    <button mat-flat-button color="accent" (click)="search()">
-      <mat-icon>search</mat-icon>
-      Rechercher
+<mat-card class="shadow">
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0"
+      >Filtres de recherche de bannières</mat-card-title
+    >
+    <button
+      class="bg-light-success text-success"
+      mat-flat-button
+      (click)="createBanner()"
+    >
+      <div class="d-flex align-items-center">
+        <i-tabler class="icon-20 m-r-4" name="library-plus"></i-tabler
+        ><span class="m-4">Créer une bannière</span>
+      </div>
     </button>
-    <button mat-flat-button color="primary" (click)="reinitFilters()">
-      <mat-icon>settings_backup_restore</mat-icon>
-      Reinitialiser les filtres
-    </button>
-  </form>
-</mat-expansion-panel>
-<br />
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header
-    >Resultats de la recherche</mat-expansion-panel-header
-  >
-  <app-table-generic
-    [buttons]="buttonsParams"
-    [isPaginated]="true"
-    [columns]="paramsColums"
-    [paginatedDataSource]="bannersPaginated!"
-    [pageSizeOptions]="[10, 20, 50]"
-    (eventPageSizeChange)="changePageSize($event)"
-    (eventPageIndexChange)="changePageIndex($event)"
-    [rowHeight]="'4rem'"
-  ></app-table-generic>
-</mat-expansion-panel>
+  </mat-card-header>
+  <mat-card-content class="b-t-1 d-flex flex-column">
+    <form
+      [formGroup]="filterForm!"
+      class="d-flex justify-content-start flex-wrap-wrap gap-16"
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Message</mat-label>
+        <input matInput type="text" [formControlName]="MESSAGE_FIELD" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Plage de dates</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate [formControlName]="DATE_CREATION_START_FIELD" />
+          <input matEndDate [formControlName]="DATE_CREATION_END_FIELD" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Statut</mat-label>
+        <mat-select
+          [formControlName]="TYPE_FIELD"
+          [compareWith]="compareCategoryObjects"
+          ngDefaultControl
+        >
+          @for (option of typesCodeLabels; track $index) {
+          <mat-option [value]="option.code">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Statut</mat-label>
+        <mat-select
+          [formControlName]="STATUS_BANNER_FIELD"
+          [compareWith]="compareCategoryObjects"
+          ngDefaultControl
+        >
+          @for (option of statusCodeLabels; track $index) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button class="m-r-8" mat-flat-button (click)="search()">
+        <div class="d-flex align-items-center">
+          <i-tabler class="icon-20 m-r-4" name="search"></i-tabler
+          ><span class="m-4">Rechercher</span>
+        </div>
+      </button>
+
+      <button class="m-r-8" mat-button (click)="reinitFilters()">
+        <div class="d-flex align-items-center">
+          <i-tabler class="icon-20 m-r-4" name="restore"></i-tabler
+          ><span class="m-4">Reinitialiser les filtres</span>
+        </div>
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<app-table-generic
+  [buttons]="buttonsParams"
+  [isPaginated]="true"
+  [columns]="paramsColums"
+  [paginatedDataSource]="bannersPaginated!"
+  [pageSizeOptions]="[10, 20, 50]"
+  (eventPageSizeChange)="changePageSize($event)"
+  (eventPageIndexChange)="changePageIndex($event)"
+  [rowHeight]="'4rem'"
+></app-table-generic>

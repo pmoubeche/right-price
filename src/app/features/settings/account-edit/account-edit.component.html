@@ -1,87 +1,128 @@
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header
-    >Réinitialiser le mot de passe</mat-expansion-panel-header
-  >
-  <form
-    [formGroup]="passwordChangeForm!"
-    style="display: grid; justify-items: start"
-  >
-    <mat-form-field class="fields" appearance="outline">
-      <mat-label>Modifier mot de passe</mat-label>
-      <input
-        matInput
-        [type]="hidePassword ? 'password' : 'text'"
-        [formControlName]="NEW_PASSWORD_FIELD"
-        required
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="showPassword($event)"
-        [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hidePassword"
+<div class="d-flex justify-content-start gap-16">
+  <mat-card class="shadow">
+    <mat-card-header class="d-flex justify-content-between">
+      <mat-card-title class="m-b-0">Modifier mon mot de passe</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1 d-flex flex-column">
+      <form
+        [formGroup]="passwordChangeForm!"
+        style="display: grid; justify-items: start"
       >
-        <mat-icon>{{
-          hidePassword ? "visibility_off" : "visibility"
-        }}</mat-icon>
-      </button>
-      @if(newPasswordControl.invalid){
-      <mat-error>Champ obligatoire</mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field class="fields" appearance="outline">
-      <mat-label>Confirmer mot de passe</mat-label>
-      <input
-        matInput
-        [type]="hidePassword ? 'password' : 'text'"
-        [formControlName]="CONFIRM_PASSWORD_FIELD"
-        required
-      />
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Modifier mot de passe</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            [formControlName]="NEW_PASSWORD_FIELD"
+            required
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="showPassword($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          @if(newPasswordControl.invalid){
+          <mat-error>Champ obligatoire</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Confirmer mot de passe</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            [formControlName]="CONFIRM_PASSWORD_FIELD"
+            required
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="showPassword($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          @if(confirmPasswordControl.invalid){
+          <mat-error>Champ obligatoire</mat-error>
+          }
+        </mat-form-field>
+        <button
+          mat-flat-button
+          class="bg-light-success text-success"
+          (click)="modifyPassword()"
+        >
+          Modifier mot de passe
+        </button>
+        <br />
+        <mat-divider></mat-divider>
+        <br />
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="shadow">
+    <mat-card-header class="d-flex justify-content-between">
+      <mat-card-title class="m-b-0">Agir sur mon compte</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1 d-flex flex-column gap-16">
       <button
-        mat-icon-button
-        matSuffix
-        (click)="showPassword($event)"
-        [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hidePassword"
+        mat-flat-button
+        class="bg-light-error text-error"
+        (click)="openPopInUnsubscribe()"
       >
-        <mat-icon>{{
-          hidePassword ? "visibility_off" : "visibility"
-        }}</mat-icon>
+        Se déabonner
       </button>
-      @if(confirmPasswordControl.invalid){
-      <mat-error>Champ obligatoire</mat-error>
-      }
-    </mat-form-field>
-    <button mat-flat-button color="accent" (click)="modifyPassword()">
-      Modifier mot de passe
-    </button>
-    <br />
-    <mat-divider></mat-divider>
-    <br />
-    <mat-form-field appearance="outline" class="fields">
-      <mat-label>Date de création du compte</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker"
-        [formControlName]="DATE_CREATION"
-        [value]="user.dateCreation"
-        ngDefaultControl
-        readonly
-      />
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </form>
-  <br />
-  <mat-divider></mat-divider>
-  <br />
-  <button mat-flat-button color="accent" (click)="openPopInUnsubscribe()">
-    Se déabonner
-  </button>
-  <br />
-  <br />
-  <mat-divider></mat-divider>
-  <br />
-  <button mat-flat-button color="warn" (click)="openPopInDeleteAccount()">
-    Supprimer le compte
-  </button>
-</mat-expansion-panel>
+      <mat-divider></mat-divider>
+      <button
+        mat-flat-button
+        class="bg-light-error text-error"
+        (click)="openPopInDeleteAccount()"
+      >
+        Supprimer le compte
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="shadow">
+    <mat-card-header class="d-flex justify-content-between">
+      <mat-card-title class="m-b-0">Informations</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1 d-flex flex-column">
+      <mat-form-field appearance="outline" class="fields">
+        <mat-label>Date de création du compte</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [value]="user.dateCreation"
+          ngDefaultControl
+          readonly
+        />
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="fields" appearance="outline">
+        <mat-label>Role</mat-label>
+        <input matInput readonly [value]="roleMax" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fields">
+        <mat-label>Actif jusqu'au</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [value]="user.dateSubEnds"
+          ngDefaultControl
+          readonly
+        />
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -15,24 +15,26 @@ import {
 } from '../../../shared/components/dialogs/dialog-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { ContextService } from '../../../shared/services/context.service';
+import { RoleUtils } from '../../../shared/utils/role.utils';
 
 @Component({
   selector: 'app-account-edit',
   imports: [MaterialModule, ReactiveFormsModule, FormsModule],
   templateUrl: './account-edit.component.html',
-  styleUrl: './account-edit.component.scss',
 })
 export class AccountEditComponent implements OnInit {
   readonly NEW_PASSWORD_FIELD = 'newPassword';
   readonly CONFIRM_PASSWORD_FIELD = 'confirmPassword';
-  readonly DATE_CREATION = 'dateCreation';
 
   currentUserId?: string;
+
+  roleMax?: string;
 
   @Input() set user(user: UserModel) {
     if (user) {
       this._user = user;
       this.initForm();
+      this.roleMax = RoleUtils.getHighestRoleFromRoles(user.roles!).code;
     }
   }
 
@@ -55,10 +57,6 @@ export class AccountEditComponent implements OnInit {
     ) as FormControl;
   }
 
-  get dateCreationControl(): FormControl {
-    return this.passwordChangeForm?.get(this.DATE_CREATION) as FormControl;
-  }
-
   hidePassword = true;
 
   constructor(
@@ -77,7 +75,6 @@ export class AccountEditComponent implements OnInit {
     this.passwordChangeForm = this.formBuilder.group({
       [this.NEW_PASSWORD_FIELD]: [''],
       [this.CONFIRM_PASSWORD_FIELD]: [''],
-      [this.DATE_CREATION]: [this.user ? this.user.dateCreation : ''],
     });
   }
 
