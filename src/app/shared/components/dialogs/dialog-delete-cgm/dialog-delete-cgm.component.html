@@ -1,29 +1,42 @@
 <h2 mat-dialog-title>{{ dialogParamData.title }}</h2>
-<mat-dialog-content
-  class="mat-typography"
-  style="display: flex; align-items: center"
->
+<mat-dialog-content class="d-flex flex-column align-items-center gap-24">
   {{ dialogParamData.message }}
-  <br />
-  <br />
-  <div style="display: flex; align-items: center">
-    <mat-card style="width: 300px">
-      <mat-calendar
-        (selectedChange)="_onSelectedChange($event!)"
-        [selected]="selectedDateRange!"
-        [dateClass]="dateClass"
-      >
-      </mat-calendar>
-    </mat-card>
-  </div>
+  <mat-card class="aw-300">
+    <mat-calendar
+      (selectedChange)="_onSelectedChange($event!)"
+      [selected]="selectedDateRange!"
+      [dateClass]="dateClass"
+    >
+    </mat-calendar>
+  </mat-card>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button color="warn" (click)="deleteDataCgm()" cdkFocusInitial>
-    <mat-label>Confirmer</mat-label>
-    <mat-icon> delete_permanantly</mat-icon>
+  <button
+    class="m-r-8"
+    mat-flat-button
+    (click)="deleteDataCgm()"
+    cdkFocusInitial
+    [ngClass]="
+      (isDeleteButtonLoading$ | async)
+        ? 'bg-light text-dark'
+        : 'bg-light-error text-error'
+    "
+    [disabled]="isDeleteButtonLoading$ | async"
+  >
+    <div class="d-flex align-items-center">
+      @if(isDeleteButtonLoading$ | async){
+      <mat-spinner class="spinner-color-dark" [diameter]="20"></mat-spinner>
+      } @else {
+      <i-tabler class="icon-20 m-r-4" name="trash-x"></i-tabler>
+      }
+      <span class="m-4">Confirmer</span>
+    </div>
   </button>
-  <button mat-button color="primary" mat-dialog-close cdkFocusInitial>
-    <mat-label>Fermer</mat-label>
-    <mat-icon>close</mat-icon>
+
+  <button class="m-r-8" mat-button mat-dialog-close cdkFocusInitial>
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="square-x"></i-tabler>
+      <span class="m-4">Fermer</span>
+    </div>
   </button>
 </mat-dialog-actions>

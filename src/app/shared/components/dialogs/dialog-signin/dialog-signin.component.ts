@@ -19,17 +19,18 @@ import {
   DialogGenericService,
 } from '../dialog-generic.service';
 import { AuthService, RefreshTokenResponse } from '../../../../../generated';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-dialog-signin',
-    imports: [
-        MaterialModule,
-        LoginGoogleComponent,
-        ReactiveFormsModule,
-        FormsModule,
-    ],
-    templateUrl: './dialog-signin.component.html',
-    styleUrl: './dialog-signin.component.scss'
+  selector: 'app-dialog-signin',
+  imports: [
+    MaterialModule,
+    LoginGoogleComponent,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
+  templateUrl: './dialog-signin.component.html',
+  styleUrl: './dialog-signin.component.scss',
 })
 export class DialogSigninComponent implements OnInit, OnDestroy {
   readonly EMAIL_INPUT = 'email';
@@ -67,7 +68,7 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
     private readonly dialogGenericService: DialogGenericService,
     private readonly authService: AuthService,
     private readonly authServiceFront: AuthServiceFront,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
     private readonly formBuilder: FormBuilder
   ) {}
 
@@ -111,7 +112,7 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
 
   public loginAndClosePopUp(res: RefreshTokenResponse): void {
     this.authServiceFront.logIn(res);
-    this.snackbarService.show('Vous etes connecté');
+    this.snackbarService.success('Vous etes connecté');
     this.dialogGenericService.close(CodeModaleEnum.SIGNIN, res);
   }
 

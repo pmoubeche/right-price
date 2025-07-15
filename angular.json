@@ -26,7 +26,11 @@
             "stylePreprocessorOptions": {
               "includePaths": ["src/assets/scss"]
             },
-            "styles": ["src/styles.scss", "src/assets/scss/style.scss"],
+            "styles": [
+              "src/styles.scss",
+              "src/assets/scss/style.scss",
+              "node_modules/ngx-toastr/toastr.css"
+            ],
             "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,

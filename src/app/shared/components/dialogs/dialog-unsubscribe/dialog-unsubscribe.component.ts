@@ -15,11 +15,12 @@ import {
 } from '../dialog-generic.service';
 import { TokenStorageService } from '../../../services/token-storage.service';
 import { AuthServiceFront } from '../../../services/auth-front.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-dialog-unsubscribe',
-    imports: [MaterialModule],
-    templateUrl: './dialog-unsubscribe.component.html'
+  selector: 'app-dialog-unsubscribe',
+  imports: [MaterialModule],
+  templateUrl: './dialog-unsubscribe.component.html',
 })
 export class DialogUnsubscribeComponent implements OnInit {
   subscription = new Subscription();
@@ -46,7 +47,7 @@ export class DialogUnsubscribeComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
     private readonly dialogService: DialogGenericService,
     private readonly contextService: ContextService,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
     private readonly subscriptionService: SubscriptionService,
     private readonly refreshTokenService: RefreshTokenService,
     private readonly tokenService: TokenStorageService,
@@ -73,7 +74,7 @@ export class DialogUnsubscribeComponent implements OnInit {
                       this.authFrontService.logIn(rtr);
                     })
                   );
-                this.snackbarService.show(
+                this.snackbarService.success(
                   'Votre désabonnement à été effectué avec succés'
                 );
               })

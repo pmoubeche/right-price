@@ -23,17 +23,18 @@ import {
   RefreshTokenResponse,
   UserRequest,
 } from '../../../../../generated';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-dialog-signup',
-    imports: [
-        MaterialModule,
-        LoginGoogleComponent,
-        ReactiveFormsModule,
-        FormsModule,
-    ],
-    templateUrl: './dialog-signup.component.html',
-    styleUrl: './dialog-signup.component.scss'
+  selector: 'app-dialog-signup',
+  imports: [
+    MaterialModule,
+    LoginGoogleComponent,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
+  templateUrl: './dialog-signup.component.html',
+  styleUrl: './dialog-signup.component.scss',
 })
 export class DialogSignupComponent implements OnInit, OnDestroy {
   readonly USERNAME_INPUT = 'username';
@@ -72,7 +73,7 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
     private readonly authService: AuthService,
     private readonly dialogGenericService: DialogGenericService,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
     private readonly authServiceFront: AuthServiceFront,
     private readonly formBuilder: FormBuilder
   ) {}
@@ -117,7 +118,7 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
 
   public loginAndClosePopUp(res: RefreshTokenResponse): void {
     this.authServiceFront.logIn(res);
-    this.snackbarService.show('Utilisateur créé avec succes');
+    this.snackbarService.success('Utilisateur créé avec succes');
     this.dialogGenericService.close(CodeModaleEnum.SIGNUP, res);
   }
 

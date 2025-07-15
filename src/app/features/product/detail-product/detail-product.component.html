@@ -2,18 +2,13 @@
   <mat-card-header class="d-flex justify-content-between">
     <mat-card-title class="m-b-0">Détail du produit</mat-card-title>
     <div>
-      <button class="m-r-8" mat-fab extended (click)="backToSearch()">
+      <button class="m-r-8" mat-button (click)="backToSearch()">
         <div class="d-flex align-items-center">
           <i-tabler class="icon-20 m-r-4" name="arrow-left"></i-tabler
           ><span class="m-4">Retour</span>
         </div>
       </button>
-      <button
-        class="m-x-8"
-        mat-fab
-        extended
-        (click)="redirectAndAddToCompare()"
-      >
+      <button class="m-x-8" mat-flat-button (click)="redirectAndAddToCompare()">
         <div class="d-flex align-items-center">
           <i-tabler class="icon-20 m-r-4" name="arrows-left-right"></i-tabler
           ><span class="m-4">Comparer</span>
@@ -21,7 +16,7 @@
       </button>
 
       @if(isTier1){
-      <button class="m-l-8" mat-fab extended (click)="redirectAndAddToMeal()">
+      <button class="m-l-8" mat-flat-button (click)="redirectAndAddToMeal()">
         <div class="d-flex align-items-center">
           <i-tabler class="icon-20 m-r-4" name="tools-kitchen-2"></i-tabler
           ><span class="m-4">Ajouter à un repas</span>

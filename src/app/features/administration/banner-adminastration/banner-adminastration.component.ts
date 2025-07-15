@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription, tap } from 'rxjs';
 import {
   BannerFilterModel,
@@ -27,14 +28,12 @@ import {
 import { TableGenericComponent } from '../../../shared/components/table-generic/table-generic.component';
 import { TableGenericService } from '../../../shared/components/table-generic/table-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
+import { ButtonParam } from '../../../shared/model/button-param';
 import { CodeLabelModel } from '../../../shared/model/code-label.model';
 import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../../shared/model/table-column-param.model';
-import { SnackbarService } from '../../../shared/services/snackbar.service';
-import { DateUtils } from '../../../shared/utils/date.utils';
-import { ButtonParam } from '../../../shared/model/button-param';
 
 @Component({
   selector: 'app-banner-adminastration',
@@ -180,7 +179,7 @@ export class BannerAdminastrationComponent implements OnInit, OnDestroy {
     private readonly bannerSearchService: SearchBannerService,
     private readonly bannerService: BannerService,
     private readonly dialogService: DialogGenericService,
-    private readonly snackbarService: SnackbarService
+    private readonly snackbarService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -291,7 +290,7 @@ export class BannerAdminastrationComponent implements OnInit, OnDestroy {
         .deleteBanner(event.id)
         .pipe(
           tap(() => {
-            this.snackbarService.show('Bannière supprimée');
+            this.snackbarService.success('Bannière supprimée');
             this.getBanners(this.setBannerFilterModelEmpty());
           })
         )

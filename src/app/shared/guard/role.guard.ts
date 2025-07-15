@@ -5,17 +5,16 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { RoleModel } from '../model/role.model';
 import { ContextService } from '../services/context.service';
-import { SnackbarService } from '../services/snackbar.service';
-import { RoleTier2 } from '../constants/role.constant';
 
 // Returns a function which can act as a guard for a route
 export function requireAnyRole(...rolesGuard: RoleModel[]): CanActivateFn {
   return (ars: ActivatedRouteSnapshot, rss: RouterStateSnapshot) => {
     const contextService = inject(ContextService);
-    const snackbarService = inject(SnackbarService);
+    const snackbarService = inject(ToastrService);
     const router = inject(Router);
 
     let currentUserRoles: RoleModel[] = [];
@@ -31,7 +30,7 @@ export function requireAnyRole(...rolesGuard: RoleModel[]): CanActivateFn {
       router.navigate(['/subscribe'], {
         queryParams: { origin: ars.routeConfig?.path },
       });
-      snackbarService.show(
+      snackbarService.error(
         'Vous devez être connecté pour acceder à cette page'
       );
       return of(false);
@@ -54,7 +53,7 @@ export function requireAnyRole(...rolesGuard: RoleModel[]): CanActivateFn {
       router.navigate(['/subscribe'], {
         queryParams: { origin: ars.routeConfig?.path },
       });
-      snackbarService.show(
+      snackbarService.error(
         "Vous n'avez pas les droits pour acceder à cette page"
       );
       return of(false);

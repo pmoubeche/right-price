@@ -1,189 +1,206 @@
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header
-    >Importer des données :</mat-expansion-panel-header
-  >
-  <div style="display: flex">
-    <form [formGroup]="deviceForm">
-      <mat-form-field class="fields" appearance="outline">
-        <mat-label>Appareil</mat-label>
-        <mat-select
-          [formControlName]="DEVICE_FIELD"
-          (selectionChange)="onSelectDevice($event)"
-          required
-        >
-          @for (device of deviceOptions; track $index) {
-          <mat-option [value]="device.code">{{ device.label }}</mat-option>
-          }
-        </mat-select>
-        @if(!deviceForm.get('device')?.value){
-        <mat-error>Champ obligatoire</mat-error>
-        }
-      </mat-form-field>
-    </form>
-    <input
-      #fileUpload
-      hidden="true"
-      type="file"
-      name="cgmImport"
-      accept=".csv"
-      onclick="value=null"
-      (change)="uploadCsvFile($event)"
-    />
-    <button
-      mat-flat-button
-      color="accent"
-      type="submit"
-      style="border-radius: 20px; margin: 0.5rem"
-      (click)="fileUpload.click()"
-      [disabled]="deviceForm.invalid"
-    >
-      <span>Importer</span>
-      <mat-icon>upload</mat-icon>
-    </button>
-    <button
-      mat-flat-button
-      color="warn"
-      type="submit"
-      style="border-radius: 20px; margin: 0.5rem"
-      (click)="openDeleteDataDialog()"
-    >
-      <span>Supprimer des données</span>
-      <mat-icon>delete</mat-icon>
-    </button>
-  </div>
-</mat-expansion-panel>
-<br />
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header>
-    Voir ma glycémie journalière
-  </mat-expansion-panel-header>
-  <div style="display: flex">
-    <div style="padding: 1rem">
-      <mat-card style="width: 300px">
-        <mat-calendar
-          (selectedChange)="onSelectedDate($event!)"
-          [(selected)]="selectedDate!"
-          [dateClass]="dateClass"
-        >
-        </mat-calendar>
-      </mat-card>
-      <br />
-      <mat-chip-listbox>
-        <div style="display: grid">
-          <mat-chip-option selected selectable="false" color="primary"
-            >Données Repas et Cgm</mat-chip-option
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0">Analyser ma glycémie</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1 d-flex flex-column">
+    <div class="d-flex flex-column gap-16">
+      <h3>Importer des données</h3>
+      <div class="d-flex gap-16 b-b-1 m-b-16">
+        <form [formGroup]="deviceForm">
+          <mat-form-field appearance="outline">
+            <mat-label>Appareil</mat-label>
+            <mat-select
+              [formControlName]="DEVICE_FIELD"
+              (selectionChange)="onSelectDevice($event)"
+              required
+            >
+              @for (device of deviceOptions; track $index) {
+              <mat-option [value]="device.code">{{ device.label }}</mat-option>
+              }
+            </mat-select>
+            @if(!deviceForm.get('device')?.value){
+            <mat-error>Champ obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </form>
+        <div class="d-flex gap-16 p-b-16">
+          <input
+            #fileUpload
+            hidden="true"
+            type="file"
+            name="cgmImport"
+            accept=".csv"
+            onclick="value=null"
+            (change)="uploadCsvFile($event)"
+          />
+          <button
+            class="m-r-8"
+            mat-flat-button
+            (click)="fileUpload.click()"
+            [ngClass]="
+              deviceForm.invalid || (isImportButtonLoading$ | async)
+                ? 'bg-light text-dark'
+                : 'bg-light-success text-success'
+            "
+            [disabled]="deviceForm.invalid || (isImportButtonLoading$ | async)"
           >
-          <mat-chip-option selected selectable="false" color="accent"
-            >Données Repas</mat-chip-option
+            <div class="d-flex align-items-center">
+              @if(isImportButtonLoading$ | async){
+              <mat-spinner
+                class="spinner-color-dark"
+                [diameter]="20"
+              ></mat-spinner>
+              } @else {
+              <i-tabler class="icon-20 m-r-4" name="upload"></i-tabler>
+              }
+              <span class="m-4">Importer</span>
+            </div>
+          </button>
+          <button
+            class="m-r-8"
+            mat-flat-button
+            (click)="openDeleteDataDialog()"
+            [ngClass]="
+              (isDeleteCgmButtonLoading$ | async)
+                ? 'bg-light text-dark'
+                : 'bg-light-error text-error'
+            "
+            [disabled]="isDeleteCgmButtonLoading$ | async"
           >
-          <mat-chip-option selected selectable="false" color="warn"
-            >Données Cgm</mat-chip-option
-          >
+            <div class="d-flex align-items-center">
+              @if(isDeleteCgmButtonLoading$ | async){
+              <mat-spinner
+                class="spinner-color-dark"
+                [diameter]="20"
+              ></mat-spinner>
+              } @else {
+              <i-tabler class="icon-20 m-r-4" name="trash-x"></i-tabler>
+              } <span class="m-4">Supprimer des données</span>
+            </div>
+          </button>
         </div>
-      </mat-chip-listbox>
+      </div>
     </div>
-    <mat-divider [vertical]="true"></mat-divider>
-    <div style="padding: 1rem; width: 100%">
-      <app-chart
-        [options]="optionsCgmChart"
-        [data]="cgmChartLineData!"
-      ></app-chart>
+    <!-- calendar and chart -->
+    <div class="d-flex flex-column gap-16">
+      <h3>Voir ma glycémie journalière</h3>
+      <div class="d-flex gap-16 hstack">
+        <div class="p-16">
+          <mat-card class="aw-300">
+            <mat-calendar
+              (selectedChange)="onSelectedDate($event!)"
+              [(selected)]="selectedDate!"
+              [dateClass]="dateClass"
+            >
+            </mat-calendar>
+          </mat-card>
+          <div class="d-flex flex-column gap-16">
+            <span
+              class="bg-light-success text-success rounded f-w-600 p-6 p-y-4 f-s-16"
+            >
+              Données Repas
+            </span>
+            <span
+              class="bg-light-warning text-warning rounded f-w-600 p-6 p-y-4 f-s-16"
+            >
+              Données Cgm
+            </span>
+            <span
+              class="bg-light-primary text-primary rounded f-w-600 p-6 p-y-4 f-s-16"
+            >
+              Données Repas et Cgm
+            </span>
+          </div>
+        </div>
+        <mat-divider [vertical]="true"></mat-divider>
+        <div class="w-webkit">
+          <app-chart
+            [options]="optionsCgmChart"
+            [data]="cgmChartLineData!"
+          ></app-chart>
+        </div>
+      </div>
     </div>
-  </div>
-</mat-expansion-panel>
-<br />
-<div style="display: flex">
-  <mat-expansion-panel
-    style="margin-right: 0.5rem; width: 33%"
-    [expanded]="true"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title> Petit déjeuner </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-table-generic
-      [isPaginated]="false"
-      [isClickable]="false"
-      [columns]="columnParamsMeal"
-      [paginatedDataSource]="dataSourceBreakfast"
-      [rowHeight]="'40px'"
-    ></app-table-generic>
-  </mat-expansion-panel>
-  <br />
-  <mat-expansion-panel
-    style="margin-right: 0.5rem; margin-left: 0.5rem; width: 33%"
-    [expanded]="true"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title> Déjeuner </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-table-generic
-      [isPaginated]="false"
-      [isClickable]="false"
-      [columns]="columnParamsMeal"
-      [paginatedDataSource]="dataSourceLunch"
-      [rowHeight]="'40px'"
-    ></app-table-generic>
-  </mat-expansion-panel>
-  <br />
-  <mat-expansion-panel
-    style="margin-left: 0.5rem; width: 33%"
-    [expanded]="true"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title> Diner </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-table-generic
-      [isPaginated]="false"
-      [columns]="columnParamsMeal"
-      [isClickable]="false"
-      [paginatedDataSource]="dataSourceDinner"
-      [rowHeight]="'40px'"
-    ></app-table-generic>
-  </mat-expansion-panel>
-</div>
-<br />
-<div style="display: flex">
-  <mat-expansion-panel
-    style="margin-right: 0.5rem; width: 33%"
-    [expanded]="true"
-  >
-    <br />
-    @for(chartData of dailyRecommanderIncomeChartsBarDataBreakfast; track
-    $index){
-    <app-chart
-      type="bar"
-      [data]="chartData!"
-      [options]="optionsBarMeal"
-      [height]="30"
-    ></app-chart>
-    }
-  </mat-expansion-panel>
-  <mat-expansion-panel
-    style="margin-right: 0.5rem; margin-left: 0.5rem; width: 33%"
-    [expanded]="true"
-  >
-    <br />
-    @for(chartData of dailyRecommanderIncomeChartsBarDataLunch; track $index){
-    <app-chart
-      type="bar"
-      [data]="chartData!"
-      [options]="optionsBarMeal"
-      [height]="30"
-    ></app-chart>
-    }
-  </mat-expansion-panel>
-  <mat-expansion-panel
-    style="margin-left: 0.5rem; width: 33%"
-    [expanded]="true"
-  >
-    <br />
-    @for(chartData of dailyRecommanderIncomeChartsBarDataDinner; track $index){
-    <app-chart
-      type="bar"
-      [data]="chartData!"
-      [options]="optionsBarMeal"
-      [height]="30"
-    ></app-chart>
-    }
-  </mat-expansion-panel>
-</div>
+    <mat-divider class="m-16"></mat-divider>
+    <!-- Table meal products -->
+    <div class="d-flex justify-content-center gap-16 hstack">
+      <mat-card class="cardWithShadow theme-card shadow aw-500">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Petit déjeuner</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-flex flex-column gap-16">
+          <app-table-generic
+            [isPaginated]="false"
+            [isClickable]="false"
+            [columns]="columnParamsMeal"
+            [paginatedDataSource]="dataSourceBreakfast"
+            [rowHeight]="'40px'"
+          ></app-table-generic>
+          <div class="d-flex flex-column">
+            @for(chartData of dailyRecommanderIncomeChartsBarDataBreakfast;
+            track $index){
+            <app-chart
+              type="bar"
+              [data]="chartData!"
+              [options]="optionsBarMeal"
+              [height]="30"
+            ></app-chart>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="cardWithShadow theme-card shadow aw-500">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Déjeuner</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-flex flex-column gap-16">
+          <app-table-generic
+            [isPaginated]="false"
+            [isClickable]="false"
+            [columns]="columnParamsMeal"
+            [paginatedDataSource]="dataSourceLunch"
+            [rowHeight]="'40px'"
+          ></app-table-generic>
+          <div class="d-flex flex-column">
+            @for(chartData of dailyRecommanderIncomeChartsBarDataLunch; track
+            $index){
+            <app-chart
+              type="bar"
+              [data]="chartData!"
+              [options]="optionsBarMeal"
+              [height]="30"
+            ></app-chart>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="cardWithShadow theme-card shadow aw-500">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Diner</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-flex flex-column gap-16">
+          <app-table-generic
+            [isPaginated]="false"
+            [isClickable]="false"
+            [columns]="columnParamsMeal"
+            [paginatedDataSource]="dataSourceDinner"
+            [rowHeight]="'40px'"
+          ></app-table-generic>
+          <div class="d-flex flex-column">
+            @for(chartData of dailyRecommanderIncomeChartsBarDataDinner; track
+            $index){
+            <app-chart
+              type="bar"
+              [data]="chartData!"
+              [options]="optionsBarMeal"
+              [height]="30"
+            ></app-chart>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>

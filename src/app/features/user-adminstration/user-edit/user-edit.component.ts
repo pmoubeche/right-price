@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import {
   FormBuilder,
@@ -9,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription, tap } from 'rxjs';
 import { UserAdminModel, UserService } from '../../../../generated';
 import {
@@ -17,16 +17,15 @@ import {
 } from '../../../shared/components/dialogs/dialog-generic.service';
 import { RolesConstants } from '../../../shared/constants/role.constant';
 import { MaterialModule } from '../../../shared/material/material.module';
-import { RoleModel } from '../../../shared/model/role.model';
 import { Gender } from '../../../shared/model/gender.model';
-import { SnackbarService } from '../../../shared/services/snackbar.service';
+import { RoleModel } from '../../../shared/model/role.model';
 import { GenderEnum } from '../../settings/profil-edit/profil-edit.component';
 
 @Component({
-    selector: 'app-user-edit',
-    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
-    templateUrl: './user-edit.component.html',
-    styleUrl: './user-edit.component.scss'
+  selector: 'app-user-edit',
+  imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+  templateUrl: './user-edit.component.html',
+  styleUrl: './user-edit.component.scss',
 })
 export class UserEditComponent {
   readonly USERNAME_FIELD = 'username';
@@ -122,7 +121,7 @@ export class UserEditComponent {
     private readonly userService: UserService,
     private readonly formBuilder: FormBuilder,
     private readonly dialogService: DialogGenericService,
-    private readonly snackBarService: SnackbarService,
+    private readonly snackBarService: ToastrService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router
   ) {}
@@ -208,7 +207,7 @@ export class UserEditComponent {
           tap((userRes) => {
             this.user = userRes;
             this.initForm();
-            this.snackBarService.show('Profil modifié avec succès');
+            this.snackBarService.success('Profil modifié avec succès');
           })
         )
         .subscribe()

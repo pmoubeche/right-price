@@ -26,7 +26,7 @@ import {
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, map, tap } from 'rxjs';
+import { EMPTY, Observable, Subscription, catchError, map, tap } from 'rxjs';
 import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
 import {
   ButtonAction,
@@ -59,6 +59,8 @@ import {
   MealsService,
   ProductMealInfoModel,
 } from '../../../generated';
+import { SnackbarService } from '../../shared/services/snackbar.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-meal',
@@ -257,7 +259,8 @@ export class MealComponent implements OnInit, OnDestroy {
     private readonly lProductMealApiService: LProductMealService,
     private readonly mealApiService: MealsService,
     private readonly popInService: DialogGenericService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -415,6 +418,11 @@ export class MealComponent implements OnInit, OnDestroy {
             this.mealCreateChipsControl.reset();
             this.timeCreateMealControl.reset();
             this.timeCreateMealControl.untouched;
+            this.toastr.success('Repas créé');
+          }),
+          catchError((_) => {
+            this.toastr.error('Une erreur est survenue');
+            return EMPTY;
           })
         )
         .subscribe()
@@ -440,6 +448,11 @@ export class MealComponent implements OnInit, OnDestroy {
             this.mealEditChipsControl.reset();
             this.timeEditMealControl.reset();
             this.timeEditMealControl.untouched;
+            this.toastr.success('Repas modifié');
+          }),
+          catchError((_) => {
+            this.toastr.error('Une erreur est survenue');
+            return EMPTY;
           })
         )
         .subscribe()
@@ -480,6 +493,11 @@ export class MealComponent implements OnInit, OnDestroy {
             this.selectedDeleteMeal = this.mealDeleteChipControl.value;
             this.getMealsByDate();
             this.mealDeleteChipControl.reset();
+            this.toastr.success('Repas supprimé');
+          }),
+          catchError((_) => {
+            this.toastr.error('Une erreur est survenue');
+            return EMPTY;
           })
         )
         .subscribe()
@@ -516,6 +534,11 @@ export class MealComponent implements OnInit, OnDestroy {
                 this.mealProduct.nutriscore =
                   this.productInfoModelSelected?.nutriscore;
                 this.mealAddProdcutChipControl.reset();
+                this.toastr.success('Produit ajouté au repas');
+              }),
+              catchError((_) => {
+                this.toastr.error('Une erreur est survenue');
+                return EMPTY;
               })
             )
             .subscribe()

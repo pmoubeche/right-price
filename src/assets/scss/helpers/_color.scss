@@ -1,5 +1,6 @@
 @use "sass:meta";
 @use "../variables" as *;
+@use "@angular/material" as mat;
 
 @mixin syntax-colors($args...) {
   @each $name, $color in meta.keywords($args) {
@@ -16,6 +17,17 @@
     html .mat-chip-option.text-#{$name} {
       color: $color !important;
       border-color: $color !important;
+    }
+
+    // Spinner override color
+    :root {
+      .spinner-color-#{$name} {
+        @include mat.progress-spinner-overrides(
+          (
+            active-indicator-color: $color,
+          )
+        );
+      }
     }
   }
 }

@@ -1,4 +1,3 @@
-
 import { Component, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -7,6 +6,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { UserModel, UserService } from '../../../../generated';
 import {
@@ -15,13 +15,12 @@ import {
 } from '../../../shared/components/dialogs/dialog-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { ContextService } from '../../../shared/services/context.service';
-import { SnackbarService } from '../../../shared/services/snackbar.service';
 
 @Component({
-    selector: 'app-account-edit',
-    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
-    templateUrl: './account-edit.component.html',
-    styleUrl: './account-edit.component.scss'
+  selector: 'app-account-edit',
+  imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+  templateUrl: './account-edit.component.html',
+  styleUrl: './account-edit.component.scss',
 })
 export class AccountEditComponent implements OnInit {
   readonly NEW_PASSWORD_FIELD = 'newPassword';
@@ -64,7 +63,7 @@ export class AccountEditComponent implements OnInit {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
     private readonly userService: UserService,
     private readonly contextService: ContextService,
     private readonly dialogService: DialogGenericService
@@ -89,7 +88,7 @@ export class AccountEditComponent implements OnInit {
 
   modifyPassword(): void {
     if (this.newPasswordControl.value !== this.confirmPasswordControl.value) {
-      this.snackbarService.show(
+      this.snackbarService.warning(
         'Les mots de passes renseignés ne sont pas égaux'
       );
     } else {
@@ -107,7 +106,7 @@ export class AccountEditComponent implements OnInit {
                   tap(() => {
                     this.newPasswordControl.reset();
                     this.confirmPasswordControl.reset();
-                    this.snackbarService.show(
+                    this.snackbarService.success(
                       'Mot de passe modifié avec succes'
                     );
                   })

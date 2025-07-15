@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -24,25 +23,26 @@ import {
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
 import { DateUtils } from '../../shared/utils/date.utils';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
-    selector: 'app-grocery-list',
-    imports: [
+  selector: 'app-grocery-list',
+  imports: [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    TableGenericComponent
-],
-    providers: [
-        provideNativeDateAdapter(),
-        {
-            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-            useClass: DefaultMatCalendarRangeStrategy,
-        },
-    ],
-    templateUrl: './grocery-list.component.html',
-    styleUrl: './grocery-list.component.scss',
-    encapsulation: ViewEncapsulation.None
+    TableGenericComponent,
+    TablerIconsModule,
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: DefaultMatCalendarRangeStrategy,
+    },
+  ],
+  templateUrl: './grocery-list.component.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class GroceryListComponent implements OnInit {
   selectedDateRange: DateRange<Date> | undefined;
@@ -160,7 +160,7 @@ export class GroceryListComponent implements OnInit {
       );
       if (index > -1) {
         if (meDates[index]) {
-          classApplied = 'highlight-date';
+          classApplied = 'highlight-date-success';
         }
       }
       return classApplied;

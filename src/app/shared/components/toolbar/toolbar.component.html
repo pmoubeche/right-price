@@ -29,15 +29,14 @@
   <app-profile></app-profile>
   } @else {
 
-  <button mat-fab extended (click)="login()">
+  <button mat-flat-button (click)="login()">
     <div class="d-flex align-items-center">
       <i-tabler class="icon-20 m-r-4" name="user-check"></i-tabler
       ><span class="m-4">Se connecter</span>
     </div>
   </button>
   <button
-    mat-fab
-    extended
+    mat-flat-button
     class="bg-light-success text-success"
     (click)="register()"
   >

@@ -1,4 +1,11 @@
-import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpStatusCode } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandlerFn,
+  HttpInterceptorFn,
+  HttpRequest,
+  HttpStatusCode,
+} from '@angular/common/http';
 import { inject } from '@angular/core';
 
 import { Router } from '@angular/router';
@@ -6,6 +13,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../env-dev';
 import { SnackbarService } from '../services/snackbar.service';
 import { TokenStorageService } from '../services/token-storage.service';
+import { ToastrService } from 'ngx-toastr';
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<any>,
@@ -13,7 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<any>> => {
   const router = inject(Router);
   const tokenService = inject(TokenStorageService);
-  const snackbarService = inject(SnackbarService);
+  const snackbarService = inject(ToastrService);
   const accessToken = tokenService.getAccessToken();
 
   if (
@@ -35,7 +43,7 @@ export const authInterceptor: HttpInterceptorFn = (
           erreur.status === HttpStatusCode.Unauthorized ||
           erreur.status === HttpStatusCode.Forbidden
         ) {
-          snackbarService.show(
+          snackbarService.error(
             "Vous n'êtes pas autorisé à effectuer cette action. Veuillez vous connecter pour pouvoir y acceder"
           );
           router.navigate(['/home']);
