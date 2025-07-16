@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { Subscription, tap } from 'rxjs';
 import { BannerInfoModel, BannerService } from '../../../../generated';
 import { MaterialModule } from '../../material/material.module';
 
 @Component({
-    selector: 'app-banner',
-    imports: [MaterialModule, CommonModule],
-    templateUrl: './banner.component.html',
-    styleUrl: './banner.component.scss'
+  selector: 'app-banner',
+  imports: [MaterialModule, CommonModule, TablerIconsModule],
+  templateUrl: './banner.component.html',
 })
 export class BannerComponent implements OnInit, OnDestroy {
   bannerType?: string;

@@ -1,7 +1,6 @@
 <section
-  class="mat-elevation-z8"
+  class="mat-elevation-z8 mw-100"
   [ngClass]="isSection ? 'example-container' : ''"
-  style="max-width: 100%"
   tabindex="0"
 >
   @if (paginatedDataSource.dataSource && this.loading === false) {
@@ -16,8 +15,6 @@
       <th
         mat-header-cell
         *matHeaderCellDef
-        mat-sort-header
-        sortActionDescription="Sort by {{ column.columDef }}"
         [ngStyle]="{
           'min-width': column.colWidth,
           padding: column.padding ? column.padding : ''
@@ -38,8 +35,9 @@
         }"
       >
         @if(column.type! === columnTypeEnum.IMAGE){
-        <div class="row-with-image">
+        <div>
           <img
+            class="m-4"
             src="{{ element[column.columDef!] }}"
             [ngStyle]="{ height: rowHeight }"
           />
@@ -47,7 +45,7 @@
         } @else if(column.type! === columnTypeEnum.AVATAR){
         <div>
           <img
-            class="row-with-avatar"
+            class="rounded-circle p-8"
             src="{{ element[column.columDef!] }}"
             [ngStyle]="{ height: rowHeight }"
           />
@@ -72,9 +70,13 @@
         } @else if(column.type! === columnTypeEnum.STRING) {
         <div
           [ngStyle]="{ height: rowHeight }"
-          style="display: flex; align-items: center"
+          class="d-flex align-items-center"
         >
-          {{ element[column.columDef!] }}
+          @if(element[column.columDef!] &&
+          element[column.columDef!].startsWith('--')){
+          <i-tabler class="icon-20 m-r-8" name="corner-down-right"></i-tabler>
+          }
+          {{ element[column.columDef!] | tableChildrenLine }}
         </div>
         } @else if(column.type! === columnTypeEnum.DATE) {
         {{ element[column.columDef!] | formatDate }}
@@ -84,56 +86,39 @@
           [matMenuTriggerFor]="menu"
           (click)="onClickMoreActions($event)"
         >
-          <mat-icon>more_vert</mat-icon>
+          <i-tabler name="dots-vertical"></i-tabler>
         </button>
         <mat-menu #menu="matMenu">
-          @if (isEditOnTable) {
+          @for (button of buttons; track $index) { @if (button.isEditField) {
           <button mat-menu-item (click)="onEditFieldOnTable(element, columns)">
-            <mat-icon color="primary">edit</mat-icon>
+            <i-tabler class="icon-20 m-r-8" name="edit"></i-tabler>
             <span>Modifier</span>
           </button>
           } @else {
-          <button mat-menu-item (click)="onEdit(element)">
-            <mat-icon color="primary">edit</mat-icon>
-            <span>Modifier</span>
+          <button mat-menu-item (click)="button?.action(element, columns)">
+            <i-tabler class="icon-20 m-r-8" name="{{ button.icon }}"></i-tabler>
+            <span>{{ button.label }}</span>
           </button>
-          }
-          <button mat-menu-item (click)="deleteElement(element)">
-            <mat-icon color="warn">delete_forever</mat-icon>
-            <span>Supprimer</span>
-          </button>
+          } }
         </mat-menu>
         } @else { @if(column.isEditable && element.isEditable$ | async ){
-        <form
-          [formGroup]="editForm!"
-          style="
-            display: inline-flex;
-            align-items: center;
-            height: 3rem;
-            margin-top: 2rem;
-            margin-left: -0.5rem;
-          "
-        >
-          <mat-form-field
-            style="padding: 0.5rem; font-size: 12px; max-width: 5rem"
-            appearance="outline"
-          >
+        <form [formGroup]="editForm!" class="d-flex gap-8">
+          <mat-form-field appearance="outline" class="aw-72 m-b--24">
             <mat-label>{{ column.label }}</mat-label>
             <input
               matInput
               [value]="element[column.columDef!]"
               [formControlName]="EDITABLE_FIELD"
               ngDefaultControl
-              style="height: 0.75rem"
               (click)="$event.stopPropagation()"
             />
           </mat-form-field>
           <button
+            class="bg-light-success text-success m-b--4"
             mat-button
             (click)="onValidateUpdateField(element, $event)"
-            style="height: 3rem; margin-top: -1.5rem"
           >
-            <mat-icon color="accent">check</mat-icon>
+            <i-tabler class="icon-20 m-r-8" name="check"></i-tabler>
           </button>
         </form>
         } @else {
@@ -144,21 +129,12 @@
     }
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    @if(isClickable){
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      (click)="onSelectItem(row)"
-      class="row-link"
-    ></tr>
-    } @else{
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
       [ngStyle]="{ height: rowHeight,
       }"
     ></tr>
-    }
   </table>
 
   @if(isPaginated){
@@ -172,7 +148,5 @@
     aria-label="Select page"
   >
   </mat-paginator>
-  } } @else {
-  <mat-spinner style="margin: 0 auto"></mat-spinner>
-  }
+  } }
 </section>

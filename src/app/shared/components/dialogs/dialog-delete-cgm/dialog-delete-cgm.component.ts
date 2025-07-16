@@ -1,38 +1,46 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import {
   DateRange,
   DefaultMatCalendarRangeStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
-import { MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { catchError, EMPTY, Subscription, tap } from 'rxjs';
 import { CgmImportService, DateRangeFilter } from '../../../../../generated';
 import { MaterialModule } from '../../../material/material.module';
-import { ButtonAction, DialogContentModel } from '../dialog-content.model';
+import { DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { DateUtils } from '../../../utils/date.utils';
-import { SnackbarService } from '../../../services/snackbar.service';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { GlucoseMonitoringService } from '../../../../features/glucose-monitoring/glucose-monitoring.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-dialog-delete-account',
-    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
-    templateUrl: './dialog-delete-cgm.component.html',
-    styleUrl: './dialog-delete-cgm.component.scss',
-    providers: [
-        provideNativeDateAdapter(),
-        {
-            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-            useClass: DefaultMatCalendarRangeStrategy,
-        },
-    ],
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-dialog-delete-account',
+  imports: [
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TablerIconsModule,
+    CommonModule,
+  ],
+  templateUrl: './dialog-delete-cgm.component.html',
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: DefaultMatCalendarRangeStrategy,
+    },
+  ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DialogDeleteDataCgmComponent implements OnInit {
   subscription = new Subscription();
@@ -45,18 +53,21 @@ export class DialogDeleteDataCgmComponent implements OnInit {
 
   selectedDateRange: DateRange<Date> | undefined;
 
+  public isDeleteButtonLoading$ =
+    this.glucMonService.isDeleteCgmButtonLoadingBs.asObservable();
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly cgmImportServiceApi: CgmImportService,
-    private readonly snackbarService: SnackbarService,
-    private readonly dialogService: DialogGenericService
+    private readonly snackbarService: ToastrService,
+    private readonly dialogService: DialogGenericService,
+    private readonly glucMonService: GlucoseMonitoringService
   ) {}
 
   ngOnInit(): void {}
 
   deleteDataCgm(): void {
     let filter: DateRangeFilter = {};
-
     if (this.selectedDateRange) {
       filter = {
         dateStart: DateUtils.formatDateMinus1(
@@ -68,16 +79,20 @@ export class DialogDeleteDataCgmComponent implements OnInit {
       };
     }
 
+    this.glucMonService.isDeleteCgmButtonLoadingBs.next(true);
+
     this.subscription.add(
       this.cgmImportServiceApi
         .deleteByDateRange(filter)
         .pipe(
           tap(() => {
+            this.glucMonService.isDeleteCgmButtonLoadingBs.next(false);
             this.dialogService.close(CodeModaleEnum.DELETE_DATA_CGM);
-            this.snackbarService.show('Données supprimées avec succès');
+            this.snackbarService.success('Données supprimées avec succès');
           }),
           catchError(() => {
-            this.snackbarService.show(
+            this.glucMonService.isDeleteCgmButtonLoadingBs.next(false);
+            this.snackbarService.error(
               'Une erreur est survenue lors de la suppression des données'
             );
             return EMPTY;
@@ -104,16 +119,9 @@ export class DialogDeleteDataCgmComponent implements OnInit {
   }
 
   dateClass = (date: Date): MatCalendarCellCssClasses => {
-    let classApplied = '';
-    const meDates = this.data.source.value.datesCgm.map(
-      (date: any) => new Date(date)
-    );
-    const index = meDates.findIndex(
-      (x: any) => new Date(x).toLocaleDateString() === date.toLocaleDateString()
-    );
-    if (index > -1) {
-      classApplied = 'highlight-date';
-    }
-    return classApplied;
+    const dateStr = date.toLocaleDateString();
+    const isCgm = this.data.has(dateStr);
+    if (isCgm) return 'highlight-date-warning';
+    return '';
   };
 }

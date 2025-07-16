@@ -1,21 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription, switchMap, tap } from 'rxjs';
+import { UserService } from '../../../../../generated';
 import { MaterialModule } from '../../../material/material.module';
+import { AuthServiceFront } from '../../../services/auth-front.service';
+import { ContextService } from '../../../services/context.service';
 import { ButtonAction, DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { ContextService } from '../../../services/context.service';
-import { SnackbarService } from '../../../services/snackbar.service';
-import { Subscription, switchMap, tap } from 'rxjs';
-import { AuthServiceFront } from '../../../services/auth-front.service';
-import { UserService } from '../../../../../generated';
 
 @Component({
-    selector: 'app-dialog-delete-account',
-    imports: [MaterialModule],
-    templateUrl: './dialog-delete-account.component.html'
+  selector: 'app-dialog-delete-account',
+  imports: [MaterialModule],
+  templateUrl: './dialog-delete-account.component.html',
 })
 export class DialogDeleteAccountComponent implements OnInit {
   subscription = new Subscription();
@@ -42,7 +42,7 @@ export class DialogDeleteAccountComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
     private readonly dialogService: DialogGenericService,
     private readonly contextService: ContextService,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
     private readonly authServiceFront: AuthServiceFront,
     private readonly userService: UserService
   ) {}
@@ -60,7 +60,7 @@ export class DialogDeleteAccountComponent implements OnInit {
             this.userService.deleteAccount(userRes?.id!).pipe(
               tap(() => {
                 this.dialogService.close(CodeModaleEnum.DELETE_ACCOUNT);
-                this.snackbarService.show('Votre compte a été supprimé !');
+                this.snackbarService.success('Votre compte a été supprimé !');
                 this.authServiceFront.logOut();
               })
             )

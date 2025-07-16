@@ -66,6 +66,10 @@ export interface UserModel {
      */
     dateCreation?: string;
     /**
+     * Date de fin de le souscription
+     */
+    dateSubEnds?: string;
+    /**
      * origin id of the user
      */
     origin?: string;

@@ -1,36 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription, tap } from 'rxjs';
+import { RoleModel, UserResponse } from '../../../../generated';
+import { SearchProductAutocompleteComponent } from '../../../features/product/search-product-autocomplete/search-product-autocomplete.component';
 import { RoleAdmin, RoleTier1, RoleTier2 } from '../../constants/role.constant';
 import { MaterialModule } from '../../material/material.module';
 import { AuthServiceFront } from '../../services/auth-front.service';
 import { ContextService } from '../../services/context.service';
 import { SideNavService } from '../../services/sidenav.service';
-import { SnackbarService } from '../../services/snackbar.service';
 import { BannerComponent } from '../banner/banner.component';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialogs/dialog-generic.service';
 import { ProfileComponent } from '../profile/profile.component';
-import { LoginGoogleComponent } from './login-google/login-google.component';
-import { SearchProductAutocompleteComponent } from '../../../features/product/search-product-autocomplete/search-product-autocomplete.component';
-import { RoleModel, UserResponse } from '../../../../generated';
 
 @Component({
-    selector: 'app-toolbar',
-    imports: [
-        MaterialModule,
-        LoginGoogleComponent,
-        ProfileComponent,
-        BannerComponent,
-        RouterLink,
-        CommonModule,
-        SearchProductAutocompleteComponent,
-    ],
-    templateUrl: './toolbar.component.html',
-    styleUrl: './toolbar.component.scss'
+  selector: 'app-toolbar',
+  imports: [
+    MaterialModule,
+    ProfileComponent,
+    BannerComponent,
+    RouterLink,
+    CommonModule,
+    SearchProductAutocompleteComponent,
+    TablerIconsModule,
+  ],
+  templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   public roleTier2 = RoleTier2;
@@ -46,7 +45,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private readonly contextService: ContextService,
     private readonly dialogService: DialogGenericService,
     private readonly authService: AuthServiceFront,
-    private readonly snackbarService: SnackbarService
+    private readonly snackbarService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +78,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         .pipe(
           tap((userRes) => {
             this.authService.logIn(userRes);
-            this.snackbarService.show('Vous etes connecté');
+            this.snackbarService.success('Vous etes connecté');
           })
         )
         .subscribe()
@@ -95,7 +94,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         .pipe(
           tap((userRes) => {
             this.authService.logIn(userRes);
-            this.snackbarService.show('Vous etes connecté');
+            this.snackbarService.success('Vous etes connecté');
           })
         )
         .subscribe()

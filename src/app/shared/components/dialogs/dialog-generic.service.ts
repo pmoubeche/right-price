@@ -16,9 +16,12 @@ import { DialogCsvImportComponent } from './dialog-csv-import/dialog-csv-import.
 import { ExternalLinkDialogComponent } from './dialog-external-link/dialog-external-link.component';
 import { DialogUnsubscribeComponent } from './dialog-unsubscribe/dialog-unsubscribe.component';
 import { DialogDeleteDataCgmComponent } from './dialog-delete-cgm/dialog-delete-cgm.component';
+import { DialogConfirmComponent } from './dialog-confirm/dialog-confirm.component';
+import { Observable } from 'rxjs';
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
+  CONFRIM = 'confirm',
   SIGNIN = 'signin',
   SIGNUP = 'signup',
   DELETE_ACCOUNT = 'deleteAccount',
@@ -45,6 +48,12 @@ export class DialogGenericService {
     {
       code: CodeModaleEnum.INFORMATION,
       composant: DialogInfoComponent,
+      width: '650px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.CONFRIM,
+      composant: DialogConfirmComponent,
       width: '650px',
       isUniqueModale: true,
     },
@@ -130,6 +139,12 @@ export class DialogGenericService {
     };
 
     return this.matDialog.open(configModale.composant, configMatDialog);
+  }
+
+  openConfirmDialog(
+    config: DialogContentModel
+  ): MatDialogRef<DialogContentModel['component'], any> {
+    return this.openDialog(CodeModaleEnum.CONFRIM, config);
   }
 
   close(codeModale: CodeModaleEnum, valeur?: unknown): void {

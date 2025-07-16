@@ -4,10 +4,9 @@ import { MaterialModule } from '../../../shared/material/material.module';
 import { ResponseProducts } from '../../../shared/model/product.model';
 
 @Component({
-    selector: 'app-list-product',
-    imports: [MaterialModule, CardResultGenericComponent],
-    templateUrl: './list-product.component.html',
-    styleUrl: './list-product.component.scss'
+  selector: 'app-list-product',
+  imports: [MaterialModule, CardResultGenericComponent],
+  templateUrl: './list-product.component.html',
 })
 export class ListProductComponent {
   @Input() httpProducts!: ResponseProducts;

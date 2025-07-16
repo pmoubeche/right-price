@@ -4,20 +4,13 @@ import {
   ResponseProduct,
   ResponseProducts,
 } from '../../shared/model/product.model';
-import { DetailProductComponent } from './detail-product/detail-product.component';
 import { ListProductComponent } from './list-product/list-product.component';
 import { SearchProductComponent } from './search-product/search-product.component';
 
 @Component({
-    selector: 'app-product',
-    imports: [
-        SearchProductComponent,
-        DetailProductComponent,
-        ListProductComponent,
-        MaterialModule,
-    ],
-    templateUrl: './product.component.html',
-    styleUrl: './product.component.scss'
+  selector: 'app-product',
+  imports: [SearchProductComponent, ListProductComponent, MaterialModule],
+  templateUrl: './product.component.html',
 })
 export class ProductComponent {
   public httpProducts: ResponseProducts = new ResponseProducts();

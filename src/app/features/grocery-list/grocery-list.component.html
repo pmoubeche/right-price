@@ -1,10 +1,10 @@
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header>
-    Faire ma liste de courses
-  </mat-expansion-panel-header>
-  <div style="display: flex">
-    <div style="padding: 1rem">
-      <mat-card style="width: 300px">
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0">Faire ma liste de courses</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1 d-flex gap-16">
+    <div>
+      <mat-card class="aw-300">
         <mat-calendar
           (selectedChange)="_onSelectedChange($event!)"
           [selected]="selectedDateRange!"
@@ -12,31 +12,24 @@
         >
         </mat-calendar>
       </mat-card>
-      <br />
-      <button
-        mat-flat-button
-        color="accent"
-        style="border-radius: 20px"
-        (click)="doGroceryList()"
-      >
-        <span>Faire ma liste de courses</span>
-        <mat-icon>playlist_add</mat-icon>
+      <button class="m-r-8" mat-flat-button (click)="doGroceryList()">
+        <div class="d-flex align-items-center">
+          <i-tabler class="icon-20 m-r-4" name="playlist-add"></i-tabler
+          ><span class="m-4">Faire ma liste de courses</span>
+        </div>
       </button>
     </div>
     <mat-divider [vertical]="true"></mat-divider>
-    <div style="padding: 1rem; width: 100%">
+    <div class="w-webkit">
       <app-table-generic
         [columns]="paramsColums"
         [paginatedDataSource]="productInfosPaginated"
         [isPaginated]="false"
         rowHeight="4rem"
-      ></app-table-generic>
+      >
+      </app-table-generic>
       @if(isNoResultMessageDisplayed){
-      <br />
-      <br />
-      <br />
-      <br />
-      <div style="display: flex; justify-content: center">
+      <div class="d-flex justify-content-center align-items-center m-t-48">
         <span
           ><b
             >Sélectionner une plage de dates dans lequel des repas ont été
@@ -46,5 +39,5 @@
       </div>
       }
     </div>
-  </div>
-</mat-expansion-panel>
+  </mat-card-content>
+</mat-card>

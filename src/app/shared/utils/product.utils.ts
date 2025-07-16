@@ -33,6 +33,18 @@ export class ProductUtils {
 
   constructor() {}
 
+  static setDefaultValuesProductInfos(
+    productInfoModels: ProductInfosModel[]
+  ): ProductInfosModel[] {
+    return productInfoModels.map(() => ({
+      image: '/assets/svg/no_img.jpg',
+      label: '',
+      nutriscore: NutriscoreLinks.NUTRISCORE_UNKNOWN,
+      ecoscore: EcoscoreLinks.ECOSCORE_UNKNOWN,
+      novagroup: NovagroupLinks.NOVAGROUP_UNKNOWN,
+    }));
+  }
+
   static setProductsInfoFromResponseProducts(
     httpProducts: ResponseProducts
   ): ProductInfosModel[] {
@@ -121,6 +133,71 @@ export class ProductUtils {
       default:
         return NovagroupLinks.NOVAGROUP_UNKNOWN;
     }
+  }
+
+  static setMacroNutrimentsDefaultValues(): NutrimentInfoModel[] {
+    return [
+      {
+        id: '0',
+        nutriment: 'Energie (kJ)',
+        value: `0 ${this.UNIT_KJ}`,
+        unit: this.UNIT_KJ,
+      },
+      {
+        id: '1',
+        nutriment: 'Energie (kcal)',
+        value: `0 ${this.UNIT_KCAL}`,
+        unit: this.UNIT_KCAL,
+      },
+      {
+        id: '2',
+        nutriment: 'Matières grasses',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '2',
+        nutriment: 'Matières grasses',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '3',
+        nutriment: '--Acides gras saturés',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '4',
+        nutriment: 'Glucides',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '5',
+        nutriment: '--Sucres',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '6',
+        nutriment: '--Fibres alimentaires',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '7',
+        nutriment: 'Protéines',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+      {
+        id: '8',
+        nutriment: 'Sel',
+        value: `0 ${this.UNIT_GRAMME}`,
+        unit: this.UNIT_GRAMME,
+      },
+    ];
   }
 
   static setMacroNutrimentsTable(nutriment: Nutriments): NutrimentInfoModel[] {
@@ -618,7 +695,7 @@ export class ProductUtils {
   }
 
   static setNutrimentChartBarMap(nutriment: Nutriments): Map<string, number> {
-    if (Object.keys(nutriment).length > 0) {
+    if (nutriment && Object.keys(nutriment).length > 0) {
       return new Map<string, number>([
         [
           `${NutrimentsManConst.ENERGY_KJ.label} (${NutrimentsManConst.ENERGY_KJ.unit})`,

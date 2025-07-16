@@ -1,5 +1,11 @@
-
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,12 +17,16 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import {
   DefaultMatCalendarRangeStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatCalendar,
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import 'chartjs-adapter-moment';
+import { ToastrService } from 'ngx-toastr';
 import {
+  BehaviorSubject,
   EMPTY,
   Observable,
   Subscription,
@@ -25,36 +35,42 @@ import {
   map,
   of,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
-import { CgmImportService, CgmInfoModel } from '../../../generated';
+import {
+  CgmImportService,
+  CgmInfoModel,
+  LProductMealService,
+  MealsService,
+} from '../../../generated';
+import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
 import { ChartComponent } from '../../shared/components/chart/chart.component';
 import { ChartUtils } from '../../shared/components/chart/chart.utils';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../shared/components/dialogs/dialog-generic.service';
+import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
 import { MaterialModule } from '../../shared/material/material.module';
 import { CodeLabelModel } from '../../shared/model/code-label.model';
-import { DateUtils } from '../../shared/utils/date.utils';
-import { SnackbarService } from '../../shared/services/snackbar.service';
-import { MealProductApiService } from '../../shared/services/meal-product-api.service';
-import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.service';
 import { MealProductInfoModel } from '../../shared/model/product-attribute-displayed.model';
 import {
   Nutriments,
   Product,
   ResponseProducts,
 } from '../../shared/model/product.model';
-import { ProductUtils } from '../../shared/utils/product.utils';
-import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
 import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
-import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
-import { MatTableDataSource } from '@angular/material/table';
 import { RoundNumberDecimalPipe } from '../../shared/pipes/round-number-decimal.pipe';
-import {
-  CodeModaleEnum,
-  DialogGenericService,
-} from '../../shared/components/dialogs/dialog-generic.service';
+import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.service';
+import { DateUtils } from '../../shared/utils/date.utils';
+import { ProductUtils } from '../../shared/utils/product.utils';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { CommonModule } from '@angular/common';
+import { GlucoseMonitoringService } from './glucose-monitoring.service';
 
 export class CarbsAndSugarsValuesCharts {
   mealType!: string;
@@ -64,38 +80,31 @@ export class CarbsAndSugarsValuesCharts {
 }
 
 @Component({
-    selector: 'app-glucose-monitoring',
-    imports: [
+  selector: 'app-glucose-monitoring',
+  imports: [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
     ChartComponent,
-    TableGenericComponent
-],
-    providers: [
-        provideNativeDateAdapter(),
-        {
-            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-            useClass: DefaultMatCalendarRangeStrategy,
-        },
-    ],
-    templateUrl: './glucose-monitoring.component.html',
-    styleUrl: './glucose-monitoring.component.scss',
-    encapsulation: ViewEncapsulation.None
+    TableGenericComponent,
+    TablerIconsModule,
+    CommonModule,
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: DefaultMatCalendarRangeStrategy,
+    },
+  ],
+  templateUrl: './glucose-monitoring.component.html',
+  encapsulation: ViewEncapsulation.None,
 })
 export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   readonly DEVICE_FIELD = 'device';
   public deviceOptions: CodeLabelModel[] = [
     { code: 'dexcom', label: 'Dexcom' },
   ];
-
-  datesMeals$: Observable<any> = this.activatedRoute.data.pipe(
-    map((data) => data['datesMeals'])
-  );
-
-  datesCgms$: Observable<any> = this.activatedRoute.data.pipe(
-    map((data) => data['datesCgm'])
-  );
 
   columnParamsMeal: TableColumnParamModel[] = [
     {
@@ -131,20 +140,6 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
       padding: '0 0 0 1rem',
     },
   ];
-
-  dataSourceBreakfast = new PaginatedDataSource<MealProductInfoModel>();
-  dataSourceLunch = new PaginatedDataSource<MealProductInfoModel>();
-  dataSourceDinner = new PaginatedDataSource<MealProductInfoModel>();
-
-  nutrimentsBreakfast: Nutriments = new Nutriments();
-  nutrimentsLunch: Nutriments = new Nutriments();
-  nutrimentsDinner: Nutriments = new Nutriments();
-
-  public mealProductsBreakfast: MealProductInfoModel[] = [];
-
-  public mealProductsLunch: MealProductInfoModel[] = [];
-
-  public mealProductsDinner: MealProductInfoModel[] = [];
 
   optionsBarMeal: ChartOptions = {
     indexAxis: 'y',
@@ -211,39 +206,73 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
       title: {
         display: true,
       },
+      tooltip: {
+        enabled: true,
+        filter: function (tooltipItem) {
+          const excludedLabels = ['Moyenne basse', 'Moyenne haute'];
+          return !excludedLabels.includes(tooltipItem.dataset.label!);
+        },
+      },
     },
   };
+
+  dataSourceBreakfast = new PaginatedDataSource<MealProductInfoModel>();
+  dataSourceLunch = new PaginatedDataSource<MealProductInfoModel>();
+  dataSourceDinner = new PaginatedDataSource<MealProductInfoModel>();
+
+  nutrimentsBreakfast: Nutriments = new Nutriments();
+  nutrimentsLunch: Nutriments = new Nutriments();
+  nutrimentsDinner: Nutriments = new Nutriments();
+
+  dailyRecommanderIncomeChartsBarDataBreakfast?: ChartData[] = [];
+  dailyRecommanderIncomeChartsBarDataLunch?: ChartData[] = [];
+  dailyRecommanderIncomeChartsBarDataDinner?: ChartData[] = [];
+
+  public mealProductsBreakfast: MealProductInfoModel[] = [];
+  public mealProductsLunch: MealProductInfoModel[] = [];
+  public mealProductsDinner: MealProductInfoModel[] = [];
+
   cgmChartLineData?: ChartData;
 
   public selectedDate!: Date | null;
+  public selectedDateString?: string;
+
   public deviceSelected!: string;
   public deviceForm!: FormGroup;
-
   private cgmInfos: CgmInfoModel[] = [];
 
   public isMaleReco = true;
 
   private carbsAndSugarsValuesCharts: CarbsAndSugarsValuesCharts[] = [];
 
-  dailyRecommanderIncomeChartsBarDataBreakfast?: ChartData[] = [];
-  dailyRecommanderIncomeChartsBarDataLunch?: ChartData[] = [];
-  dailyRecommanderIncomeChartsBarDataDinner?: ChartData[] = [];
-
   public fileSelected!: File;
   private subscription = new Subscription();
+  public isImportButtonLoading$ =
+    this.glucoseMonitoringService.isImportButtonLoadingBs.asObservable();
+
+  public isDeleteCgmButtonLoading$ =
+    this.glucoseMonitoringService.isDeleteCgmButtonLoadingBs.asObservable();
+
+  private mealsDatesSet = new Set<string>();
+  private cgmsDatesSet = new Set<string>();
+
+  @ViewChild(MatCalendar) calendar!: MatCalendar<Date>;
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cgmImportServiceApi: CgmImportService,
-    private readonly mealService: MealProductApiService,
+    private readonly lProductMealApiService: LProductMealService,
+    private readonly mealService: MealsService,
     private readonly openFoodFactApi: OpenFoodFactsApiService,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
     private readonly roundNumberPipe: RoundNumberDecimalPipe,
     private readonly dialogService: DialogGenericService,
-    private activatedRoute: ActivatedRoute
+    private readonly glucoseMonitoringService: GlucoseMonitoringService,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.updateCalendarHighlights();
     ChartUtils.setChartImports();
     this.initForm();
   }
@@ -254,57 +283,41 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
     });
   }
 
+  updateCalendarHighlights(): void {
+    combineLatest([
+      this.cgmImportServiceApi.getDatesCgmFromUser(),
+      this.mealService.getDatesMealsFromUser(),
+    ])
+      .pipe(take(1))
+      .subscribe(([datesCgms, datesMeals]) => {
+        this.mealsDatesSet = new Set(
+          datesMeals.map((date: any) => new Date(date).toLocaleDateString())
+        );
+        this.cgmsDatesSet = new Set(
+          datesCgms.map((date: any) => new Date(date).toLocaleDateString())
+        );
+
+        // 🧼 Force manuellement Angular à détecter les changements
+        this.calendar.updateTodaysDate(); // Déclenche une vérification interne
+        this.cdr.detectChanges(); // Assure que tout est bien synchronisé avec le template
+      });
+  }
+
   dateClass = (date: Date): MatCalendarCellCssClasses => {
-    let classApplied = '';
+    const dateStr = date.toLocaleDateString();
 
-    this.subscription.add(
-      combineLatest([this.datesMeals$, this.datesCgms$])
-        .pipe(
-          tap(([datesMeals, datesCgms]) => {
-            const mealsDates: Date[] = datesMeals.map(
-              (date: any) => new Date(date)
-            );
-            const cgmDates: Date[] = datesCgms.map(
-              (date: any) => new Date(date)
-            );
-            const indexMeals = mealsDates.findIndex(
-              (x: any) =>
-                new Date(x).toLocaleDateString() === date.toLocaleDateString()
-            );
-            const indexCgm = cgmDates.findIndex(
-              (x: any) =>
-                new Date(x).toLocaleDateString() === date.toLocaleDateString()
-            );
+    const isMeal = this.mealsDatesSet.has(dateStr);
+    const isCgm = this.cgmsDatesSet.has(dateStr);
 
-            if (indexMeals > -1) {
-              if (mealsDates[indexMeals]) {
-                classApplied = 'highlight-date-meals';
-              }
-            }
+    if (isMeal && isCgm) return 'highlight-date-primary';
+    if (isMeal) return 'highlight-date-success';
+    if (isCgm) return 'highlight-date-warning';
 
-            if (indexCgm > -1) {
-              if (cgmDates[indexCgm]) {
-                classApplied = 'highlight-date-cgm';
-              }
-            }
-
-            if (indexMeals > -1 && indexCgm > -1) {
-              if (
-                mealsDates[indexMeals].getDay() === cgmDates[indexCgm].getDay()
-              ) {
-                classApplied = 'highlight-date-cgm-and-meals';
-              }
-            }
-            return classApplied;
-          })
-        )
-        .subscribe()
-    );
-
-    return classApplied;
+    return '';
   };
 
   onSelectedDate(date: Date): void {
+    this.selectedDateString = DateUtils.formatDate(date);
     this.resetDatasOnChange();
     this.getCgmData(date);
     this.getMealProductsInfos(date);
@@ -343,15 +356,15 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
 
   getMealProductsInfos(date: Date): void {
     this.subscription.add(
-      this.mealService
-        .getMealProducts(DateUtils.formatDate(date))
+      this.lProductMealApiService
+        .getProductsOnMeal(DateUtils.formatDate(date))
         .pipe(
           tap((mealProductsInfos) => {
             if (mealProductsInfos.length > 0) {
               this.getHttpProductsFromOFF(mealProductsInfos);
               mealProductsInfos.forEach((productInfo) => {
                 this.addProductToRightList(productInfo);
-                productInfo.isEditable = false;
+                // productInfo.isEditable = false;
               });
             }
           })
@@ -563,42 +576,52 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
       this.cgmImportServiceApi
         .existDataInDbFromCsv(this.deviceSelected, this.fileSelected)
         .pipe(
-          switchMap((res) =>
-            res
-              ? of(true).pipe(
-                  tap(() =>
-                    this.dialogService.openDialog(CodeModaleEnum.CSV_IMPORT, [
-                      this.fileSelected,
-                      this.deviceSelected,
-                    ])
-                  )
-                )
-              : this.cgmImportServiceApi
-                  .importGgmFromOrigin(this.deviceSelected, this.fileSelected)
-                  .pipe(
-                    tap(() => {
-                      this.snackbarService.show(
-                        'Import de données effectué avec succès'
-                      );
-                    }),
-                    catchError(() => {
-                      this.snackbarService.show(
-                        "Une erreur est survenue lors de l'import"
-                      );
-                      return EMPTY;
-                    })
-                  )
-          )
+          switchMap((res) => {
+            if (res) {
+              this.dialogService.openDialog(CodeModaleEnum.CSV_IMPORT, [
+                this.fileSelected,
+                this.deviceSelected,
+              ]);
+              return EMPTY;
+            } else {
+              this.glucoseMonitoringService.isImportButtonLoadingBs.next(true);
+              return this.cgmImportServiceApi
+                .importGgmFromOrigin(this.deviceSelected, this.fileSelected)
+                .pipe(
+                  tap(() => {
+                    this.snackbarService.success(
+                      'Import de données effectué avec succès'
+                    );
+                    this.glucoseMonitoringService.isImportButtonLoadingBs.next(
+                      false
+                    );
+                    this.updateCalendarHighlights();
+                  }),
+                  catchError(() => {
+                    this.snackbarService.error(
+                      "Une erreur est survenue lors de l'import"
+                    );
+                    this.glucoseMonitoringService.isImportButtonLoadingBs.next(
+                      false
+                    );
+                    return EMPTY;
+                  })
+                );
+            }
+          })
         )
         .subscribe()
     );
   }
 
   openDeleteDataDialog(): void {
-    this.dialogService.openDialog(
+    const ref = this.dialogService.openDialog(
       CodeModaleEnum.DELETE_DATA_CGM,
-      this.datesCgms$
+      this.cgmsDatesSet
     );
+    ref.afterClosed().subscribe((_) => {
+      this.updateCalendarHighlights();
+    });
   }
 
   setChartCgmData(datasCgm: CgmInfoModel[]): void {
@@ -658,8 +681,8 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
           label: 'Glucides (g)',
           type: 'bar',
           data: this.carbsAndSugarsValuesCharts.length > 0 ? mealCarbList : [],
-          backgroundColor: '#2b5fad',
-          borderColor: '#2b5fad',
+          backgroundColor: ChartUtils.getCssVariableValue('success'),
+          borderColor: ChartUtils.getCssVariableValue('success'),
           yAxisID: 'y1',
           barThickness: 10,
           borderRadius: 5,
@@ -669,7 +692,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
           label: 'Glycémie journalière en mg/dL',
           type: 'line',
           data: datasChartLine.map((el) => el.y),
-          borderColor: '#7fc8c9',
+          borderColor: ChartUtils.getCssVariableValue('primary'),
           pointRadius: 0,
           yAxisID: 'y',
           tension: 0.4,
@@ -679,8 +702,8 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
           label: 'Moyenne basse',
           type: 'line',
           data: datasChartLine.map((_) => 100),
-          backgroundColor: ['#ffc30f'],
-          borderColor: '#ffc30f',
+          backgroundColor: [ChartUtils.getCssVariableValue('lightWarning')],
+          borderColor: ChartUtils.getCssVariableValue('lightWarning'),
           pointRadius: 0,
         },
         {
@@ -688,8 +711,8 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
           label: 'Moyenne haute',
           type: 'line',
           data: datasChartLine.map((_) => 140),
-          borderColor: '#ffc30f',
-          backgroundColor: 'rgb(255, 205, 86, 0.2)',
+          borderColor: ChartUtils.getCssVariableValue('lightWarning'),
+          backgroundColor: ChartUtils.getCssVariableValue('lightWarning'),
           pointRadius: 0,
           fill: '-1',
         },
@@ -707,7 +730,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         label: "P'tit déj",
         data: [value],
         fill: true,
-        backgroundColor: ['#7fc8c9'],
+        backgroundColor: [ChartUtils.getCssVariableValue('success')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -723,7 +746,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
           ChartUtils.setValueFiller(this.isMaleReco, key, dataSetBreakfast),
         ],
         fill: true,
-        backgroundColor: ['#f1f1f1'],
+        backgroundColor: [ChartUtils.getCssVariableValue('light')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -751,7 +774,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         label: 'Déjeuner',
         data: [value],
         fill: true,
-        backgroundColor: ['#4c7ed0'],
+        backgroundColor: [ChartUtils.getCssVariableValue('primary')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -765,7 +788,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         label: 'AJR',
         data: [ChartUtils.setValueFiller(this.isMaleReco, key, dataSetLunch)],
         fill: true,
-        backgroundColor: ['#f1f1f1'],
+        backgroundColor: [ChartUtils.getCssVariableValue('light')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -793,7 +816,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         label: 'Dinner',
         data: [value],
         fill: true,
-        backgroundColor: ['#ffc30f'],
+        backgroundColor: [ChartUtils.getCssVariableValue('warning')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,
@@ -807,7 +830,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         label: 'AJR',
         data: [ChartUtils.setValueFiller(this.isMaleReco, key, dataSetDinner)],
         fill: true,
-        backgroundColor: ['#f1f1f1'],
+        backgroundColor: [ChartUtils.getCssVariableValue('light')],
         borderRadius: {
           topLeft: 15,
           topRight: 15,

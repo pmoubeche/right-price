@@ -1,0 +1,51 @@
+@use 'variables';
+
+$utilities: (
+  'border': (
+    property: border,
+    class: b,
+    values: variables.$borders
+  ),
+  'border-top': (
+    property: border-top,
+    class: b-t,
+    values: variables.$borders
+  ),
+  'border-bottom': (
+    property: border-bottom,
+    class: b-b,
+    values: variables.$borders
+  ),
+  'border-left': (
+    property: border-left,
+    class: b-l,
+    values: variables.$borders
+  ),
+  'border-right': (
+    property: border-right,
+    class: b-r,
+    values: variables.$borders
+  ),
+  'border-color': (
+    property: border-color,
+    class: b-c,
+    values: variables.$borders
+  ),
+  'border-width': (
+    property: border-width,
+    class: b-w,
+    values: variables.$borders
+  ),
+  'border-style': (
+    property: border-style,
+    class: b-s,
+    values: variables.$borders
+  ),
+  'border-radius': (
+    property: border-radius,
+    class: b-ra,
+    values: variables.$borders
+  ),
+);
+
+

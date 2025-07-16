@@ -13,12 +13,12 @@
 
 export interface PasswordUpdate { 
     /**
-     * user id
+     * old password user
      */
-    userId?: string;
+    oldPassword?: string;
     /**
      * new password user
      */
-    password?: string;
+    newPassword?: string;
 }
 

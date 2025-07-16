@@ -1,52 +1,67 @@
-<mat-expansion-panel
-  class="meal-breakfast-panel"
-  [expanded]="isExpandedBreakfast"
+<mat-card
+  class="cardWithShadow theme-card shadow"
+  [ngClass]="
+    mealProductsBreakfast.length > 0 ? 'border-success ' : 'border-light'
+  "
 >
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      Petit déjeuner ({{ dateBreakfast ?? "No time" }})</mat-panel-title
-    >
-  </mat-expansion-panel-header>
-  <app-table-generic
-    [isPaginated]="false"
-    (onDeleteItem)="deleteLProductMeal($event)"
-    (onValidateUpdateItem)="updateLProductMealQuantity($event)"
-    (eventSelectLine)="onSelectLine($event)"
-    [isClickable]="true"
-    [columns]="columnParamsMeal"
-    [paginatedDataSource]="dataSourceBreakfast"
-    [rowHeight]="'40px'"
-  ></app-table-generic>
-</mat-expansion-panel>
-<br />
-<mat-expansion-panel class="meal-lunch-panel" [expanded]="isExpandedLunch">
-  <mat-expansion-panel-header>
-    <mat-panel-title> Déjeuner ({{ dateLunch ?? "No time" }})</mat-panel-title>
-  </mat-expansion-panel-header>
-  <app-table-generic
-    [isPaginated]="false"
-    (onDeleteItem)="deleteLProductMeal($event)"
-    (onValidateUpdateItem)="updateLProductMealQuantity($event)"
-    (eventSelectLine)="onSelectLine($event)"
-    [isClickable]="true"
-    [columns]="columnParamsMeal"
-    [paginatedDataSource]="dataSourceLunch"
-    [rowHeight]="'40px'"
-  ></app-table-generic>
-</mat-expansion-panel>
-<br />
-<mat-expansion-panel class="meal-dinner-panel" [expanded]="isExpandedDinner">
-  <mat-expansion-panel-header>
-    <mat-panel-title> Diner ({{ dateDinner ?? "No time" }})</mat-panel-title>
-  </mat-expansion-panel-header>
-  <app-table-generic
-    (onDeleteItem)="deleteLProductMeal($event)"
-    (onValidateUpdateItem)="updateLProductMealQuantity($event)"
-    (eventSelectLine)="onSelectLine($event)"
-    [isPaginated]="false"
-    [columns]="columnParamsMeal"
-    [isClickable]="true"
-    [paginatedDataSource]="dataSourceDinner"
-    [rowHeight]="'40px'"
-  ></app-table-generic>
-</mat-expansion-panel>
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0">Petit déjeuner </mat-card-title>
+    @if(dateBreakfast){
+    <mat-card-title class="m-b-0"> {{ dateBreakfast }}</mat-card-title>
+    }
+  </mat-card-header>
+  <mat-card-content class="b-t-1 d-grid">
+    <app-table-generic
+      [buttons]="buttonsParams"
+      [isPaginated]="false"
+      (onValidateUpdateItem)="updateLProductMealQuantity($event)"
+      [columns]="columnParamsMeal"
+      [paginatedDataSource]="dataSourceBreakfast"
+      [rowHeight]="'40px'"
+    ></app-table-generic>
+  </mat-card-content>
+</mat-card>
+
+<mat-card
+  class="cardWithShadow theme-card shadow"
+  [ngClass]="mealProductsLunch.length > 0 ? 'border-primary ' : 'border-light'"
+>
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0">Déjeuner </mat-card-title>
+    @if(dateLunch){
+    <mat-card-title class="m-b-0"> {{ dateLunch }}</mat-card-title>
+    }
+  </mat-card-header>
+  <mat-card-content class="b-t-1 d-grid">
+    <app-table-generic
+      [buttons]="buttonsParams"
+      [isPaginated]="false"
+      (onValidateUpdateItem)="updateLProductMealQuantity($event)"
+      [columns]="columnParamsMeal"
+      [paginatedDataSource]="dataSourceLunch"
+      [rowHeight]="'40px'"
+    ></app-table-generic>
+  </mat-card-content>
+</mat-card>
+
+<mat-card
+  class="cardWithShadow theme-card shadow"
+  [ngClass]="mealProductsDinner.length > 0 ? 'border-warning ' : 'border-light'"
+>
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0">Diner </mat-card-title>
+    @if(dateDinner){
+    <mat-card-title class="m-b-0"> {{ dateDinner }}</mat-card-title>
+    }
+  </mat-card-header>
+  <mat-card-content class="b-t-1 d-flex flex-column">
+    <app-table-generic
+      [buttons]="buttonsParams"
+      (onValidateUpdateItem)="updateLProductMealQuantity($event)"
+      [isPaginated]="false"
+      [columns]="columnParamsMeal"
+      [paginatedDataSource]="dataSourceDinner"
+      [rowHeight]="'40px'"
+    ></app-table-generic>
+  </mat-card-content>
+</mat-card>

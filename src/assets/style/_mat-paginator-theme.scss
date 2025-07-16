@@ -1,9 +1,0 @@
-/// Mixin utilisée pour surcharger le thème du paginator d'Angular Material
-@mixin theme($theme) {
-  mat-paginator {
-    .mat-mdc-paginator-container {
-      // Réaligne les items du paginator
-      align-items: baseline;
-    }
-  }
-}

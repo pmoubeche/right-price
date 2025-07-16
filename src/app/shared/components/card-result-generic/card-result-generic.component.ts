@@ -5,30 +5,20 @@ import { Router } from '@angular/router';
 import { MaterialModule } from '../../material/material.module';
 import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
 import { ResponseProducts } from '../../model/product.model';
-import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
-import { TrimStringPipe } from '../../pipes/trim-string.pipe';
-import { UppercaseFirstLetterFormatPipe } from '../../pipes/uppercase-first-letter-format.pipe';
 import { ProductUtils } from '../../utils/product.utils';
+import { CardProductComponent } from '../card-product/card-product.component';
 import { CardResultGenericService } from './card-result-generic.service';
 
 @Component({
-    selector: 'app-card-result-generic',
-    imports: [
-        MaterialModule,
-        CommonModule,
-        PercentFormatPipe,
-        UppercaseFirstLetterFormatPipe,
-        TrimStringPipe,
-    ],
-    templateUrl: './card-result-generic.component.html',
-    styleUrl: './card-result-generic.component.scss'
+  selector: 'app-card-result-generic',
+  imports: [MaterialModule, CommonModule, CardProductComponent],
+  templateUrl: './card-result-generic.component.html',
 })
 export class CardResultGenericComponent implements OnInit {
   public isError$ = this.cardResultGenericService.getIsError();
   public isLoading$ = this.cardResultGenericService.getIsLoading();
 
   @Input() isLineDisposal = false;
-  @Input() countProductPerLine = 6;
   productsAttributesToDisplay: ProductInfosModel[] = [];
 
   private _httpProducts!: ResponseProducts;

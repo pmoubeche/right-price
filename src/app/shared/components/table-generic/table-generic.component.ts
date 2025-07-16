@@ -24,11 +24,13 @@ import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
 } from '../../model/table-column-param.model';
-import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
-import { TableGenericService } from './table-generic.service';
-import { RouterLink } from '@angular/router';
 import { FormatDatePipe } from '../../pipes/format-date.pipe';
+import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
 import { CardResultGenericService } from '../card-result-generic/card-result-generic.service';
+import { TableGenericService } from './table-generic.service';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { TableChildrenLinePipe } from '../../pipes/table-children-line.pipe';
+import { ButtonParam } from '../../model/button-param';
 
 export class UpdateData {
   element: any;
@@ -36,18 +38,19 @@ export class UpdateData {
 }
 
 @Component({
-    selector: 'app-table-generic',
-    imports: [
-        MaterialModule,
-        CommonModule,
-        PercentFormatPipe,
-        FormatDatePipe,
-        ReactiveFormsModule,
-        FormsModule,
-        RouterLink,
-    ],
-    templateUrl: './table-generic.component.html',
-    styleUrl: './table-generic.component.scss'
+  selector: 'app-table-generic',
+  imports: [
+    MaterialModule,
+    CommonModule,
+    PercentFormatPipe,
+    FormatDatePipe,
+    TableChildrenLinePipe,
+    ReactiveFormsModule,
+    FormsModule,
+    TablerIconsModule,
+  ],
+  templateUrl: './table-generic.component.html',
+  styleUrl: './table-generic.component.scss',
 })
 export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   readonly EDITABLE_FIELD = 'field';
@@ -69,16 +72,13 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
 
   displayedColumns: (string | undefined)[] = [];
   @Input() paginatedDataSource = new PaginatedDataSource<T>();
+  @Input() buttons?: ButtonParam[];
   @Input() rowHeight?: string;
   @Input() isRowCentered = false;
   @Input() isPaginated = true;
-  @Input() isClickable = false;
   @Input() pageSizeOptions: number[] = [24];
-  @Input() isEditOnTable = true;
   @Input() isSection = false;
 
-  @Output() onDeleteItem = new EventEmitter<T>();
-  @Output() onEditItem = new EventEmitter<T>();
   @Output() onValidateUpdateItem = new EventEmitter<UpdateData>();
   @Output() eventSelectLine = new EventEmitter<T>();
   @Output() eventPageSizeChange = new EventEmitter<number>();
@@ -139,12 +139,6 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     }
   }
 
-  onSelectItem(row: any): void {
-    this.eventSelectLine.next(row);
-    this.tableGenericService.onSelectItem(row.idProduct);
-    this.cardGenericService.productIdBs.next(row.idProduct);
-  }
-
   onClickMoreActions(event: any) {
     event.stopPropagation();
   }
@@ -165,10 +159,6 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     line.isEditable$ = of(line.isEditable);
   }
 
-  onEdit(event: any) {
-    this.onEditItem.emit(event);
-  }
-
   onValidateUpdateField(line: T, event: any): void {
     event.stopPropagation();
     const data: UpdateData = {
@@ -176,9 +166,5 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
       formInputValue: this.editForm?.get(this.EDITABLE_FIELD)!.value,
     };
     this.onValidateUpdateItem.next(data);
-  }
-
-  deleteElement(ligne: T): void {
-    this.onDeleteItem.emit(ligne);
   }
 }

@@ -2,27 +2,55 @@
 <mat-dialog-content class="mat-typography">
   {{ dialogParamData.message }}
 </mat-dialog-content>
-<mat-dialog-actions align="end">
+<mat-dialog-actions class="d-flex justify-content-end">
   <button
-    mat-button
-    color="warn"
+    class="m-r-8"
+    mat-flat-button
     (click)="importCsvCgmImportOverrideExistingData()"
     cdkFocusInitial
+    [ngClass]="
+      (isImportButtonLoading$ | async)
+        ? 'bg-light text-dark'
+        : 'bg-light-success text-success'
+    "
+    [disabled]="isImportButtonLoading$ | async"
   >
-    <mat-label>Remplacer les données existantes</mat-label>
-    <mat-icon> delete_forever</mat-icon>
+    <div class="d-flex align-items-center">
+      @if(isImportButtonLoading$ | async){
+      <mat-spinner class="spinner-color-dark" [diameter]="20"></mat-spinner>
+      } @else {
+      <i-tabler class="icon-20 m-r-4" name="replace"></i-tabler>
+      }
+      <span class="m-4">Remplacer</span>
+    </div>
   </button>
+
   <button
-    mat-button
-    color="accent"
+    class="m-r-8"
+    mat-flat-button
     (click)="importCsvCgmImportPreserveExistingData()"
     cdkFocusInitial
+    [ngClass]="
+      (isImportButtonLoading$ | async)
+        ? 'bg-light-success text-success'
+        : 'bg-light text-dark'
+    "
+    [disabled]="isImportButtonLoading$ | async"
   >
-    <mat-label>Conserver les données existantes</mat-label>
-    <mat-icon> playlist_add</mat-icon>
+    <div class="d-flex align-items-center">
+      @if(isImportButtonLoading$ | async){
+      <mat-spinner class="spinner-color-dark" [diameter]="20"></mat-spinner>
+      } @else {
+      <i-tabler class="icon-20 m-r-4" name="playlist-add"></i-tabler>
+      }
+      <span class="m-4">Conserver</span>
+    </div>
   </button>
-  <button mat-button color="primary" mat-dialog-close cdkFocusInitial>
-    <mat-label>Fermer</mat-label>
-    <mat-icon>close</mat-icon>
+
+  <button class="m-r-8" mat-button mat-dialog-close cdkFocusInitial>
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="square-x"></i-tabler>
+      <span class="m-4">Fermer</span>
+    </div>
   </button>
 </mat-dialog-actions>

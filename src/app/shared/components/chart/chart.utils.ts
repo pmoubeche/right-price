@@ -51,6 +51,33 @@ export class ChartUtils {
     );
   }
 
+  static getCssVariableValue(key: string): string {
+    const cssVariableMap: Record<string, string> = {
+      primary: 'rgb(93, 135, 255)',
+      secondary: 'rgb(68, 183, 247)',
+      error: '--mat-sys-error',
+      warning: '#ffae1f',
+      success: '#13deb9',
+      white: '#ffffff',
+      dark: '#223742',
+      light: '#d7dde2',
+      lightPrimary: 'rgb(93, 135, 255, 0.5)',
+      lightSecondary: 'rgb(68, 183, 247, 0.5)',
+      lightWarning: '#ffad1f40',
+      lightSuccess: '#13deb940',
+      lightError: 'rgba(247, 68, 86, 0.5)',
+    };
+    const variableName = cssVariableMap[key] || key;
+
+    if (variableName.startsWith('--mat')) {
+      return getComputedStyle(document.documentElement)
+        .getPropertyValue(variableName)
+        .trim();
+    } else {
+      return variableName;
+    }
+  }
+
   static setDataSetFilledValue(...dataSets: ChartDataset[]): ChartDataset {
     const dailyRecos = Object.values(NutrimentsManConst);
     let valueToAdd = 0;

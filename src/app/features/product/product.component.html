@@ -1,10 +1,12 @@
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header> Recherche</mat-expansion-panel-header>
-
-  <app-search-product
-    (eventHttpProductsChange)="onHttpProductsChange($event)"
-    (eventHttpProductChange)="onHttpProductChange($event)"
-  ></app-search-product>
-</mat-expansion-panel>
-<br />
-<app-list-product [httpProducts]="httpProducts"></app-list-product>
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Rechercher des produits</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    <app-search-product
+      (eventHttpProductsChange)="onHttpProductsChange($event)"
+      (eventHttpProductChange)="onHttpProductChange($event)"
+    ></app-search-product>
+    <app-list-product [httpProducts]="httpProducts"></app-list-product>
+  </mat-card-content>
+</mat-card>

@@ -1,19 +1,22 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 import { EMPTY, Subscription, catchError, tap } from 'rxjs';
 import { CgmImportService } from '../../../../../generated';
 import { MaterialModule } from '../../../material/material.module';
-import { SnackbarService } from '../../../services/snackbar.service';
 import { ButtonAction, DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
+import { GlucoseMonitoringService } from '../../../../features/glucose-monitoring/glucose-monitoring.service';
+import { CommonModule } from '@angular/common';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
-    selector: 'app-dialog-csv-import',
-    imports: [MaterialModule],
-    templateUrl: './dialog-csv-import.component.html'
+  selector: 'app-dialog-csv-import',
+  imports: [MaterialModule, CommonModule, TablerIconsModule],
+  templateUrl: './dialog-csv-import.component.html',
 })
 export class DialogCsvImportComponent implements OnInit {
   subscription = new Subscription();
@@ -39,17 +42,21 @@ export class DialogCsvImportComponent implements OnInit {
   public dialogParamData: DialogContentModel = {
     title: 'Attention',
     message:
-      'Des données sont déjà enregistrées pour la plage de dates que vous souhaitez importer. Que souhaitez vous faire ?',
+      'Des données sont déjà enregistrées pour la plage de dates que vous souhaitez importer. Que souhaitez vous faire avec  les données existantes ?',
     buttons: this.buttonsDialog,
   };
 
   public fileSelected!: File;
   public deviceSelected!: string;
 
+  public isImportButtonLoading$ =
+    this.glucoseMonitoringService.isImportButtonLoadingBs.asObservable();
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
     private readonly dialogService: DialogGenericService,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
+    private readonly glucoseMonitoringService: GlucoseMonitoringService,
     private readonly cgmService: CgmImportService
   ) {}
 
@@ -61,6 +68,7 @@ export class DialogCsvImportComponent implements OnInit {
   }
 
   importCsvCgmImportOverrideExistingData(): void {
+    this.glucoseMonitoringService.isImportButtonLoadingBs.next(true);
     this.subscription.add(
       this.cgmService
         .importCsvCgmImportOverrideExistingData(
@@ -69,11 +77,13 @@ export class DialogCsvImportComponent implements OnInit {
         )
         .pipe(
           tap(() => {
-            this.snackbarService.show("L'import modifié avec succés");
+            this.glucoseMonitoringService.isImportButtonLoadingBs.next(false);
+            this.snackbarService.success("L'import modifié avec succés");
             this.dialogService.close(CodeModaleEnum.CSV_IMPORT);
           }),
           catchError(() => {
-            this.snackbarService.show(
+            this.glucoseMonitoringService.isImportButtonLoadingBs.next(false);
+            this.snackbarService.error(
               "Une erreur est survenue lors de l'import"
             );
             return EMPTY;
@@ -84,6 +94,7 @@ export class DialogCsvImportComponent implements OnInit {
   }
 
   importCsvCgmImportPreserveExistingData(): void {
+    this.glucoseMonitoringService.isImportButtonLoadingBs.next(true);
     this.subscription.add(
       this.cgmService
         .importCsvCgmImportPreserveExistingData(
@@ -92,11 +103,13 @@ export class DialogCsvImportComponent implements OnInit {
         )
         .pipe(
           tap(() => {
-            this.snackbarService.show("L'import modifié avec succés");
+            this.glucoseMonitoringService.isImportButtonLoadingBs.next(false);
+            this.snackbarService.success("L'import modifié avec succés");
             this.dialogService.close(CodeModaleEnum.CSV_IMPORT);
           }),
           catchError(() => {
-            this.snackbarService.show(
+            this.glucoseMonitoringService.isImportButtonLoadingBs.next(false);
+            this.snackbarService.error(
               "Une erreur est survenue lors de l'import"
             );
             return EMPTY;

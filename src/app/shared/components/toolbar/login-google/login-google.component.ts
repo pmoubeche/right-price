@@ -19,10 +19,9 @@ import { RoleGuest } from '../../../constants/role.constant';
 declare var google: any;
 
 @Component({
-    selector: 'app-login-google',
-    imports: [],
-    templateUrl: './login-google.component.html',
-    styleUrl: './login-google.component.scss'
+  selector: 'app-login-google',
+  imports: [],
+  templateUrl: './login-google.component.html',
 })
 export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
   @Input() isSignup: boolean = false;
@@ -51,7 +50,7 @@ export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
           {
             theme: 'outline',
             size: 'large',
-            shape: 'pill',
+            shape: 'rectangular',
             logo_alignment: 'left',
           }
         );

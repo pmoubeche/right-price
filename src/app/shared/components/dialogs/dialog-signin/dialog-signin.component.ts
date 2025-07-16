@@ -19,17 +19,23 @@ import {
   DialogGenericService,
 } from '../dialog-generic.service';
 import { AuthService, RefreshTokenResponse } from '../../../../../generated';
+import { ToastrService } from 'ngx-toastr';
+import { RouterLink } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-dialog-signin',
-    imports: [
-        MaterialModule,
-        LoginGoogleComponent,
-        ReactiveFormsModule,
-        FormsModule,
-    ],
-    templateUrl: './dialog-signin.component.html',
-    styleUrl: './dialog-signin.component.scss'
+  selector: 'app-dialog-signin',
+  imports: [
+    MaterialModule,
+    LoginGoogleComponent,
+    RouterLink,
+    ReactiveFormsModule,
+    FormsModule,
+    TablerIconsModule,
+    CommonModule,
+  ],
+  templateUrl: './dialog-signin.component.html',
 })
 export class DialogSigninComponent implements OnInit, OnDestroy {
   readonly EMAIL_INPUT = 'email';
@@ -47,19 +53,6 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
     return this.signinForm?.get(this.PASSWORD_INPUT) as FormControl;
   }
 
-  private buttonsDialog: ButtonAction[] = [
-    {
-      isCloseButton: true,
-      label: 'Fermer',
-    },
-  ];
-
-  public dialogParamDataSignin: DialogContentModel = {
-    title: 'Se Connecter',
-    message: '',
-    buttons: this.buttonsDialog,
-  };
-
   subscription = new Subscription();
 
   constructor(
@@ -67,7 +60,7 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
     private readonly dialogGenericService: DialogGenericService,
     private readonly authService: AuthService,
     private readonly authServiceFront: AuthServiceFront,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
     private readonly formBuilder: FormBuilder
   ) {}
 
@@ -111,8 +104,16 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
 
   public loginAndClosePopUp(res: RefreshTokenResponse): void {
     this.authServiceFront.logIn(res);
-    this.snackbarService.show('Vous etes connecté');
+    this.snackbarService.success('Vous etes connecté');
     this.dialogGenericService.close(CodeModaleEnum.SIGNIN, res);
+  }
+
+  redirectSignUpPopin(event: any): void {
+    event?.preventDefault();
+    this.dialogGenericService.close(CodeModaleEnum.SIGNIN);
+    setTimeout(() => {
+      this.dialogGenericService.openDialog(CodeModaleEnum.SIGNUP);
+    }, 100); // délai court suffisant (100-200ms)
   }
 
   ngOnDestroy(): void {

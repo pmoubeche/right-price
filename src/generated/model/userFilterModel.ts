@@ -39,7 +39,7 @@ export interface UserFilterModel {
     /**
      * boolean whether user is active or not
      */
-    isActive?: boolean;
+    isActive?: string;
     /**
      * Start date of the range
      */

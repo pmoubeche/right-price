@@ -15,12 +15,10 @@ const EXP = 'exp';
   providedIn: 'root',
 })
 export class TokenStorageService {
-  readonly TOKEN_EXPIRATION_MIN = 60;
-
   constructor() {}
 
   signOut(): void {
-    window.sessionStorage.clear();
+    if (typeof window !== 'undefined') window.sessionStorage.clear();
   }
 
   public saveAccessToken(accessToken: string): void {

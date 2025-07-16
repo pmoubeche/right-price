@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
+  LOCALE_ID,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -13,17 +16,22 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import {
+  MAT_DATE_LOCALE,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
 import {
   DefaultMatCalendarRangeStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatCalendar,
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, map, tap } from 'rxjs';
+import { EMPTY, Observable, Subscription, catchError, map, tap } from 'rxjs';
 import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
 import {
   ButtonAction,
+  DialogConfirmContentModel,
   DialogContentModel,
 } from '../../shared/components/dialogs/dialog-content.model';
 import {
@@ -33,84 +41,111 @@ import {
 import { MaterialModule } from '../../shared/material/material.module';
 import {
   Meal,
-  MealProductInfoModel,
-  MealProductParam,
   ProductInfosModel,
 } from '../../shared/model/product-attribute-displayed.model';
 import {
   ResponseProduct,
   ResponseProducts,
 } from '../../shared/model/product.model';
-import { MealProductApiService } from '../../shared/services/meal-product-api.service';
 import { DateUtils } from '../../shared/utils/date.utils';
 import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
 import { ChartMealProductComponent } from './chart-meal-product/chart-meal-product.component';
 import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
+import {
+  LProductMealService,
+  MealModel,
+  MealProductParam,
+  MealsService,
+  ProductMealInfoModel,
+} from '../../../generated';
+import { SnackbarService } from '../../shared/services/snackbar.service';
+import { ToastrService } from 'ngx-toastr';
+import { MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
-    selector: 'app-meal',
-    standalone: true,
-    imports: [
-        MaterialModule,
-        TableProductMealComponent,
-        ChartMealProductComponent,
-        ReactiveFormsModule,
-        CommonModule,
-        SearchProductAutocompleteComponent,
-    ],
-    templateUrl: './meal.component.html',
-    styleUrl: './meal.component.scss',
-    providers: [
-        provideNativeDateAdapter(),
-        {
-            provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
-            useClass: DefaultMatCalendarRangeStrategy,
-        },
-    ],
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-meal',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    TableProductMealComponent,
+    ChartMealProductComponent,
+    ReactiveFormsModule,
+    CommonModule,
+    SearchProductAutocompleteComponent,
+    TablerIconsModule,
+    CardProductComponent,
+  ],
+  templateUrl: './meal.component.html',
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: DefaultMatCalendarRangeStrategy,
+    },
+    { provide: LOCALE_ID, useValue: 'fr-FR' },
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
+  ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MealComponent implements OnInit, OnDestroy {
   readonly DATE_MEAL_INPUT = 'dateMeal';
-  readonly TIME_MEAL_INPUT = 'timeMeal';
+  readonly TIME_CREATE_MEAL_INPUT = 'timeCreateMeal';
+  readonly MEAL_CREATE_CHIPS_SELECT = 'mealCreate';
+  readonly TIME_EDIT_MEAL_INPUT = 'timeEditMeal';
+  readonly MEAL_EDIT_CHIPS_SELECT = 'mealEdit';
+  readonly MEAL_DELETE_SELECT_CHIP = 'mealDeleteSelect';
+
   readonly QUANTITY_FORM = 'quantity';
-  readonly MEAL_FORM = 'meal';
+  readonly MEAL_ADD_PRODUCT_SELECT_CHIP = 'mealAddProductSelect';
   readonly PRODUCT_INFO_FORM = 'productInfo';
 
-  private _mealProductsBreakfast!: MealProductInfoModel[];
+  public mealsDefault: Meal[] = [
+    {
+      mealType: 'breakfast',
+      label: "P'tit déj",
+      class: 'bg-light-success text-success',
+      disabled: false,
+    },
+    {
+      mealType: 'lunch',
+      label: 'Déjeuner',
 
-  set mealProductsBreakfast(mealProductsBreakfast: MealProductInfoModel[]) {
-    this._mealProductsBreakfast = mealProductsBreakfast;
-  }
+      class: 'bg-light-primary text-primary',
+      disabled: false,
+    },
+    {
+      mealType: 'dinner',
+      label: 'Dinner',
+      class: 'bg-light-warning text-warning',
+      disabled: false,
+    },
+  ];
 
-  get mealProductsBreakfast() {
-    return this._mealProductsBreakfast;
-  }
-
-  private _mealProductsLunch!: MealProductInfoModel[];
-
-  set mealProductsLunch(mealProductsLunch: MealProductInfoModel[]) {
-    this._mealProductsLunch = mealProductsLunch;
-  }
-
-  get mealProductsLunch() {
-    return this._mealProductsLunch;
-  }
-
-  private _mealProductsDinner!: MealProductInfoModel[];
-
-  set mealProductsDinner(mealProductsDinner: MealProductInfoModel[]) {
-    this._mealProductsDinner = mealProductsDinner;
-  }
-
-  get mealProductsDinner() {
-    return this._mealProductsDinner;
-  }
+  public mealsCreate = this.mealsDefault;
 
   public meals: Meal[] = [
-    { id: 'breakfast', label: "P'tit déj" },
-    { id: 'lunch', label: 'Déjeuner' },
-    { id: 'dinner', label: 'Dinner' },
+    {
+      mealType: 'breakfast',
+      label: "P'tit déj",
+      class: 'bg-light-success text-success',
+      disabled: true,
+    },
+    {
+      mealType: 'lunch',
+      label: 'Déjeuner',
+
+      class: 'bg-light-primary text-primary',
+      disabled: true,
+    },
+    {
+      mealType: 'dinner',
+      label: 'Dinner',
+      class: 'bg-light-warning text-warning',
+      disabled: true,
+    },
   ];
 
   private buttonsDialog: ButtonAction[] = [
@@ -127,43 +162,27 @@ export class MealComponent implements OnInit, OnDestroy {
     buttons: this.buttonsDialog,
   };
 
-  mealSelected?: Meal;
+  private _mealProductsBreakfast!: ProductMealInfoModel[];
+  private _mealProductsLunch!: ProductMealInfoModel[];
+  private _mealProductsDinner!: ProductMealInfoModel[];
 
+  allMealsSelected?: boolean;
   public httpProduct?: ResponseProduct;
-
   httpProducts!: ResponseProducts;
-
+  mealCreateForm!: FormGroup;
+  mealEditForm!: FormGroup;
+  mealDeleteForm!: FormGroup;
   mealProductForm!: FormGroup;
-
-  public mealProduct: MealProductInfoModel = new MealProductInfoModel();
-
+  public mealProduct?: ProductMealInfoModel;
   public productInfoModelSelected?: ProductInfosModel;
-
-  allMealsProduct: MealProductInfoModel[] = [];
-
-  get quantityControl(): FormControl {
-    return this.mealProductForm?.get(this.QUANTITY_FORM) as FormControl;
-  }
-  get mealControl(): FormControl {
-    return this.mealProductForm?.get(this.MEAL_FORM) as FormControl;
-  }
-
-  get productInfoControl(): FormControl {
-    return this.mealProductForm?.get(this.PRODUCT_INFO_FORM) as FormControl;
-  }
-
-  get dateControl(): FormControl {
-    return this.mealProductForm?.get(this.DATE_MEAL_INPUT) as FormControl;
-  }
-
-  get timeControl(): FormControl {
-    return this.mealProductForm?.get(this.TIME_MEAL_INPUT) as FormControl;
-  }
-
+  allMealsProduct: ProductMealInfoModel[] = [];
+  timeCreate?: { hours: number; minutes: number };
+  timeEdit?: { hours: number; minutes: number };
   selectedDate?: string;
-  public selDate!: Date | null;
-
-  subscription = new Subscription();
+  selectedDateDate?: Date;
+  //only for table-meal-prodcut updates
+  selectedDeleteMeal?: MealModel;
+  expandEdit = false;
 
   @ViewChild('tableProductMealComponent')
   tableProductMealComponent!: TableProductMealComponent;
@@ -172,22 +191,132 @@ export class MealComponent implements OnInit, OnDestroy {
     map((data) => data['dates'])
   );
 
+  subscription = new Subscription();
+
+  set mealProductsBreakfast(mealProductsBreakfast: ProductMealInfoModel[]) {
+    this._mealProductsBreakfast = mealProductsBreakfast;
+  }
+
+  get mealProductsBreakfast() {
+    return this._mealProductsBreakfast;
+  }
+
+  set mealProductsLunch(mealProductsLunch: ProductMealInfoModel[]) {
+    this._mealProductsLunch = mealProductsLunch;
+  }
+
+  get mealProductsLunch() {
+    return this._mealProductsLunch;
+  }
+
+  set mealProductsDinner(mealProductsDinner: ProductMealInfoModel[]) {
+    this._mealProductsDinner = mealProductsDinner;
+  }
+
+  get mealProductsDinner() {
+    return this._mealProductsDinner;
+  }
+
+  get mealCreateChipsControl(): FormControl {
+    return this.mealCreateForm?.get(
+      this.MEAL_CREATE_CHIPS_SELECT
+    ) as FormControl;
+  }
+
+  get timeCreateMealControl(): FormControl {
+    return this.mealCreateForm?.get(this.TIME_CREATE_MEAL_INPUT) as FormControl;
+  }
+
+  get mealEditChipsControl(): FormControl {
+    return this.mealEditForm?.get(this.MEAL_EDIT_CHIPS_SELECT) as FormControl;
+  }
+
+  get timeEditMealControl(): FormControl {
+    return this.mealEditForm?.get(this.TIME_EDIT_MEAL_INPUT) as FormControl;
+  }
+
+  get quantityControl(): FormControl {
+    return this.mealProductForm?.get(this.QUANTITY_FORM) as FormControl;
+  }
+
+  get mealDeleteChipControl(): FormControl {
+    return this.mealDeleteForm?.get(
+      this.MEAL_DELETE_SELECT_CHIP
+    ) as FormControl;
+  }
+
+  get mealAddProdcutChipControl(): FormControl {
+    return this.mealProductForm?.get(
+      this.MEAL_ADD_PRODUCT_SELECT_CHIP
+    ) as FormControl;
+  }
+
+  get productInfoControl(): FormControl {
+    return this.mealProductForm?.get(this.PRODUCT_INFO_FORM) as FormControl;
+  }
+
+  private mealsDatesSet = new Set<string>();
+  @ViewChild(MatCalendar) calendar!: MatCalendar<Date>;
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cardsService: CardResultGenericService,
     private readonly mealService: MealService,
-    private readonly mealProductApiService: MealProductApiService,
+    private readonly lProductMealApiService: LProductMealService,
+    private readonly mealApiService: MealsService,
     private readonly popInService: DialogGenericService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly toastr: ToastrService,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.selectedDate = DateUtils.formatDate(new Date());
     this.initForm();
+    this.updateCalendarHighlights();
+    this.getMealsByDate();
     this.cardsService.selectItem$.subscribe((item) => {
       this.productInfoModelSelected = item;
     });
 
     this.setProductInfoSelectedFromProductDetail();
+  }
+
+  getMealsByDate(): void {
+    this.meals.forEach((meal) => {
+      (meal.disabled = true), (meal.timeHour = '');
+    });
+    this.mealsCreate.forEach((meal) => (meal.disabled = false));
+
+    this.subscription.add(
+      this.mealApiService
+        .getMealsByDate(this.selectedDate!)
+        .pipe(
+          tap((meals) => {
+            if (meals && meals.length > 0) {
+              meals.forEach((apiMeal) => {
+                const matchDefault = this.mealsCreate.find(
+                  (m) => m.mealType === apiMeal.mealType
+                );
+                if (matchDefault) {
+                  matchDefault.disabled = true;
+                }
+                const matchMeal = this.meals.find(
+                  (m) => m.mealType === apiMeal.mealType
+                );
+                if (matchMeal) {
+                  matchMeal.disabled = false;
+                  matchMeal.id = apiMeal.id;
+                  matchMeal.timeHour = DateUtils.getHoursMinutesFromDateString(
+                    apiMeal.dateCreation!
+                  );
+                }
+              });
+            }
+          })
+        )
+        .subscribe()
+    );
   }
 
   private setProductInfoSelectedFromProductDetail() {
@@ -203,93 +332,227 @@ export class MealComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    this.mealProductForm = this.formBuilder.group({
+    this.mealCreateForm = this.formBuilder.group({
       [this.DATE_MEAL_INPUT]: [new Date(), [Validators.required]],
-      [this.TIME_MEAL_INPUT]: ['', [Validators.required]],
+      [this.TIME_CREATE_MEAL_INPUT]: ['', [Validators.required]],
+      [this.MEAL_DELETE_SELECT_CHIP]: ['', [Validators.required]],
+      [this.MEAL_CREATE_CHIPS_SELECT]: ['', [Validators.required]],
+    });
+    this.mealEditForm = this.formBuilder.group({
+      [this.TIME_EDIT_MEAL_INPUT]: ['', [Validators.required]],
+      [this.MEAL_EDIT_CHIPS_SELECT]: ['', [Validators.required]],
+    });
+    this.mealDeleteForm = this.formBuilder.group({
+      [this.MEAL_DELETE_SELECT_CHIP]: ['', [Validators.required]],
+    });
+    this.mealProductForm = this.formBuilder.group({
       [this.QUANTITY_FORM]: ['', [Validators.required]],
-      [this.MEAL_FORM]: new FormControl('', [Validators.required]),
-      [this.PRODUCT_INFO_FORM]: [
-        this.productInfoModelSelected,
-        [Validators.required],
-      ],
+      [this.MEAL_ADD_PRODUCT_SELECT_CHIP]: ['', [Validators.required]],
+      [this.PRODUCT_INFO_FORM]: [null, [Validators.required]],
+    });
+
+    this.timeCreateMealControl.valueChanges.subscribe((timeCreate) => {
+      this.timeCreate = {
+        hours: timeCreate.getHours(),
+        minutes: timeCreate.getMinutes(),
+      };
+    });
+
+    this.timeEditMealControl.valueChanges.subscribe((timeEdit) => {
+      this.timeEdit = {
+        hours: timeEdit.getHours(),
+        minutes: timeEdit.getMinutes(),
+      };
+    });
+  }
+
+  updateCalendarHighlights(): void {
+    this.mealApiService.getDatesMealsFromUser().subscribe((datesMeals) => {
+      this.mealsDatesSet = new Set(
+        datesMeals.map((date: any) => new Date(date).toLocaleDateString())
+      );
+
+      // 🧼 Force manuellement Angular à détecter les changements
+      this.calendar.updateTodaysDate(); // Déclenche une vérification interne
+      this.cdr.detectChanges(); // Assure que tout est bien synchronisé avec le template
     });
   }
 
   dateClass = (date: Date): MatCalendarCellCssClasses => {
-    let classApplied = '';
-    this.dates$.subscribe((dates) => {
-      const meDates = dates.map((date: any) => new Date(date));
-      const index = meDates.findIndex(
-        (x: any) =>
-          new Date(x).toLocaleDateString() === date.toLocaleDateString()
-      );
-      if (index > -1) {
-        if (meDates[index]) {
-          classApplied = 'highlight-date';
-        }
-      }
-      return classApplied;
-    });
-    return classApplied;
+    const dateStr = date.toLocaleDateString();
+
+    const isMeal = this.mealsDatesSet.has(dateStr);
+
+    if (isMeal) return 'highlight-date-success';
+
+    return '';
   };
 
-  onHttpProductsChange(httpProducts: ResponseProducts): void {
-    this.httpProducts = httpProducts;
-  }
+  // dateClass = (date: Date): MatCalendarCellCssClasses => {
+  //   let classApplied = '';
+  //   this.dates$.subscribe((dates) => {
+  //     const meDates = dates.map((date: any) => new Date(date));
+  //     const index = meDates.findIndex(
+  //       (x: any) =>
+  //         new Date(x).toLocaleDateString() === date.toLocaleDateString()
+  //     );
+  //     if (index > -1) {
+  //       if (meDates[index]) {
+  //         classApplied = 'highlight-date-success';
+  //       }
+  //     }
+  //     return classApplied;
+  //   });
+  //   return classApplied;
+  // };
 
-  onHttpProductChange(httpProduct: ResponseProduct): void {
-    this.httpProduct = httpProduct;
-  }
-
-  onSelectMeal(meal: any) {
-    this.mealSelected = meal.value;
-    this.productInfoControl.markAsTouched();
-  }
-
-  onDateChange(event: any) {
-    this.dateControl.setValue(event);
+  onDateChange(event: Date) {
+    this.selectedDate = DateUtils.formatDate(event);
+    this.selectedDateDate = event;
+    this.selectedDeleteMeal = {};
+    this.getMealsByDate();
     this.mealService.dateSelectedBs.next(DateUtils.formatDate(event));
   }
 
-  onMealProductsBreakfastChange(mealProducts: MealProductInfoModel[]): void {
+  onMealProductsBreakfastChange(mealProducts: ProductMealInfoModel[]): void {
     this.mealProductsBreakfast = mealProducts;
   }
 
-  onMealProductsLunchChange(mealProducts: MealProductInfoModel[]): void {
+  onMealProductsLunchChange(mealProducts: ProductMealInfoModel[]): void {
     this.mealProductsLunch = mealProducts;
   }
 
-  onMealProductsDinnerChange(mealProducts: MealProductInfoModel[]): void {
+  onMealProductsDinnerChange(mealProducts: ProductMealInfoModel[]): void {
     this.mealProductsDinner = mealProducts;
   }
 
-  addMealProductToResult(): void {
-    let time = DateUtils.fromTimeStringToMapTime(this.timeControl.value);
-    let quantity = this.quantityControl!.value;
-    let meal = this.mealSelected;
-
-    let myDate = new Date(this.dateControl.value).setHours(
-      time.hours,
-      time.minutes
+  addMeal(): void {
+    const baseDate = DateUtils.parseDateFromString(this.selectedDate!);
+    baseDate.setHours(
+      this.timeCreate?.hours || 0,
+      this.timeCreate?.minutes || 0
     );
 
+    const req: MealModel = {
+      mealType: this.mealCreateChipsControl.value.mealType,
+      dateCreation: DateUtils.dateStringWithoutOffesetTimeZone(baseDate),
+    };
+
+    this.subscription.add(
+      this.mealApiService
+        .createMeal(req)
+        .pipe(
+          tap((_) => {
+            this.getMealsByDate();
+            this.mealCreateChipsControl.reset();
+            this.timeCreateMealControl.reset();
+            this.timeCreateMealControl.untouched;
+            this.toastr.success('Repas créé');
+            this.updateCalendarHighlights();
+          }),
+          catchError((_) => {
+            this.toastr.error('Une erreur est survenue');
+            return EMPTY;
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  editMeal(): void {
+    const baseDate = DateUtils.parseDateFromString(this.selectedDate!);
+    baseDate.setHours(this.timeEdit?.hours || 0, this.timeEdit?.minutes || 0);
+
+    const req: MealModel = {
+      id: this.mealEditChipsControl.value.id,
+      mealType: this.mealEditChipsControl.value.mealType,
+      dateCreation: DateUtils.dateStringWithoutOffesetTimeZone(baseDate),
+    };
+
+    this.subscription.add(
+      this.mealApiService
+        .updateMeal(req)
+        .pipe(
+          tap((_) => {
+            this.getMealsByDate();
+            this.mealEditChipsControl.reset();
+            this.timeEditMealControl.reset();
+            this.timeEditMealControl.untouched;
+            this.toastr.success('Repas modifié');
+            this.updateCalendarHighlights();
+          }),
+          catchError((_) => {
+            this.toastr.error('Une erreur est survenue');
+            return EMPTY;
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  openDeletePopIn(): void {
+    const meals = [
+      this.mealProductsBreakfast,
+      this.mealProductsLunch,
+      this.mealProductsDinner,
+    ];
+
+    const hasSelectedMealProductsInIt = meals.some(
+      (mp) =>
+        mp.length > 0 &&
+        mp[0].mealType === this.mealDeleteChipControl.value.mealType
+    );
+
+    const config: DialogConfirmContentModel = {
+      color: 'error',
+      icon: 'trash',
+      title: 'Attention',
+      message:
+        'En supprimant le repas, tous les aliments qui y sont contenus le seront également, continuer ?',
+      confirm: () => this.deleteMeal(),
+    };
+
+    if (hasSelectedMealProductsInIt) {
+      this.popInService.openConfirmDialog(config);
+    } else {
+      this.deleteMeal();
+    }
+  }
+
+  deleteMeal(): void {
+    this.subscription.add(
+      this.mealApiService
+        .deleteMeal(this.mealDeleteChipControl.value.id)
+        .pipe(
+          tap((_) => {
+            this.selectedDeleteMeal = this.mealDeleteChipControl.value;
+            this.getMealsByDate();
+            this.mealDeleteChipControl.reset();
+            this.toastr.success('Repas supprimé');
+            this.updateCalendarHighlights();
+          }),
+          catchError((_) => {
+            this.toastr.error('Une erreur est survenue');
+            return EMPTY;
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  addMealProductToResult(): void {
     const mealProductParam: MealProductParam = {
       barcodeProduct: this.productInfoModelSelected?.id,
       nameProduct: this.productInfoModelSelected?.label,
       imageProduct: this.productInfoModelSelected?.image,
       nutriscore: this.productInfoModelSelected?.nutriscore,
-      quantity: Number.parseFloat(quantity),
       packagingQuantity: this.productInfoModelSelected?.packagingQuantity,
-      mealType: meal?.id,
-      date: DateUtils.dateStringWithoutOffesetTimeZone(new Date(myDate)),
+      quantity: Number.parseFloat(this.quantityControl!.value),
+      mealId: this.mealAddProdcutChipControl?.value.id,
     };
 
     this.mealProductForm.markAllAsTouched();
-    if (
-      this.mealSelected &&
-      this.quantityControl.valid &&
-      this.productInfoModelSelected
-    ) {
+    if (this.quantityControl.valid && this.productInfoModelSelected) {
       if (this.isProductExistInList(mealProductParam)) {
         this.popInService.openDialog(
           CodeModaleEnum.INFORMATION,
@@ -297,8 +560,8 @@ export class MealComponent implements OnInit, OnDestroy {
         );
       } else {
         this.subscription.add(
-          this.mealProductApiService
-            .addMealProduct(mealProductParam)
+          this.lProductMealApiService
+            .createProductOnMeal(mealProductParam)
             .pipe(
               tap((mealProductInfo) => {
                 this.mealProduct = mealProductInfo;
@@ -306,6 +569,13 @@ export class MealComponent implements OnInit, OnDestroy {
                   this.productInfoModelSelected?.image;
                 this.mealProduct.nutriscore =
                   this.productInfoModelSelected?.nutriscore;
+                this.mealAddProdcutChipControl.reset();
+                this.toastr.success('Produit ajouté au repas');
+                this.updateCalendarHighlights();
+              }),
+              catchError((_) => {
+                this.toastr.error('Une erreur est survenue');
+                return EMPTY;
               })
             )
             .subscribe()
@@ -323,7 +593,7 @@ export class MealComponent implements OnInit, OnDestroy {
     return allMealsProduct.find(
       (mealProduct) =>
         mealProductParam.barcodeProduct === mealProduct.idProduct &&
-        mealProductParam.mealType === mealProduct.mealType
+        this.mealAddProdcutChipControl.value.mealType === mealProduct.mealType
     )?.idProduct
       ? true
       : false;

@@ -1,10 +1,9 @@
 <div>
   @if(user$ | async; as user){ @if(user.image){
-  <div style="cursor: pointer">
+  <div class="cursor-pointer border-primary rounded-circle">
     <ngx-avatars
       src="{{ user.image }}"
       [matMenuTriggerFor]="menu"
-      [borderColor]="'#f1f1f1'"
       [round]="true"
     ></ngx-avatars>
   </div>
@@ -13,18 +12,24 @@
   <mat-menu #menu="matMenu">
     @if (user$ | async; as user) {
     <button mat-menu-item [routerLink]="'/settings/' + user.id">
-      <label>Parametres</label>
-      <mat-icon>settings</mat-icon>
+      <div class="d-flex align-items-center">
+        <i-tabler class="icon-20 m-r-4" name="settings"></i-tabler>
+        <label>Parametres</label>
+      </div>
     </button>
     @if (hasUserAdminRole(user.roles)) {
     <button mat-menu-item [routerLink]="'/administration'">
-      <label>Administration</label>
-      <mat-icon>people</mat-icon>
+      <div class="d-flex align-items-center">
+        <i-tabler class="icon-20 m-r-4" name="user-cog"></i-tabler>
+        <label>Administration</label>
+      </div>
     </button>
     }
     <button mat-menu-item (click)="logOut()">
-      <label>Se Deconnecter</label>
-      <mat-icon>cancel</mat-icon>
+      <div class="d-flex align-items-center">
+        <i-tabler class="icon-20 m-r-4" name="logout"></i-tabler>
+        <label>Se deconnecter</label>
+      </div>
     </button>
     }
   </mat-menu>

@@ -1,4 +1,3 @@
-
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -16,6 +15,7 @@ import {
   NativeDateAdapter,
 } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription, tap } from 'rxjs';
 import {
   BannerCreateModel,
@@ -23,25 +23,30 @@ import {
   BannerService,
 } from '../../../../../generated';
 import { MaterialModule } from '../../../material/material.module';
-import { SnackbarService } from '../../../services/snackbar.service';
-import { DateUtils } from '../../../utils/date.utils';
+import { CodeLabelModel } from '../../../model/code-label.model';
 import { DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { CodeLabelModel } from '../../../model/code-label.model';
+import { CommonModule } from '@angular/common';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
-    selector: 'app-dialog-banner-edit',
-    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
-    providers: [
-        { provide: DateAdapter, useClass: NativeDateAdapter },
-        { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
-        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-    ],
-    templateUrl: './dialog-banner-edit.component.html',
-    styleUrl: './dialog-banner-edit.component.scss'
+  selector: 'app-dialog-banner-edit',
+  imports: [
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    TablerIconsModule,
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+  ],
+  templateUrl: './dialog-banner-edit.component.html',
 })
 export class DialogBannerEditComponent implements OnInit, OnDestroy {
   readonly MESSAGE_INPUT = 'message';
@@ -83,7 +88,7 @@ export class DialogBannerEditComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
     private readonly dialogGenericService: DialogGenericService,
-    private readonly snackbarService: SnackbarService,
+    private readonly snackbarService: ToastrService,
     private readonly bannerService: BannerService,
     private readonly formBuilder: FormBuilder
   ) {
@@ -126,7 +131,7 @@ export class DialogBannerEditComponent implements OnInit, OnDestroy {
             .createBanner(bannerCreate)
             .pipe(
               tap(() => {
-                this.snackbarService.show('Bannière créée avec succès');
+                this.snackbarService.success('Bannière créée avec succès');
                 this.dialogGenericService.close(CodeModaleEnum.BANNER);
               })
             )
@@ -147,7 +152,7 @@ export class DialogBannerEditComponent implements OnInit, OnDestroy {
             .updateBanner(bannerParam)
             .pipe(
               tap(() => {
-                this.snackbarService.show('Bannière modifiée avec succès');
+                this.snackbarService.success('Bannière modifiée avec succès');
                 this.dialogGenericService.close(CodeModaleEnum.BANNER);
               })
             )

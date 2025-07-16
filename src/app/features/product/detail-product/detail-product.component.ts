@@ -1,7 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChartData, ChartOptions } from 'chart.js';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import {
+  ChartConfiguration,
+  ChartData,
+  ChartOptions,
+  DoughnutControllerDatasetOptions,
+} from 'chart.js';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../../shared/common/paginated/paginated-datasource';
 import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
@@ -45,20 +51,19 @@ export class NutrimentInfoModel {
   ajr?: string;
   percentAjr_100g?: number;
   unit?: string;
+  isChildren?: boolean;
 }
 
 @Component({
-    selector: 'app-detail-product',
-    imports: [
-        MaterialModule,
-        TableGenericComponent,
-        PercentFormatPipe,
-        UppercaseFirstLetterFormatPipe,
-        ChartComponent,
-        GaugeChartCardComponent,
-    ],
-    templateUrl: './detail-product.component.html',
-    styleUrl: './detail-product.component.scss'
+  selector: 'app-detail-product',
+  imports: [
+    MaterialModule,
+    TableGenericComponent,
+    ChartComponent,
+    GaugeChartCardComponent,
+    TablerIconsModule,
+  ],
+  templateUrl: './detail-product.component.html',
 })
 export class DetailProductComponent implements OnInit, OnDestroy {
   private _httpProduct!: ResponseProduct;
@@ -196,11 +201,13 @@ export class DetailProductComponent implements OnInit, OnDestroy {
   sugarsChartPieData?: ChartData;
   microNutrimentschartPieData?: ChartData;
 
-  chartOptions: ChartOptions = {
+  chartOptions: ChartOptions<'doughnut'> = {
+    maintainAspectRatio: false,
+    cutout: '80%',
     responsive: true,
     plugins: {
       legend: {
-        position: 'bottom',
+        display: false,
       },
     },
   };
@@ -214,7 +221,17 @@ export class DetailProductComponent implements OnInit, OnDestroy {
         stacked: true,
         ticks: { format: { style: 'percent' } },
       },
-      x: { stacked: true },
+      x: {
+        grid: {
+          display: false,
+        },
+        stacked: true,
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
     },
   };
 
@@ -301,39 +318,39 @@ export class DetailProductComponent implements OnInit, OnDestroy {
   private setGaugesParamsDatas(httpProduct: ResponseProduct) {
     this.gaugeChartParamCal = {
       title: 'Calories',
-      color: '#be0e13',
+      color: ChartUtils.getCssVariableValue('error'),
       unit: 'kcal',
       value: httpProduct.product?.nutriments?.['energy-kcal_100g'],
       valueMax: 900,
-      height: 30,
-      width: 15,
+      width: 100,
+      height: 50,
     };
     this.gaugeChartParamProt = {
       title: 'Protéines',
-      color: '#FFCE56',
+      color: ChartUtils.getCssVariableValue('warning'),
       unit: 'g',
       value: httpProduct.product?.nutriments?.proteins_100g,
       valueMax: 100,
-      height: 30,
-      width: 15,
+      width: 100,
+      height: 50,
     };
     this.gaugeChartParamGluc = {
       title: 'Glucides',
-      color: '#36A2EB',
+      color: ChartUtils.getCssVariableValue('success'),
       unit: 'g',
       value: httpProduct.product?.nutriments?.carbohydrates_100g,
       valueMax: 100,
-      height: 30,
-      width: 15,
+      width: 100,
+      height: 50,
     };
     this.gaugeChartParamLip = {
       title: 'Lipides',
-      color: '#7fc8c9',
+      color: ChartUtils.getCssVariableValue('primary'),
       unit: 'g',
       value: httpProduct.product?.nutriments?.fat_100g,
       valueMax: 100,
-      height: 30,
-      width: 15,
+      width: 100,
+      height: 50,
     };
   }
 
@@ -397,8 +414,18 @@ export class DetailProductComponent implements OnInit, OnDestroy {
       datasets: [
         {
           data: Array.from(nutrimentChartPieMap.values()),
-          backgroundColor: ['#7fc8c9', '#36A2EB', '#FFCE56', '#F0EBE3'],
-          hoverBackgroundColor: ['#7fc8c9', '#36A2EB', '#FFCE56', '#F0EBE3'],
+          backgroundColor: [
+            ChartUtils.getCssVariableValue('primary'),
+            ChartUtils.getCssVariableValue('success'),
+            ChartUtils.getCssVariableValue('warning'),
+            ChartUtils.getCssVariableValue('light'),
+          ],
+          hoverBackgroundColor: [
+            ChartUtils.getCssVariableValue('lightPrimary'),
+            ChartUtils.getCssVariableValue('lightSuccess'),
+            ChartUtils.getCssVariableValue('lightWarning'),
+            ChartUtils.getCssVariableValue('light'),
+          ],
         },
       ],
     };
@@ -417,22 +444,22 @@ export class DetailProductComponent implements OnInit, OnDestroy {
         {
           data: Array.from(sugarsChartPieMap.values()),
           backgroundColor: [
-            '#21428d',
-            '#2b5fad',
-            '#3170bf',
-            '#3881d2',
-            '#4c7ed0',
-            '#529ee4',
-            '#6dafe8',
+            ChartUtils.getCssVariableValue('primary'),
+            ChartUtils.getCssVariableValue('lightPrimary'),
+            ChartUtils.getCssVariableValue('primary'),
+            ChartUtils.getCssVariableValue('lightPrimary'),
+            ChartUtils.getCssVariableValue('primary'),
+            ChartUtils.getCssVariableValue('lightPrimary'),
+            ChartUtils.getCssVariableValue('primary'),
           ],
           hoverBackgroundColor: [
-            '#21428d',
-            '#2b5fad',
-            '#3170bf',
-            '#3881d2',
-            '#4c7ed0',
-            '#529ee4',
-            '#6dafe8',
+            ChartUtils.getCssVariableValue('light'),
+            ChartUtils.getCssVariableValue('light'),
+            ChartUtils.getCssVariableValue('light'),
+            ChartUtils.getCssVariableValue('light'),
+            ChartUtils.getCssVariableValue('light'),
+            ChartUtils.getCssVariableValue('light'),
+            ChartUtils.getCssVariableValue('light'),
           ],
         },
       ],
@@ -453,7 +480,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
           label: 'Pourcentage AJR pour 100g',
           data: Array.from(micronutrimentChartMap.values()),
           fill: true,
-          backgroundColor: ['#7fc8c9'],
+          backgroundColor: [ChartUtils.getCssVariableValue('primary')],
           borderRadius: {
             topLeft: 15,
             topRight: 15,
@@ -461,6 +488,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
             bottomRight: 15,
           },
           borderSkipped: false,
+          barThickness: 10,
         },
         {
           label: 'Pourcentage AJR (100%)',
@@ -468,7 +496,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
             .map((val) => 1 - val)
             .map((val) => (val < 0 ? 0 : val)),
           fill: true,
-          backgroundColor: ['#f1f1f1'],
+          backgroundColor: [ChartUtils.getCssVariableValue('light')],
           borderRadius: {
             topLeft: 15,
             topRight: 15,
@@ -476,6 +504,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
             bottomRight: 15,
           },
           borderSkipped: false,
+          barThickness: 10,
         },
       ],
     };

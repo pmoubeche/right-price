@@ -39,4 +39,18 @@ export class DateUtils {
       date.getTime() - date.getTimezoneOffset() * 60000
     ).toISOString();
   }
+
+  static parseDateFromString(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  static getHoursMinutesFromDateString(date: string) {
+    const d = new Date(date);
+
+    // Format HH:mm
+    const hours = d.getUTCHours().toString().padStart(2, '0');
+    const minutes = d.getUTCMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
 }

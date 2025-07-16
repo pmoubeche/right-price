@@ -1,4 +1,3 @@
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -24,17 +23,19 @@ import {
   TableColumnParamModel,
 } from '../../shared/model/table-column-param.model';
 import { DateUtils } from '../../shared/utils/date.utils';
+import { ButtonParam } from '../../shared/model/button-param';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
-    selector: 'app-user-adminstration',
-    imports: [
+  selector: 'app-user-adminstration',
+  imports: [
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    TableGenericComponent
-],
-    templateUrl: './user-adminstration.component.html',
-    styleUrl: './user-adminstration.component.scss'
+    TableGenericComponent,
+    TablerIconsModule,
+  ],
+  templateUrl: './user-adminstration.component.html',
 })
 export class UserAdminstrationComponent implements OnInit, OnDestroy {
   readonly USERNAME_FIELD = 'username';
@@ -51,6 +52,10 @@ export class UserAdminstrationComponent implements OnInit, OnDestroy {
   readonly STATUS_INACTIVE = 'inactive';
 
   statusCodeLabels: CodeLabelModel[] = [
+    {
+      code: '',
+      label: 'Tous',
+    },
     {
       code: 'active',
       label: 'Actif',
@@ -69,7 +74,7 @@ export class UserAdminstrationComponent implements OnInit, OnDestroy {
   rolesOptions: CodeLabelModel[] = RolesConstants.map((role) => {
     return {
       code: role.id,
-      label: role.name?.substring(0, role.name.indexOf('_')),
+      label: role.code,
     };
   });
 
@@ -133,6 +138,21 @@ export class UserAdminstrationComponent implements OnInit, OnDestroy {
       label: 'Actions',
       columDef: ColumnTypeParamEnum.ACTIONS,
       type: ColumnTypeParamEnum.ACTIONS,
+    },
+  ];
+
+  buttonsParams: ButtonParam[] = [
+    {
+      label: 'Modifier',
+      icon: 'edit',
+      color: 'success',
+      action: (row: any) => this.updateUser(row),
+    },
+    {
+      label: 'Supprimer',
+      icon: 'trash-x',
+      color: 'error',
+      action: (row: any) => this.deleteUser(row),
     },
   ];
 
@@ -203,7 +223,7 @@ export class UserAdminstrationComponent implements OnInit, OnDestroy {
       [this.DATE_CREATION_START_FIELD]: [''],
       [this.DATE_CREATION_END_FIELD]: [''],
       [this.ORIGIN_FIELD]: [''],
-      [this.STATUS_USER_FIELD]: [true],
+      [this.STATUS_USER_FIELD]: [''],
     });
   }
 
@@ -217,7 +237,7 @@ export class UserAdminstrationComponent implements OnInit, OnDestroy {
       dateCreationStart: '',
       dateCreationEnd: '',
       origin: '',
-      isActive: true,
+      isActive: '',
     };
   }
 
@@ -240,7 +260,7 @@ export class UserAdminstrationComponent implements OnInit, OnDestroy {
           ? ''
           : DateUtils.formatDate(this.dateCreationEndControl.value),
       origin: this.originControl.value,
-      isActive: this.statusControl.value === 'active' ? true : false,
+      isActive: this.statusControl.value,
     };
   }
 

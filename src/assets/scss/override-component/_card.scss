@@ -1,0 +1,124 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../variables" as *;
+
+@include mat.card-overrides(
+  (
+    elevated-container-color: $white,
+    title-text-size: 1.125rem,
+    subtitle-text-size: 14px,
+    title-text-line-height: 1.6rem,
+    title-text-weight: 600,
+    subtitle-text-weight: 400,
+    elevated-container-shape: var(--mat-sys-corner-small),
+    outlined-container-shape: var(--mat-sys-corner-small),
+    elevated-container-elevation: var(--mat-sys-level2),
+  )
+);
+
+// styles
+html {
+  .mat-mdc-card {
+    margin-bottom: $card-spacer;
+
+    .mat-mdc-card-header {
+      padding: 16px $card-spacer !important;
+    }
+
+    .mat-mdc-card-header + .mat-mdc-card-content {
+      padding: 0 $card-spacer $card-spacer;
+    }
+
+    > .mat-mdc-card-content {
+      padding: $card-spacer !important;
+    }
+
+    .mdc-card__actions {
+      padding: $card-spacer !important;
+    }
+  }
+
+  .card-hover {
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+    &:hover {
+      outline: 2px solid $primary;
+      scale: 1.05;
+      transition: all 0s ease-in 0s;
+      cursor: pointer;
+    }
+  }
+
+  .cardBorder {
+    .mdc-card {
+      box-shadow: none !important;
+      border: 1px solid $borderColor !important;
+
+      &.shadow-none {
+        border: 0 !important;
+      }
+    }
+  }
+
+  .card-wrapper-line {
+    display: grid;
+    grid-template-columns: repeat(var(--nb), 1fr);
+  }
+
+  .card-wrapper-table {
+    display: flex;
+    grid-template-columns: repeat(var(--nb), 1fr);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .spinner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.5
+    ); // semi-transparent pour voir derrière
+    backdrop-filter: blur(2px); // optionnel : floutage doux
+  }
+
+  .cardNoClick {
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+    &:hover {
+      outline: 2px solid $primary;
+      scale: 1.05;
+      transition: all 0s ease-in 0s;
+    }
+  }
+
+  .shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .highlight-date-success {
+    background-color: $light-success !important;
+    border-radius: 25px;
+  }
+
+  .highlight-date-primary {
+    background-color: $light-primary !important;
+    border-radius: 25px;
+  }
+
+  .highlight-date-warning {
+    background-color: $light-warning !important;
+    border-radius: 25px;
+  }
+}

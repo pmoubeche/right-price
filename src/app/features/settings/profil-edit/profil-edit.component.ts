@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../shared/material/material.module';
 import { ContextService } from '../../../shared/services/context.service';
 
-import { Gender } from '../../../shared/model/gender.model';
 import {
   FormBuilder,
   FormControl,
@@ -10,14 +9,17 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription, tap } from 'rxjs';
+import { UserModel, UserResponse, UserService } from '../../../../generated';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../../../shared/components/dialogs/dialog-generic.service';
-import { SnackbarService } from '../../../shared/services/snackbar.service';
-import { UserModel, UserResponse, UserService } from '../../../../generated';
+import { Gender } from '../../../shared/model/gender.model';
 import { AuthServiceFront } from '../../../shared/services/auth-front.service';
+import { CommonModule } from '@angular/common';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 export enum GenderEnum {
   MALE = 'male',
@@ -26,10 +28,15 @@ export enum GenderEnum {
 }
 
 @Component({
-    selector: 'app-profil-edit',
-    imports: [MaterialModule, ReactiveFormsModule, FormsModule],
-    templateUrl: './profil-edit.component.html',
-    styleUrl: './profil-edit.component.scss'
+  selector: 'app-profil-edit',
+  imports: [
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    TablerIconsModule,
+  ],
+  templateUrl: './profil-edit.component.html',
 })
 export class ProfilEditComponent implements OnInit, OnDestroy {
   readonly USERNAME_FIELD = 'username';
@@ -105,7 +112,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly authServiceFront: AuthServiceFront,
     private readonly dialogService: DialogGenericService,
-    private readonly snackBarService: SnackbarService
+    private readonly snackBarService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -159,7 +166,7 @@ export class ProfilEditComponent implements OnInit, OnDestroy {
           tap((res) => {
             this.user = res.userModel!;
             this.authServiceFront.logIn(res.refreshTokenResponse!);
-            this.snackBarService.show('Profil modifié avec succès');
+            this.snackBarService.success('Profil modifié avec succès');
           })
         )
         .subscribe()
