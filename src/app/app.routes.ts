@@ -50,10 +50,6 @@ export const routes: Routes = [
     path: 'cgm',
     component: GlucoseMonitoringComponent,
     canActivate: [requireAnyRole(RoleTier2, RoleAdmin), authGuard()],
-    resolve: {
-      datesMeals: getListDatesWhereMealsResolver,
-      datesCgm: getListDatesWhereCgmResolver,
-    },
   },
   {
     path: 'compare',

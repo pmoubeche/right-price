@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, Subscription, switchMap, tap } from 'rxjs';
@@ -13,9 +13,11 @@ import { MaterialModule } from '../../shared/material/material.module';
 import { AuthServiceFront } from '../../shared/services/auth-front.service';
 import { ContextService } from '../../shared/services/context.service';
 import { TokenStorageService } from '../../shared/services/token-storage.service';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 export class Sub {
   type?: string;
+  class?: string;
   title?: string;
   price?: string;
   features?: string[];
@@ -25,10 +27,10 @@ export class Sub {
 }
 
 @Component({
-    selector: 'app-pricing',
-    imports: [MaterialModule, CommonModule],
-    templateUrl: './subscribe.component.html',
-    styleUrl: './subscribe.component.scss'
+  selector: 'app-pricing',
+  imports: [MaterialModule, CommonModule, TablerIconsModule],
+  templateUrl: './subscribe.component.html',
+  styleUrl: './subscribe.component.scss',
 })
 export class SubscriptionComponent implements OnInit, OnDestroy {
   readonly GUEST = 'GUEST';
@@ -41,6 +43,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   public prices: Sub[] = [
     {
       type: this.GUEST,
+      class: 'bg-light-primary text-primary rounded f-w-600 p-6 p-y-4 f-s-16',
       title: 'Découvrir',
       price: '0€',
       features: [
@@ -53,6 +56,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     },
     {
       type: this.TIER1,
+      class: 'bg-light-success text-success rounded f-w-600 p-6 p-y-4 f-s-16',
       title: 'Niveau 1',
       price: '7,99€',
       features: [
@@ -67,6 +71,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     },
     {
       type: this.TIER2,
+      class: 'bg-light-warning text-warning rounded f-w-600 p-6 p-y-4 f-s-16',
       title: 'Niveau 2',
       price: '12,99€',
       features: [
@@ -95,7 +100,8 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     private readonly contexteService: ContextService,
     private readonly authFrontService: AuthServiceFront,
     private readonly ar: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {

@@ -18,7 +18,7 @@ export class TokenStorageService {
   constructor() {}
 
   signOut(): void {
-    if (window) window.sessionStorage.clear();
+    if (typeof window !== 'undefined') window.sessionStorage.clear();
   }
 
   public saveAccessToken(accessToken: string): void {

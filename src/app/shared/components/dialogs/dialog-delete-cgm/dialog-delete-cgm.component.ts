@@ -69,7 +69,6 @@ export class DialogDeleteDataCgmComponent implements OnInit {
 
   deleteDataCgm(): void {
     let filter: DateRangeFilter = {};
-
     if (this.selectedDateRange) {
       filter = {
         dateStart: DateUtils.formatDateMinus1(
@@ -89,13 +88,11 @@ export class DialogDeleteDataCgmComponent implements OnInit {
         .pipe(
           tap(() => {
             this.glucMonService.isDeleteCgmButtonLoadingBs.next(false);
-
             this.dialogService.close(CodeModaleEnum.DELETE_DATA_CGM);
             this.snackbarService.success('Données supprimées avec succès');
           }),
           catchError(() => {
             this.glucMonService.isDeleteCgmButtonLoadingBs.next(false);
-
             this.snackbarService.error(
               'Une erreur est survenue lors de la suppression des données'
             );
@@ -123,16 +120,9 @@ export class DialogDeleteDataCgmComponent implements OnInit {
   }
 
   dateClass = (date: Date): MatCalendarCellCssClasses => {
-    let classApplied = '';
-    const meDates = this.data.source.value.datesCgm.map(
-      (date: any) => new Date(date)
-    );
-    const index = meDates.findIndex(
-      (x: any) => new Date(x).toLocaleDateString() === date.toLocaleDateString()
-    );
-    if (index > -1) {
-      classApplied = 'highlight-date-warning';
-    }
-    return classApplied;
+    const dateStr = date.toLocaleDateString();
+    const isCgm = this.data.has(dateStr);
+    if (isCgm) return 'highlight-date-warning';
+    return '';
   };
 }

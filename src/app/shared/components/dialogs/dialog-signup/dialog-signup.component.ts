@@ -24,6 +24,7 @@ import {
   UserRequest,
 } from '../../../../../generated';
 import { ToastrService } from 'ngx-toastr';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
   selector: 'app-dialog-signup',
@@ -32,6 +33,7 @@ import { ToastrService } from 'ngx-toastr';
     LoginGoogleComponent,
     ReactiveFormsModule,
     FormsModule,
+    TablerIconsModule,
   ],
   templateUrl: './dialog-signup.component.html',
   styleUrl: './dialog-signup.component.scss',
@@ -120,6 +122,14 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
     this.authServiceFront.logIn(res);
     this.snackbarService.success('Utilisateur créé avec succes');
     this.dialogGenericService.close(CodeModaleEnum.SIGNUP, res);
+  }
+
+  redirectSignInPopin(event: any): void {
+    event?.preventDefault();
+    this.dialogGenericService.close(CodeModaleEnum.SIGNUP);
+    setTimeout(() => {
+      this.dialogGenericService.openDialog(CodeModaleEnum.SIGNIN);
+    }, 100); // délai court suffisant (100-200ms)
   }
 
   ngOnDestroy(): void {

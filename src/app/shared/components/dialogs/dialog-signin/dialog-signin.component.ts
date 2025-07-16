@@ -20,17 +20,22 @@ import {
 } from '../dialog-generic.service';
 import { AuthService, RefreshTokenResponse } from '../../../../../generated';
 import { ToastrService } from 'ngx-toastr';
+import { RouterLink } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dialog-signin',
   imports: [
     MaterialModule,
     LoginGoogleComponent,
+    RouterLink,
     ReactiveFormsModule,
     FormsModule,
+    TablerIconsModule,
+    CommonModule,
   ],
   templateUrl: './dialog-signin.component.html',
-  styleUrl: './dialog-signin.component.scss',
 })
 export class DialogSigninComponent implements OnInit, OnDestroy {
   readonly EMAIL_INPUT = 'email';
@@ -47,19 +52,6 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
   get passwordControl(): FormControl {
     return this.signinForm?.get(this.PASSWORD_INPUT) as FormControl;
   }
-
-  private buttonsDialog: ButtonAction[] = [
-    {
-      isCloseButton: true,
-      label: 'Fermer',
-    },
-  ];
-
-  public dialogParamDataSignin: DialogContentModel = {
-    title: 'Se Connecter',
-    message: '',
-    buttons: this.buttonsDialog,
-  };
 
   subscription = new Subscription();
 
@@ -114,6 +106,14 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
     this.authServiceFront.logIn(res);
     this.snackbarService.success('Vous etes connecté');
     this.dialogGenericService.close(CodeModaleEnum.SIGNIN, res);
+  }
+
+  redirectSignUpPopin(event: any): void {
+    event?.preventDefault();
+    this.dialogGenericService.close(CodeModaleEnum.SIGNIN);
+    setTimeout(() => {
+      this.dialogGenericService.openDialog(CodeModaleEnum.SIGNUP);
+    }, 100); // délai court suffisant (100-200ms)
   }
 
   ngOnDestroy(): void {

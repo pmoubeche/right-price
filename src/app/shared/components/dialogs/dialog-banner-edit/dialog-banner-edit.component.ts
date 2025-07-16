@@ -29,17 +29,24 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
+import { CommonModule } from '@angular/common';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
   selector: 'app-dialog-banner-edit',
-  imports: [MaterialModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    TablerIconsModule,
+  ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
   ],
   templateUrl: './dialog-banner-edit.component.html',
-  styleUrl: './dialog-banner-edit.component.scss',
 })
 export class DialogBannerEditComponent implements OnInit, OnDestroy {
   readonly MESSAGE_INPUT = 'message';

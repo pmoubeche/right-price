@@ -17,6 +17,7 @@ import { ExternalLinkDialogComponent } from './dialog-external-link/dialog-exter
 import { DialogUnsubscribeComponent } from './dialog-unsubscribe/dialog-unsubscribe.component';
 import { DialogDeleteDataCgmComponent } from './dialog-delete-cgm/dialog-delete-cgm.component';
 import { DialogConfirmComponent } from './dialog-confirm/dialog-confirm.component';
+import { Observable } from 'rxjs';
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
@@ -140,13 +141,10 @@ export class DialogGenericService {
     return this.matDialog.open(configModale.composant, configMatDialog);
   }
 
-  openConfirmDialog(title: string, message: string, confirm: () => void): void {
-    const data = {
-      title: title,
-      message: message,
-      confirm: confirm,
-    };
-    this.openDialog(CodeModaleEnum.CONFRIM, data);
+  openConfirmDialog(
+    config: DialogContentModel
+  ): MatDialogRef<DialogContentModel['component'], any> {
+    return this.openDialog(CodeModaleEnum.CONFRIM, config);
   }
 
   close(codeModale: CodeModaleEnum, valeur?: unknown): void {

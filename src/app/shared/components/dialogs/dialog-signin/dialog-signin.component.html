@@ -1,99 +1,72 @@
-<h2 mat-dialog-title>{{ dialogParamDataSignin.title }}</h2>
-<mat-dialog-content class="mat-typography">
-  <div style="display: flex; justify-content: center">
-    <app-login-google
-      [isSignin]="true"
-      (eventLogin)="loginAndClosePopUp($event)"
-    ></app-login-google>
-  </div>
-  <br />
-  <div style="display: grid; justify-content: center">
-    <button
-      mat-button
-      class="emailButton"
-      style="width: 15.5rem"
-      (click)="onSigninWithEmailButton()"
-    >
-      <span>Se connecter avec email</span>
-      <mat-icon>person</mat-icon>
-    </button>
-    <br />
-    @if(isDisplaySigninForm){
-    <div style="display: grid">
-      <form
-        [formGroup]="signinForm!"
-        style="display: grid; justify-content: center"
-      >
-        <mat-form-field class="fields" appearance="outline">
-          <mat-label>Email</mat-label>
-          <input
-            matInput
-            type="email"
-            [formControlName]="EMAIL_INPUT"
-            placeholder="Ex. aa@bb.com"
-            required
-          />
-          @if(emailControl.invalid){
-          <mat-error>Champ obligatoire</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field class="fields" appearance="outline">
-          <mat-label>Password</mat-label>
-          <input
-            matInput
-            type="password"
-            [formControlName]="PASSWORD_INPUT"
-            required
-            (keydown.enter)="signIn()"
-          />
-          @if(passwordControl.invalid){
-          <mat-error>Champ obligatoire</mat-error>
-          }
-        </mat-form-field>
-      </form>
-      @if(isEmailPasswordIncorrect){
-      <p>Nom d'utilitsateur ou mot de passe incorrect</p>
+<h2 mat-dialog-title>Se connecter</h2>
+<mat-dialog-content
+  class="mat-typography d-flex flex-column align-items-center"
+>
+  <app-login-google
+    [isSignin]="true"
+    (eventLogin)="loginAndClosePopUp($event)"
+  ></app-login-google>
+
+  <div class="or-border m-t-30">Ou vous connecter avec :</div>
+
+  <form [formGroup]="signinForm!" class="m-t-30">
+    <mat-label class="f-s-14 f-w-600 m-b-12 d-block">Adresse email</mat-label>
+    <mat-form-field class="w-100" color="primary" appearance="outline">
+      <input
+        matInput
+        type="email"
+        [formControlName]="EMAIL_INPUT"
+        placeholder="Ex. aa@bb.com"
+        required
+      />
+      @if(emailControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
       }
-      <button
-        mat-flat-button
-        color="accent"
-        style="border-radius: 20px"
-        (click)="signIn()"
+    </mat-form-field>
+    <mat-label class="f-s-14 f-w-600 m-b-12 d-block">Mot de passe</mat-label>
+    <mat-form-field class="w-100" color="primary" appearance="outline">
+      <input
+        matInput
+        type="password"
+        [formControlName]="PASSWORD_INPUT"
+        required
+        (keydown.enter)="signIn()"
+      />
+      @if(passwordControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+    <div class="d-flex align-items-center m-b-12">
+      <a
+        [routerLink]="['/']"
+        class="text-primary f-w-600 text-decoration-none m-l-auto f-s-14"
+        >Forgot Password ?</a
       >
-        <span>Se connecter</span>
-      </button>
-      <br />
-      <a href="">Mot de passe oublié</a>
     </div>
-    }
-  </div>
+  </form>
+
+  <span class="d-block f-w-500 text-center m-t-24"
+    >Noueau ici ?
+    <a
+      href
+      (click)="redirectSignUpPopin($event)"
+      class="text-decoration-none text-primary f-w-500 f-s-14"
+    >
+      Créer un compte</a
+    >
+  </span>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  @for(button of dialogParamDataSignin.buttons; track $index){
-  @if(button.isIntialyFocused) {
-  <button
-    mat-button
-    [color]="button.color"
-    (click)="(button.action)"
-    cdkFocusInitial
-  >
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon> {{ button.icon }}</mat-icon>
+  <button mat-flat-button (click)="signIn()">
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="user"></i-tabler>
+      <span class="m-4">Se connecter</span>
+    </div>
   </button>
-  } @else if (button.isCloseButton) {
-  <button mat-button color="danger" mat-dialog-close cdkFocusInitial>
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon>close</mat-icon>
+  <button mat-button mat-dialog-close>
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="x"></i-tabler
+      ><span class="m-4">Fermer</span>
+    </div>
   </button>
-  } @else {
-  <button
-    mat-button
-    [color]="button.color"
-    [mat-dialog-close]="button.isCloseButton"
-    (click)="(button.action)"
-  >
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon> {{ button.icon }}</mat-icon>
-  </button>
-  } }
 </mat-dialog-actions>

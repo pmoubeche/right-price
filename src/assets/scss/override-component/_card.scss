@@ -93,6 +93,16 @@ html {
     backdrop-filter: blur(2px); // optionnel : floutage doux
   }
 
+  .cardNoClick {
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+    &:hover {
+      outline: 2px solid $primary;
+      scale: 1.05;
+      transition: all 0s ease-in 0s;
+    }
+  }
+
   .shadow {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }

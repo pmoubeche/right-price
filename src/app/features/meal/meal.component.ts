@@ -23,6 +23,7 @@ import {
 import {
   DefaultMatCalendarRangeStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatCalendar,
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
@@ -30,6 +31,7 @@ import { EMPTY, Observable, Subscription, catchError, map, tap } from 'rxjs';
 import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
 import {
   ButtonAction,
+  DialogConfirmContentModel,
   DialogContentModel,
 } from '../../shared/components/dialogs/dialog-content.model';
 import {
@@ -61,6 +63,7 @@ import {
 } from '../../../generated';
 import { SnackbarService } from '../../shared/services/snackbar.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-meal',
@@ -252,6 +255,9 @@ export class MealComponent implements OnInit, OnDestroy {
     return this.mealProductForm?.get(this.PRODUCT_INFO_FORM) as FormControl;
   }
 
+  private mealsDatesSet = new Set<string>();
+  @ViewChild(MatCalendar) calendar!: MatCalendar<Date>;
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cardsService: CardResultGenericService,
@@ -260,13 +266,14 @@ export class MealComponent implements OnInit, OnDestroy {
     private readonly mealApiService: MealsService,
     private readonly popInService: DialogGenericService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly toastr: ToastrService
+    private readonly toastr: ToastrService,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.selectedDate = DateUtils.formatDate(new Date());
     this.initForm();
-
+    this.updateCalendarHighlights();
     this.getMealsByDate();
     this.cardsService.selectItem$.subscribe((item) => {
       this.productInfoModelSelected = item;
@@ -359,23 +366,45 @@ export class MealComponent implements OnInit, OnDestroy {
     });
   }
 
-  dateClass = (date: Date): MatCalendarCellCssClasses => {
-    let classApplied = '';
-    this.dates$.subscribe((dates) => {
-      const meDates = dates.map((date: any) => new Date(date));
-      const index = meDates.findIndex(
-        (x: any) =>
-          new Date(x).toLocaleDateString() === date.toLocaleDateString()
+  updateCalendarHighlights(): void {
+    this.mealApiService.getDatesMealsFromUser().subscribe((datesMeals) => {
+      this.mealsDatesSet = new Set(
+        datesMeals.map((date: any) => new Date(date).toLocaleDateString())
       );
-      if (index > -1) {
-        if (meDates[index]) {
-          classApplied = 'highlight-date-success';
-        }
-      }
-      return classApplied;
+
+      // 🧼 Force manuellement Angular à détecter les changements
+      this.calendar.updateTodaysDate(); // Déclenche une vérification interne
+      this.cdr.detectChanges(); // Assure que tout est bien synchronisé avec le template
     });
-    return classApplied;
+  }
+
+  dateClass = (date: Date): MatCalendarCellCssClasses => {
+    const dateStr = date.toLocaleDateString();
+
+    const isMeal = this.mealsDatesSet.has(dateStr);
+
+    if (isMeal) return 'highlight-date-success';
+
+    return '';
   };
+
+  // dateClass = (date: Date): MatCalendarCellCssClasses => {
+  //   let classApplied = '';
+  //   this.dates$.subscribe((dates) => {
+  //     const meDates = dates.map((date: any) => new Date(date));
+  //     const index = meDates.findIndex(
+  //       (x: any) =>
+  //         new Date(x).toLocaleDateString() === date.toLocaleDateString()
+  //     );
+  //     if (index > -1) {
+  //       if (meDates[index]) {
+  //         classApplied = 'highlight-date-success';
+  //       }
+  //     }
+  //     return classApplied;
+  //   });
+  //   return classApplied;
+  // };
 
   onDateChange(event: Date) {
     this.selectedDate = DateUtils.formatDate(event);
@@ -419,6 +448,7 @@ export class MealComponent implements OnInit, OnDestroy {
             this.timeCreateMealControl.reset();
             this.timeCreateMealControl.untouched;
             this.toastr.success('Repas créé');
+            this.updateCalendarHighlights();
           }),
           catchError((_) => {
             this.toastr.error('Une erreur est survenue');
@@ -449,6 +479,7 @@ export class MealComponent implements OnInit, OnDestroy {
             this.timeEditMealControl.reset();
             this.timeEditMealControl.untouched;
             this.toastr.success('Repas modifié');
+            this.updateCalendarHighlights();
           }),
           catchError((_) => {
             this.toastr.error('Une erreur est survenue');
@@ -472,13 +503,17 @@ export class MealComponent implements OnInit, OnDestroy {
         mp[0].mealType === this.mealDeleteChipControl.value.mealType
     );
 
-    const messagePopIn =
-      'En supprimant le repas, tous les aliments qui y sont contenus le seront également, continuer ?';
+    const config: DialogConfirmContentModel = {
+      color: 'error',
+      icon: 'trash',
+      title: 'Attention',
+      message:
+        'En supprimant le repas, tous les aliments qui y sont contenus le seront également, continuer ?',
+      confirm: () => this.deleteMeal(),
+    };
 
     if (hasSelectedMealProductsInIt) {
-      this.popInService.openConfirmDialog('Attention', messagePopIn, () =>
-        this.deleteMeal()
-      );
+      this.popInService.openConfirmDialog(config);
     } else {
       this.deleteMeal();
     }
@@ -494,6 +529,7 @@ export class MealComponent implements OnInit, OnDestroy {
             this.getMealsByDate();
             this.mealDeleteChipControl.reset();
             this.toastr.success('Repas supprimé');
+            this.updateCalendarHighlights();
           }),
           catchError((_) => {
             this.toastr.error('Une erreur est survenue');
@@ -535,6 +571,7 @@ export class MealComponent implements OnInit, OnDestroy {
                   this.productInfoModelSelected?.nutriscore;
                 this.mealAddProdcutChipControl.reset();
                 this.toastr.success('Produit ajouté au repas');
+                this.updateCalendarHighlights();
               }),
               catchError((_) => {
                 this.toastr.error('Une erreur est survenue');

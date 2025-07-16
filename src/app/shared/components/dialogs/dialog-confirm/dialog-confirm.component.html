@@ -3,18 +3,17 @@
   {{ data.message }}
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button
-    mat-fab
-    extended
-    class="bg-light-success text-success"
-    (click)="onConfirm()"
-  >
+  <button mat-flat-button (click)="onConfirm()" [ngClass]="getCardClasses()">
     <div class="d-flex align-items-center">
-      <i-tabler class="icon-20 m-r-4" name="check"></i-tabler
-      ><span class="m-4">Confirmer</span>
+      @if(data.isLoading$! | async){
+      <mat-spinner class="spinner-color-dark" [diameter]="20"></mat-spinner>
+      } @else {
+      <i-tabler class="icon-20 m-r-4" name="{{ data.icon }}"></i-tabler>
+      }
+      <span class="m-4">Confirmer</span>
     </div>
   </button>
-  <button mat-flat-button mat-dialog-close cdkFocusInitial>
+  <button mat-button mat-dialog-close>
     <div class="d-flex align-items-center">
       <i-tabler class="icon-20 m-r-4" name="x"></i-tabler
       ><span class="m-4">Fermer</span>

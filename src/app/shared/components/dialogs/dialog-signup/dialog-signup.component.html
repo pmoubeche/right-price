@@ -1,107 +1,78 @@
-<h2 mat-dialog-title>{{ dialogParamDataSignin.title }}</h2>
-<mat-dialog-content class="mat-typography">
-  <div style="display: flex; justify-content: center">
-    <app-login-google
-      [isSignup]="true"
-      (eventLogin)="loginAndClosePopUp($event)"
-    ></app-login-google>
-  </div>
-  <br />
-  <div style="display: grid; justify-content: center">
-    <button
-      mat-button
-      class="emailButton"
-      style="width: 15.5rem"
-      (click)="onSignupWithEmailButton()"
+<h2 mat-dialog-title>Créer un compte</h2>
+<mat-dialog-content
+  class="mat-typography d-flex flex-column align-items-center"
+>
+  <app-login-google
+    [isSignin]="true"
+    (eventLogin)="loginAndClosePopUp($event)"
+  ></app-login-google>
+
+  <div class="or-border m-t-30">Ou créer un compte avec avec :</div>
+
+  <form [formGroup]="signupForm!" class="m-t-30">
+    <mat-label class="f-s-14 f-w-600 m-b-12 d-block">Adresse email</mat-label>
+    <mat-form-field class="w-100" color="primary" appearance="outline">
+      <input
+        matInput
+        type="email"
+        [formControlName]="EMAIL_INPUT"
+        placeholder="Ex. aa@bb.com"
+        required
+      />
+      @if(emailControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+    <mat-label class="f-s-14 f-w-600 m-b-12 d-block"
+      >Nom d'utilisateur</mat-label
     >
-      <span>Créer un compte</span>
-      <mat-icon>person</mat-icon>
-    </button>
-    <br />
-    @if(isDisplaySignupForm){
-    <div style="display: grid">
-      <form
-        [formGroup]="signupForm!"
-        style="display: grid; justify-content: center"
-      >
-        <mat-form-field class="fields" appearance="outline">
-          <mat-label>Username</mat-label>
-          <input
-            matInput
-            type="srting"
-            [formControlName]="USERNAME_INPUT"
-            required
-          />
-          @if(emailControl.invalid){
-          <mat-error>Champ obligatoire</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field class="fields" appearance="outline">
-          <mat-label>Email</mat-label>
-          <input
-            matInput
-            type="email"
-            [formControlName]="EMAIL_INPUT"
-            placeholder="Ex. aa@bb.com"
-            required
-          />
-          @if(emailControl.invalid){
-          <mat-error>Champ obligatoire</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field class="fields" appearance="outline">
-          <mat-label>Password</mat-label>
-          <input
-            matInput
-            type="password"
-            [formControlName]="PASSWORD_INPUT"
-            required
-            (keydown.enter)="signUp()"
-          />
-          @if(passwordControl.invalid){
-          <mat-error>Champ obligatoire</mat-error>
-          }
-        </mat-form-field>
-      </form>
-      <button
-        mat-flat-button
-        color="accent"
-        style="border-radius: 20px"
-        (click)="signUp()"
-        [disabled]="!signupForm?.valid"
-      >
-        <span>Créer un compte</span>
-      </button>
-    </div>
-    }
-  </div>
+    <mat-form-field class="w-100" color="primary" appearance="outline">
+      <input matInput type="text" [formControlName]="USERNAME_INPUT" required />
+      @if(usernameControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+    <mat-label class="f-s-14 f-w-600 m-b-12 d-block">Mot de passe</mat-label>
+    <mat-form-field class="w-100" color="primary" appearance="outline">
+      <input
+        matInput
+        type="password"
+        [formControlName]="PASSWORD_INPUT"
+        required
+        (keydown.enter)="signUp()"
+      />
+      @if(passwordControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+  </form>
+
+  <span class="d-block f-w-500 text-center m-t-24"
+    >Vous avez déjà un compte ?
+    <a
+      href
+      (click)="redirectSignInPopin($event)"
+      class="text-decoration-none text-primary f-w-500 f-s-14"
+    >
+      Se connecter</a
+    >
+  </span>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  @for(button of dialogParamDataSignin.buttons; track $index){
-  @if(button.isIntialyFocused) {
   <button
-    mat-button
-    [color]="button.color"
-    (click)="(button.action)"
-    cdkFocusInitial
+    mat-flat-button
+    class="bg-light-success text-success"
+    (click)="signUp()"
   >
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon> {{ button.icon }}</mat-icon>
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="user"></i-tabler>
+      <span class="m-4">Créér un compte</span>
+    </div>
   </button>
-  } @else if (button.isCloseButton) {
-  <button mat-button color="danger" mat-dialog-close cdkFocusInitial>
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon>close</mat-icon>
+  <button mat-button mat-dialog-close>
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="x"></i-tabler
+      ><span class="m-4">Fermer</span>
+    </div>
   </button>
-  } @else {
-  <button
-    mat-button
-    [color]="button.color"
-    [mat-dialog-close]="button.isCloseButton"
-    (click)="(button.action)"
-  >
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon> {{ button.icon }}</mat-icon>
-  </button>
-  } }
 </mat-dialog-actions>

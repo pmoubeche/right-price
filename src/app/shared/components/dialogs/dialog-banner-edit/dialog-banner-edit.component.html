@@ -1,84 +1,58 @@
 <h2 mat-dialog-title>{{ data.title }}</h2>
-<mat-dialog-content class="mat-typography">
-  <div style="display: grid; justify-content: center">
-    <div style="display: grid">
-      <form
-        [formGroup]="bannerCreateForm!"
-        style="display: grid; justify-content: center"
-      >
-        <mat-form-field class="fields" appearance="outline">
-          <mat-label>Message</mat-label>
-          <textarea
-            matInput
-            type="text"
-            [formControlName]="MESSAGE_INPUT"
-            required
-          ></textarea>
-          @if(messageControl.invalid){
-          <mat-error>Champ obligatoire</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Type</mat-label>
-          <mat-select [formControlName]="TYPE_INPUT" [(value)]="selectedType">
-            @for (type of typeCodeLabels; track $index) {
-            <mat-option [value]="type.code">{{ type.label }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="fields">
-          <mat-label>Choisir une date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="picker"
-            [formControlName]="DATE_CREATION_FIELD"
-            ngDefaultControl
-          />
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <mat-checkbox [formControlName]="IS_ACTIVE_FIELD">Actif</mat-checkbox>
-      </form>
-      <br />
-      <button
-        mat-flat-button
-        color="accent"
-        style="border-radius: 20px"
-        (click)="createOrUpdate()"
-      >
-        <span>Enregistrer</span>
-      </button>
-    </div>
-  </div>
+<mat-dialog-content class="b-t-1 d-flex">
+  <form
+    class="m-t-24 gap-16 d-flex flex-column"
+    style="justify-content: center"
+    [formGroup]="bannerCreateForm!"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label>Message</mat-label>
+      <textarea
+        matInput
+        type="text"
+        [formControlName]="MESSAGE_INPUT"
+        required
+      ></textarea>
+      @if(messageControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Type</mat-label>
+      <mat-select [formControlName]="TYPE_INPUT" [(value)]="selectedType">
+        @for (type of typeCodeLabels; track $index) {
+        <mat-option [value]="type.code">{{ type.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Choisir une date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [formControlName]="DATE_CREATION_FIELD"
+        ngDefaultControl
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-checkbox [formControlName]="IS_ACTIVE_FIELD">Actif</mat-checkbox>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  @for(button of data.buttons; track $index){ @if(button.isIntialyFocused) {
-  <button
-    mat-button
-    [color]="button.color"
-    (click)="(button.action)"
-    cdkFocusInitial
-  >
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon> {{ button.icon }}</mat-icon>
+  <button mat-flat-button (click)="createOrUpdate()">
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="device-floppy"></i-tabler>
+      <span class="m-4">Enregistrer</span>
+    </div>
   </button>
-  } @else if (button.isCloseButton) {
-  <button mat-button color="danger" mat-dialog-close cdkFocusInitial>
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon>close</mat-icon>
+  <button mat-button mat-dialog-close>
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="x"></i-tabler
+      ><span class="m-4">Fermer</span>
+    </div>
   </button>
-  } @else {
-  <button
-    mat-button
-    [color]="button.color"
-    [mat-dialog-close]="button.isCloseButton"
-    (click)="(button.action)"
-  >
-    <mat-label>{{ button.label }}</mat-label>
-    <mat-icon> {{ button.icon }}</mat-icon>
-  </button>
-  } }
 </mat-dialog-actions>
