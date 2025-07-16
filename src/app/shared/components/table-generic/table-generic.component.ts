@@ -76,7 +76,6 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   @Input() rowHeight?: string;
   @Input() isRowCentered = false;
   @Input() isPaginated = true;
-  @Input() isClickable = false;
   @Input() pageSizeOptions: number[] = [24];
   @Input() isSection = false;
 
@@ -138,12 +137,6 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
     if (this.paginatedDataSource.pageSize !== pageEvent.pageSize) {
       this.eventPageSizeChange.next(pageEvent.pageSize);
     }
-  }
-
-  onSelectItem(row: any): void {
-    this.eventSelectLine.next(row);
-    this.tableGenericService.onSelectItem(row.idProduct);
-    this.cardGenericService.productIdBs.next(row.idProduct);
   }
 
   onClickMoreActions(event: any) {

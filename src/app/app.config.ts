@@ -38,6 +38,13 @@ export const appConfig: ApplicationConfig = {
       MaterialModule,
       TablerIconsModule.pick(TablerIcons)
     ),
-    provideToastr(),
+    provideToastr({
+      positionClass: 'toast-bottom-right',
+      timeOut: 5000,
+      extendedTimeOut: 2000,
+      closeButton: true,
+      progressBar: true,
+      preventDuplicates: true,
+    }),
   ],
 };

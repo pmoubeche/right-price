@@ -1,8 +1,0 @@
-@use "app-utils" as utils;
-
-/// Mixin utilisée pour surcharger le thème des panels
-@mixin theme($theme) {
-  mat-expansion-panel {
-    border-radius: 1rem !important;
-  }
-}

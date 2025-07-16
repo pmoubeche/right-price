@@ -50,7 +50,7 @@ export class LoginGoogleComponent implements AfterViewInit, OnDestroy {
           {
             theme: 'outline',
             size: 'large',
-            shape: 'pill',
+            shape: 'rectangular',
             logo_alignment: 'left',
           }
         );

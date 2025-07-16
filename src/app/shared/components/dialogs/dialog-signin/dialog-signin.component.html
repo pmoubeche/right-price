@@ -3,20 +3,21 @@
   class="mat-typography d-flex flex-column align-items-center"
 >
   <app-login-google
+    class="p-y-16"
     [isSignin]="true"
     (eventLogin)="loginAndClosePopUp($event)"
   ></app-login-google>
 
-  <div class="or-border m-t-30">Ou vous connecter avec :</div>
+  <div class="or-border">Ou vous connecter avec :</div>
 
   <form [formGroup]="signinForm!" class="m-t-30">
     <mat-label class="f-s-14 f-w-600 m-b-12 d-block">Adresse email</mat-label>
-    <mat-form-field class="w-100" color="primary" appearance="outline">
+    <mat-form-field class="aw-240" color="primary" appearance="outline">
       <input
         matInput
         type="email"
         [formControlName]="EMAIL_INPUT"
-        placeholder="Ex. aa@bb.com"
+        placeholder="aa@bb.com"
         required
       />
       @if(emailControl.invalid){
@@ -24,7 +25,7 @@
       }
     </mat-form-field>
     <mat-label class="f-s-14 f-w-600 m-b-12 d-block">Mot de passe</mat-label>
-    <mat-form-field class="w-100" color="primary" appearance="outline">
+    <mat-form-field class="aw-240" color="primary" appearance="outline">
       <input
         matInput
         type="password"

@@ -3,15 +3,16 @@
   class="mat-typography d-flex flex-column align-items-center"
 >
   <app-login-google
+    class="p-y-16"
     [isSignin]="true"
     (eventLogin)="loginAndClosePopUp($event)"
   ></app-login-google>
 
-  <div class="or-border m-t-30">Ou créer un compte avec avec :</div>
+  <div class="or-border">Ou créer un compte avec avec :</div>
 
   <form [formGroup]="signupForm!" class="m-t-30">
     <mat-label class="f-s-14 f-w-600 m-b-12 d-block">Adresse email</mat-label>
-    <mat-form-field class="w-100" color="primary" appearance="outline">
+    <mat-form-field class="aw-240" color="primary" appearance="outline">
       <input
         matInput
         type="email"
@@ -26,14 +27,14 @@
     <mat-label class="f-s-14 f-w-600 m-b-12 d-block"
       >Nom d'utilisateur</mat-label
     >
-    <mat-form-field class="w-100" color="primary" appearance="outline">
+    <mat-form-field class="aw-240" color="primary" appearance="outline">
       <input matInput type="text" [formControlName]="USERNAME_INPUT" required />
       @if(usernameControl.invalid){
       <mat-error>Champ obligatoire</mat-error>
       }
     </mat-form-field>
     <mat-label class="f-s-14 f-w-600 m-b-12 d-block">Mot de passe</mat-label>
-    <mat-form-field class="w-100" color="primary" appearance="outline">
+    <mat-form-field class="aw-240" color="primary" appearance="outline">
       <input
         matInput
         type="password"

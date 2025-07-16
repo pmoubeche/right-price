@@ -101,6 +101,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       type: ColumnTypeParamEnum.IMAGE,
       applyStyleWithImage: true,
       colWidth: '6rem',
+      padding: '4px',
       sortable: false,
     },
     {
@@ -110,6 +111,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       isEditable: false,
       type: ColumnTypeParamEnum.STRING,
       colWidth: '6rem',
+      padding: '4px',
     },
     {
       id: '3',
@@ -117,7 +119,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       columDef: 'nutriscore',
       type: ColumnTypeParamEnum.IMAGE,
       applyStyleWithImage: true,
-      padding: '0 0 0 0',
+      padding: '4px',
     },
     {
       id: '4',
@@ -126,7 +128,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       type: ColumnTypeParamEnum.NUMBER,
       colWidth: '6rem',
       isEditable: true,
-      padding: '0 0 0 1rem',
+      padding: '4px',
     },
     {
       id: '5',
@@ -134,7 +136,7 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
       columDef: ColumnTypeParamEnum.ACTIONS,
       type: ColumnTypeParamEnum.ACTIONS,
       colWidth: '3rem',
-      padding: '0px',
+      padding: '4px',
       sortable: false,
     },
   ];

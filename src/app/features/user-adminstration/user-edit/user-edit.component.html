@@ -18,21 +18,10 @@
       <div
         class="d-flex justify-content-center align-items-end m-t--60 position-relative"
       >
-        @if(user?.image){
         <img
           [src]="user?.image"
           class="aw-100 rounded-circle border-primary bg-light"
         />
-        } @else {
-        <button
-          mat-fab
-          color="accent"
-          [disabled]="true"
-          style="height: 10rem; width: 10rem"
-        >
-          <mat-icon style="height: 5rem; width: 5rem">person</mat-icon>
-        </button>
-        }
         <button class="m-l--24" mat-mini-fab (click)="openPopInAvatar()">
           <i-tabler class="icon-20 m-r-4" name="pencil-bolt"></i-tabler>
         </button>
