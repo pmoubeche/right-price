@@ -36,7 +36,6 @@ import { TablerIconsModule } from 'angular-tabler-icons';
     TablerIconsModule,
   ],
   templateUrl: './dialog-signup.component.html',
-  styleUrl: './dialog-signup.component.scss',
 })
 export class DialogSignupComponent implements OnInit, OnDestroy {
   readonly USERNAME_INPUT = 'username';

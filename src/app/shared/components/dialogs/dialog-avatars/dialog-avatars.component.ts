@@ -9,10 +9,9 @@ import {
 } from '../dialog-generic.service';
 
 @Component({
-    selector: 'app-dialog-avatars',
-    imports: [MaterialModule],
-    templateUrl: './dialog-avatars.component.html',
-    styleUrl: './dialog-avatars.component.scss'
+  selector: 'app-dialog-avatars',
+  imports: [MaterialModule],
+  templateUrl: './dialog-avatars.component.html',
 })
 export class DialogAvatarComponent implements OnInit {
   avatars = [

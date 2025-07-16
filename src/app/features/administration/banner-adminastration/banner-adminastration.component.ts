@@ -46,7 +46,6 @@ import { TablerIconsModule } from 'angular-tabler-icons';
     TablerIconsModule,
   ],
   templateUrl: './banner-adminastration.component.html',
-  styleUrl: './banner-adminastration.component.scss',
 })
 export class BannerAdminastrationComponent implements OnInit, OnDestroy {
   readonly MESSAGE_FIELD = 'message';

@@ -1,23 +1,9 @@
 <h2 mat-dialog-title>{{ data.title }}</h2>
-<mat-dialog-content class="mat-typography">
-  <div
-    style="
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      padding: 2rem;
-    "
-  >
+<mat-dialog-content class="b-t-1 mat-typography">
+  <div class="d-flex flex-wrap-wrap justify-content-between gap-24 p-t-16">
     @for(avatar of avatars; track $index){
-    <mat-card
-      class="avatar-link"
-      style="border-radius: 4rem; margin: 1rem"
-      (click)="onClickAvatar(avatar)"
-    >
-      <img
-        [src]="avatar"
-        style="height: 6rem; border-radius: 3rem; padding: 1rem"
-      />
+    <mat-card class="card-hover rounded-circle" (click)="onClickAvatar(avatar)">
+      <img [src]="avatar" class="ah-72 rounded-circle" />
     </mat-card>
     }
   </div>

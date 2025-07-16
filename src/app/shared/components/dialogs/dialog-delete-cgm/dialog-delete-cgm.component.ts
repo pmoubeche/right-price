@@ -33,7 +33,6 @@ import { CommonModule } from '@angular/common';
     CommonModule,
   ],
   templateUrl: './dialog-delete-cgm.component.html',
-  styleUrl: './dialog-delete-cgm.component.scss',
   providers: [
     provideNativeDateAdapter(),
     {

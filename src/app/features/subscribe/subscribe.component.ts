@@ -30,7 +30,6 @@ export class Sub {
   selector: 'app-pricing',
   imports: [MaterialModule, CommonModule, TablerIconsModule],
   templateUrl: './subscribe.component.html',
-  styleUrl: './subscribe.component.scss',
 })
 export class SubscriptionComponent implements OnInit, OnDestroy {
   readonly GUEST = 'GUEST';
