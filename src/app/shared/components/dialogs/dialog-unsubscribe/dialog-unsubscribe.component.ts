@@ -18,6 +18,7 @@ import { AuthServiceFront } from '../../../services/auth-front.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-unsubscribe',
   imports: [MaterialModule],
   templateUrl: './dialog-unsubscribe.component.html',

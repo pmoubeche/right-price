@@ -32,6 +32,7 @@ export enum ChipParamSearch {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-search-product',
   imports: [MaterialModule, ReactiveFormsModule, TablerIconsModule],
   templateUrl: './search-product.component.html',

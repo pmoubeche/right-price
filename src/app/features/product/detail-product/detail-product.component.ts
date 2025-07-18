@@ -55,6 +55,7 @@ export class NutrimentInfoModel {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-detail-product',
   imports: [
     MaterialModule,

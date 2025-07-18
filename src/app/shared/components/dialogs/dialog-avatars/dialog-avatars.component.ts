@@ -9,6 +9,7 @@ import {
 } from '../dialog-generic.service';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-avatars',
   imports: [MaterialModule],
   templateUrl: './dialog-avatars.component.html',

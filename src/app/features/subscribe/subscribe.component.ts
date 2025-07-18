@@ -27,6 +27,7 @@ export class Sub {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-pricing',
   imports: [MaterialModule, CommonModule, TablerIconsModule],
   templateUrl: './subscribe.component.html',

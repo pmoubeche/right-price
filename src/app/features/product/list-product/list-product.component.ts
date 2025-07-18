@@ -4,6 +4,7 @@ import { MaterialModule } from '../../../shared/material/material.module';
 import { ResponseProducts } from '../../../shared/model/product.model';
 
 @Component({
+  standalone: true,
   selector: 'app-list-product',
   imports: [MaterialModule, CardResultGenericComponent],
   templateUrl: './list-product.component.html',

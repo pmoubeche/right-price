@@ -27,6 +27,7 @@ import { ButtonParam } from '../../shared/model/button-param';
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
+  standalone: true,
   selector: 'app-user-adminstration',
   imports: [
     MaterialModule,

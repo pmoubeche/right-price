@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-csv-import',
   imports: [MaterialModule, CommonModule, TablerIconsModule],
   templateUrl: './dialog-csv-import.component.html',

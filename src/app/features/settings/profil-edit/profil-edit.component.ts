@@ -28,6 +28,7 @@ export enum GenderEnum {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-profil-edit',
   imports: [
     MaterialModule,

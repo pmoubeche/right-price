@@ -28,10 +28,13 @@ model/mealModel.ts
 model/mealProductInfoGenModel.ts
 model/mealProductParam.ts
 model/models.ts
+model/passwordResetRequest.ts
 model/passwordUpdate.ts
 model/productMealInfoModel.ts
 model/refreshTokenRequest.ts
 model/refreshTokenResponse.ts
+model/resetPasswordRequest.ts
+model/resetTokenVerificationRequest.ts
 model/roleModel.ts
 model/updateUserResponse.ts
 model/userAdminModel.ts

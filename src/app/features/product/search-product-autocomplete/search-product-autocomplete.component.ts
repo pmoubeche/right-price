@@ -40,6 +40,7 @@ export enum ChipParamSearch {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-search-product-autocomplete',
   imports: [MaterialModule, ReactiveFormsModule, CommonModule],
   templateUrl: './search-product-autocomplete.component.html',

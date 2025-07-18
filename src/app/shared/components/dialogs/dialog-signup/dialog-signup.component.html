@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>Créer un compte</h2>
 <mat-dialog-content
-  class="mat-typography d-flex flex-column align-items-center"
+  class="b-t-1 mat-typography d-flex flex-column align-items-center"
 >
   <app-login-google
     class="p-y-16"
-    [isSignin]="true"
+    [isSignup]="true"
     (eventLogin)="loginAndClosePopUp($event)"
   ></app-login-google>
 
@@ -62,12 +62,15 @@
 <mat-dialog-actions align="end">
   <button
     mat-flat-button
-    class="bg-light-success text-success"
+    [ngClass]="
+      signupForm?.valid ? 'bg-light-success text-success' : 'bg-light text-dark'
+    "
     (click)="signUp()"
+    [disabled]="signupForm?.invalid"
   >
     <div class="d-flex align-items-center">
-      <i-tabler class="icon-20 m-r-4" name="user"></i-tabler>
-      <span class="m-4">Créér un compte</span>
+      <i-tabler class="icon-20 m-r-4" name="user-plus"></i-tabler>
+      <span class="m-4">Créer</span>
     </div>
   </button>
   <button mat-button mat-dialog-close>

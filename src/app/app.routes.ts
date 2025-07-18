@@ -1,24 +1,25 @@
 import { Routes } from '@angular/router';
+import { AdministrationComponent } from './features/administration/administration.component';
 import { CompareProductsComponent } from './features/compare-products/compare-products.component';
+import { GlucoseMonitoringComponent } from './features/glucose-monitoring/glucose-monitoring.component';
+import { GroceryListComponent } from './features/grocery-list/grocery-list.component';
 import { HomeComponent } from './features/home/home.component';
 import { MealComponent } from './features/meal/meal.component';
+import { DetailProductComponent } from './features/product/detail-product/detail-product.component';
 import { ProductComponent } from './features/product/product.component';
+import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
 import { SettingsComponent } from './features/settings/settings.component';
+import { SubscriptionComponent } from './features/subscribe/subscribe.component';
+import { UserEditComponent } from './features/user-adminstration/user-edit/user-edit.component';
 import {
   RoleAdmin,
   RoleTier1,
   RoleTier2,
 } from './shared/constants/role.constant';
-import { requireAnyRole } from './shared/guard/role.guard';
-import { UserEditComponent } from './features/user-adminstration/user-edit/user-edit.component';
-import { AdministrationComponent } from './features/administration/administration.component';
-import { GroceryListComponent } from './features/grocery-list/grocery-list.component';
-import { getListDatesWhereMealsResolver } from './shared/routes/grocery-list-resolver.service';
-import { GlucoseMonitoringComponent } from './features/glucose-monitoring/glucose-monitoring.component';
-import { getListDatesWhereCgmResolver } from './shared/routes/cmg-dates-resolver.service';
-import { DetailProductComponent } from './features/product/detail-product/detail-product.component';
-import { SubscriptionComponent } from './features/subscribe/subscribe.component';
 import { authGuard } from './shared/guard/auth.guard';
+import { resetPasswordGuard } from './shared/guard/reset-password.guard';
+import { requireAnyRole } from './shared/guard/role.guard';
+import { getListDatesWhereMealsResolver } from './shared/routes/grocery-list-resolver.service';
 import { getUserByIdResolver } from './shared/routes/user-resolver.service';
 
 export const routes: Routes = [
@@ -75,6 +76,11 @@ export const routes: Routes = [
     path: 'subscribe',
     component: SubscriptionComponent,
     canActivate: [authGuard()],
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+    canActivate: [resetPasswordGuard()],
   },
   {
     path: '',

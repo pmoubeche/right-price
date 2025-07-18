@@ -66,8 +66,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-meal',
   standalone: true,
+  selector: 'app-meal',
   imports: [
     MaterialModule,
     TableProductMealComponent,

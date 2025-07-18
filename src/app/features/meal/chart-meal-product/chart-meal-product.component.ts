@@ -24,6 +24,7 @@ import { title } from 'process';
 import { text } from 'stream/consumers';
 
 @Component({
+  standalone: true,
   selector: 'app-chart-meal-product',
   imports: [ChartComponent, MaterialModule, FormsModule],
   templateUrl: './chart-meal-product.component.html',

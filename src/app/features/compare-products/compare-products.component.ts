@@ -41,18 +41,19 @@ export class PercentCompareModelNumber {
 }
 
 @Component({
-    selector: 'app-compare-products',
-    imports: [
-        MaterialModule,
-        TableGenericComponent,
-        ReactiveFormsModule,
-        RoundNumberDecimalPipe,
-        SearchProductAutocompleteComponent,
-        CommonModule,
-        ChartComponent,
-        CardProductComponent
-    ],
-    templateUrl: './compare-products.component.html',
+  standalone: true,
+  selector: 'app-compare-products',
+  imports: [
+    MaterialModule,
+    TableGenericComponent,
+    ReactiveFormsModule,
+    RoundNumberDecimalPipe,
+    SearchProductAutocompleteComponent,
+    CommonModule,
+    ChartComponent,
+    CardProductComponent,
+  ],
+  templateUrl: './compare-products.component.html',
 })
 export class CompareProductsComponent implements OnInit {
   public _productA = new Product();
@@ -111,8 +112,10 @@ export class CompareProductsComponent implements OnInit {
     return this._productB;
   }
 
-  public macroNutrimentInfoA: NutrimentInfoModel[] = ProductUtils.setMacroNutrimentsDefaultValues();
-  public macroNutrimentInfoB: NutrimentInfoModel[] = ProductUtils.setMacroNutrimentsDefaultValues();
+  public macroNutrimentInfoA: NutrimentInfoModel[] =
+    ProductUtils.setMacroNutrimentsDefaultValues();
+  public macroNutrimentInfoB: NutrimentInfoModel[] =
+    ProductUtils.setMacroNutrimentsDefaultValues();
   public percentCompare: PercentCompareModelNumber[] = [];
 
   macroNutrimentsDataSourcesA = new PaginatedDataSource<NutrimentInfoModel>();
@@ -179,7 +182,7 @@ export class CompareProductsComponent implements OnInit {
   constructor(
     private readonly cardsService: CardResultGenericService,
     private readonly openFoodFactsApiService: OpenFoodFactsApiService,
-    private readonly router: Router,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {

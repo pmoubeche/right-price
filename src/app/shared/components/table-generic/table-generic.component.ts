@@ -38,6 +38,7 @@ export class UpdateData {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-table-generic',
   imports: [
     MaterialModule,
@@ -50,7 +51,6 @@ export class UpdateData {
     TablerIconsModule,
   ],
   templateUrl: './table-generic.component.html',
-  styleUrl: './table-generic.component.scss',
 })
 export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   readonly EDITABLE_FIELD = 'field';

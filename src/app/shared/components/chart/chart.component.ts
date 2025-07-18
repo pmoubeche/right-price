@@ -20,6 +20,7 @@ import type {
 } from 'chart.js';
 
 @Component({
+  standalone: true,
   selector: 'app-chart',
   template: `
     @if(this.isBrowser){
@@ -28,7 +29,6 @@ import type {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [':host { display: block }'],
-  standalone: true,
 })
 export class ChartComponent implements AfterViewInit, OnChanges {
   @ViewChild('ref') ref?: ElementRef<HTMLCanvasElement>;

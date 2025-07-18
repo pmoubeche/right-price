@@ -24,6 +24,7 @@ import { ButtonParam } from '../../../shared/model/button-param';
 import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-table-product-meal',
   imports: [MaterialModule, TableGenericComponent, CommonModule],
   templateUrl: './table-product-meal.component.html',
