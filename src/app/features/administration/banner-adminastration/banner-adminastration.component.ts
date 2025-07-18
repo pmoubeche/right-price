@@ -37,6 +37,7 @@ import {
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
+  standalone: true,
   selector: 'app-banner-adminastration',
   imports: [
     MaterialModule,

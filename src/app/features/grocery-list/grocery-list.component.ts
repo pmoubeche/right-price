@@ -26,6 +26,7 @@ import { DateUtils } from '../../shared/utils/date.utils';
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
+  standalone: true,
   selector: 'app-grocery-list',
   imports: [
     MaterialModule,

@@ -34,6 +34,7 @@ import { AccountEditService } from './account-edit.service';
 import { TokenStorageService } from '../../../shared/services/token-storage.service';
 
 @Component({
+  standalone: true,
   selector: 'app-account-edit',
   imports: [
     MaterialModule,

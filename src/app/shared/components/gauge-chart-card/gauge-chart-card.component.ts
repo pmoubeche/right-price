@@ -17,6 +17,7 @@ export class GaugeCardParams {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-gauge-chart-card',
   imports: [
     MaterialModule,

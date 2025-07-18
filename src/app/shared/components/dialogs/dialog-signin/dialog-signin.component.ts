@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -8,32 +9,29 @@ import {
   Validators,
 } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { ToastrService } from 'ngx-toastr';
 import { EMPTY, Subscription, catchError, of, tap } from 'rxjs';
+import { AuthService, RefreshTokenResponse } from '../../../../../generated';
 import { MaterialModule } from '../../../material/material.module';
 import { AuthServiceFront } from '../../../services/auth-front.service';
-import { SnackbarService } from '../../../services/snackbar.service';
 import { LoginGoogleComponent } from '../../toolbar/login-google/login-google.component';
-import { ButtonAction, DialogContentModel } from '../dialog-content.model';
+import { DialogContentModel } from '../dialog-content.model';
 import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialog-generic.service';
-import { AuthService, RefreshTokenResponse } from '../../../../../generated';
-import { ToastrService } from 'ngx-toastr';
-import { RouterLink } from '@angular/router';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-signin',
   imports: [
     MaterialModule,
-    LoginGoogleComponent,
-    RouterLink,
     ReactiveFormsModule,
     FormsModule,
-    TablerIconsModule,
     CommonModule,
+    TablerIconsModule,
+    LoginGoogleComponent,
   ],
   templateUrl: './dialog-signin.component.html',
 })
@@ -42,8 +40,6 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
   readonly PASSWORD_INPUT = 'password';
 
   signinForm?: FormGroup;
-  isDisplaySigninForm = false;
-  isEmailPasswordIncorrect = false;
 
   get emailControl(): FormControl {
     return this.signinForm?.get(this.EMAIL_INPUT) as FormControl;
@@ -61,23 +57,18 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     private readonly authServiceFront: AuthServiceFront,
     private readonly snackbarService: ToastrService,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilderIn: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.isEmailPasswordIncorrect = false;
     this.initForm();
   }
 
   initForm(): void {
-    this.signinForm = this.formBuilder.group({
+    this.signinForm = this.formBuilderIn.group({
       [this.EMAIL_INPUT]: ['', [Validators.email, Validators.required]],
       [this.PASSWORD_INPUT]: ['', [Validators.required, Validators.min(3)]],
     });
-  }
-
-  onSigninWithEmailButton() {
-    this.isDisplaySigninForm = true;
   }
 
   signIn(): void {
@@ -93,7 +84,6 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
               this.loginAndClosePopUp(res);
             }),
             catchError(() => {
-              this.isEmailPasswordIncorrect = true;
               return of(EMPTY);
             })
           )
@@ -113,7 +103,13 @@ export class DialogSigninComponent implements OnInit, OnDestroy {
     this.dialogGenericService.close(CodeModaleEnum.SIGNIN);
     setTimeout(() => {
       this.dialogGenericService.openDialog(CodeModaleEnum.SIGNUP);
-    }, 100); // délai court suffisant (100-200ms)
+    }, 100);
+  }
+
+  redirectResetPasswordPopin(event: any): void {
+    event?.preventDefault();
+    this.dialogGenericService.close(CodeModaleEnum.SIGNIN);
+    this.dialogGenericService.openDialog(CodeModaleEnum.RESET_PASSWORD);
   }
 
   ngOnDestroy(): void {

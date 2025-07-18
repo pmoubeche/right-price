@@ -13,6 +13,7 @@ import {
 } from '../dialog-generic.service';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-delete-account',
   imports: [MaterialModule],
   templateUrl: './dialog-delete-account.component.html',

@@ -6,6 +6,7 @@ import { BannerInfoModel, BannerService } from '../../../../generated';
 import { MaterialModule } from '../../material/material.module';
 
 @Component({
+  standalone: true,
   selector: 'app-banner',
   imports: [MaterialModule, CommonModule, TablerIconsModule],
   templateUrl: './banner.component.html',

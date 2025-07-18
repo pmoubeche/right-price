@@ -10,6 +10,7 @@ import { CardProductComponent } from '../card-product/card-product.component';
 import { CardResultGenericService } from './card-result-generic.service';
 
 @Component({
+  standalone: true,
   selector: 'app-card-result-generic',
   imports: [MaterialModule, CommonModule, CardProductComponent],
   templateUrl: './card-result-generic.component.html',

@@ -6,6 +6,7 @@ import { MaterialModule } from '../../../material/material.module';
 import { DialogConfirmContentModel } from '../dialog-content.model';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-confirm',
   imports: [MaterialModule, TablerIconsModule, CommonModule],
   templateUrl: './dialog-confirm.component.html',

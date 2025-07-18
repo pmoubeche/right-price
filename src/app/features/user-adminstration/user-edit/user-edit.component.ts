@@ -24,6 +24,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-user-edit',
   imports: [
     MaterialModule,

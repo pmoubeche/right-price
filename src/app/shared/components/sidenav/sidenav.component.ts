@@ -20,6 +20,7 @@ export class ItemSidenav {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-sidenav',
   imports: [
     MaterialModule,

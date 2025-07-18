@@ -80,6 +80,7 @@ export class CarbsAndSugarsValuesCharts {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-glucose-monitoring',
   imports: [
     MaterialModule,

@@ -5,6 +5,7 @@ import { MaterialModule } from '../../../material/material.module';
 import { DialogContentModel } from '../dialog-content.model';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-info',
   imports: [MaterialModule, TablerIconsModule],
   templateUrl: './dialog-info.component.html',

@@ -33,6 +33,7 @@ import { CommonModule } from '@angular/common';
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-banner-edit',
   imports: [
     MaterialModule,

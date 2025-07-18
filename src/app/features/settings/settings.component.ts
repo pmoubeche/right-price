@@ -6,6 +6,7 @@ import { AccountEditComponent } from './account-edit/account-edit.component';
 import { ProfilEditComponent } from './profil-edit/profil-edit.component';
 
 @Component({
+  standalone: true,
   selector: 'app-settings',
   imports: [MaterialModule, ProfilEditComponent, AccountEditComponent],
   templateUrl: './settings.component.html',

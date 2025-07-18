@@ -4,10 +4,10 @@ import { MaterialModule } from '../../material/material.module';
 import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
 
 @Component({
+  standalone: true,
   selector: 'app-card-product',
   imports: [CommonModule, MaterialModule],
   templateUrl: './card-product.component.html',
-  standalone: true,
 })
 export class CardProductComponent {
   @Input() productInfoModel = new ProductInfosModel();

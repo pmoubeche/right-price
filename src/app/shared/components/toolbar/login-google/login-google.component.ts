@@ -20,7 +20,6 @@ declare var google: any;
 
 @Component({
   selector: 'app-login-google',
-  imports: [],
   templateUrl: './login-google.component.html',
 })
 export class LoginGoogleComponent implements AfterViewInit, OnDestroy {

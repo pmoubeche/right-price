@@ -4,6 +4,7 @@ import { UserAdminstrationComponent } from '../user-adminstration/user-adminstra
 import { BannerAdminastrationComponent } from './banner-adminastration/banner-adminastration.component';
 
 @Component({
+  standalone: true,
   selector: 'app-administration',
   imports: [
     MaterialModule,

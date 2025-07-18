@@ -8,6 +8,7 @@ import { ListProductComponent } from './list-product/list-product.component';
 import { SearchProductComponent } from './search-product/search-product.component';
 
 @Component({
+  standalone: true,
   selector: 'app-product',
   imports: [SearchProductComponent, ListProductComponent, MaterialModule],
   templateUrl: './product.component.html',

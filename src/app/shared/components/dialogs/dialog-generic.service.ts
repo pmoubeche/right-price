@@ -18,12 +18,14 @@ import { DialogUnsubscribeComponent } from './dialog-unsubscribe/dialog-unsubscr
 import { DialogDeleteDataCgmComponent } from './dialog-delete-cgm/dialog-delete-cgm.component';
 import { DialogConfirmComponent } from './dialog-confirm/dialog-confirm.component';
 import { Observable } from 'rxjs';
+import { DialogResetPasswordComponent } from './dialog-reset-password/dialog-reset-password.component';
 
 export enum CodeModaleEnum {
   INFORMATION = 'information',
   CONFRIM = 'confirm',
   SIGNIN = 'signin',
   SIGNUP = 'signup',
+  RESET_PASSWORD = 'resetPassword',
   DELETE_ACCOUNT = 'deleteAccount',
   UNSUBSCRIBE = 'unsubscribe',
   AVATAR = 'avatar',
@@ -66,6 +68,12 @@ export class DialogGenericService {
     {
       code: CodeModaleEnum.SIGNUP,
       composant: DialogSignupComponent,
+      width: '650px',
+      isUniqueModale: true,
+    },
+    {
+      code: CodeModaleEnum.RESET_PASSWORD,
+      composant: DialogResetPasswordComponent,
       width: '650px',
       isUniqueModale: true,
     },

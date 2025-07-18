@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -8,32 +9,33 @@ import {
   Validators,
 } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription, tap } from 'rxjs';
-import { MaterialModule } from '../../../material/material.module';
-import { AuthServiceFront } from '../../../services/auth-front.service';
-import { SnackbarService } from '../../../services/snackbar.service';
-import { LoginGoogleComponent } from '../../toolbar/login-google/login-google.component';
-import { ButtonAction, DialogContentModel } from '../dialog-content.model';
-import {
-  CodeModaleEnum,
-  DialogGenericService,
-} from '../dialog-generic.service';
 import {
   AuthService,
   RefreshTokenResponse,
   UserRequest,
 } from '../../../../../generated';
-import { ToastrService } from 'ngx-toastr';
-import { TablerIconsModule } from 'angular-tabler-icons';
+import { MaterialModule } from '../../../material/material.module';
+import { AuthServiceFront } from '../../../services/auth-front.service';
+import { LoginGoogleComponent } from '../../toolbar/login-google/login-google.component';
+import { DialogContentModel } from '../dialog-content.model';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../dialog-generic.service';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-signup',
   imports: [
     MaterialModule,
-    LoginGoogleComponent,
     ReactiveFormsModule,
     FormsModule,
+    CommonModule,
     TablerIconsModule,
+    LoginGoogleComponent,
   ],
   templateUrl: './dialog-signup.component.html',
 })
@@ -43,20 +45,6 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
   readonly PASSWORD_INPUT = 'password';
 
   signupForm?: FormGroup;
-  isDisplaySignupForm = false;
-
-  private buttonsDialog: ButtonAction[] = [
-    {
-      isCloseButton: true,
-      label: 'Fermer',
-    },
-  ];
-
-  public dialogParamDataSignin: DialogContentModel = {
-    title: 'Se Connecter',
-    message: '',
-    buttons: this.buttonsDialog,
-  };
 
   get usernameControl(): FormControl {
     return this.signupForm?.get(this.USERNAME_INPUT) as FormControl;
@@ -72,11 +60,11 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogContentModel,
-    private readonly authService: AuthService,
     private readonly dialogGenericService: DialogGenericService,
-    private readonly snackbarService: ToastrService,
+    private readonly authService: AuthService,
     private readonly authServiceFront: AuthServiceFront,
-    private readonly formBuilder: FormBuilder
+    private readonly snackbarService: ToastrService,
+    private readonly formBuilderUp: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -84,15 +72,11 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    this.signupForm = this.formBuilder.group({
+    this.signupForm = this.formBuilderUp.group({
       [this.USERNAME_INPUT]: ['', [Validators.required]],
-      [this.EMAIL_INPUT]: ['', [Validators.required]],
-      [this.PASSWORD_INPUT]: ['', [Validators.required]],
+      [this.EMAIL_INPUT]: ['', [Validators.email, Validators.required]],
+      [this.PASSWORD_INPUT]: ['', [Validators.required, Validators.min(3)]],
     });
-  }
-
-  onSignupWithEmailButton() {
-    this.isDisplaySignupForm = true;
   }
 
   signUp(): void {
@@ -128,7 +112,7 @@ export class DialogSignupComponent implements OnInit, OnDestroy {
     this.dialogGenericService.close(CodeModaleEnum.SIGNUP);
     setTimeout(() => {
       this.dialogGenericService.openDialog(CodeModaleEnum.SIGNIN);
-    }, 100); // délai court suffisant (100-200ms)
+    }, 100);
   }
 
   ngOnDestroy(): void {

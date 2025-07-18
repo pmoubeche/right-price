@@ -24,6 +24,7 @@ import { GlucoseMonitoringService } from '../../../../features/glucose-monitorin
 import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-dialog-delete-account',
   imports: [
     MaterialModule,

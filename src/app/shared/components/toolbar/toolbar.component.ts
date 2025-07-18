@@ -19,6 +19,7 @@ import {
 import { ProfileComponent } from '../profile/profile.component';
 
 @Component({
+  standalone: true,
   selector: 'app-toolbar',
   imports: [
     MaterialModule,

@@ -12,6 +12,7 @@ import { ContextService } from '../../services/context.service';
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
+  standalone: true,
   selector: 'app-profile',
   imports: [
     MaterialModule,
