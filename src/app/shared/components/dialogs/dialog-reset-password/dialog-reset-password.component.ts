@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { finalize, Subscription } from 'rxjs';
-import { AuthService } from '../../../../../generated';
+import { AuthService, PasswordResetRequest } from '../../../../../generated';
 import { MaterialModule } from '../../../material/material.module';
 import {
   CodeModaleEnum,
@@ -62,9 +62,12 @@ export class DialogResetPasswordComponent implements OnInit, OnDestroy {
   }
 
   resetPwd() {
+    const req: PasswordResetRequest = {
+      email: this.emailControl?.value,
+    };
     this.subscription.add(
       this.authService
-        .requestPasswordReset({ email: this.resetPasswordForm?.value })
+        .requestPasswordReset(req)
         .pipe(
           finalize(() => {
             this.requestSend = true;
