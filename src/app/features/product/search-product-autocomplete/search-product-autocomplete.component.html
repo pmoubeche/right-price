@@ -1,5 +1,5 @@
 <form [formGroup]="searchForm!">
-  <mat-form-field appearance="outline">
+  <mat-form-field class="aw-300" appearance="outline">
     @if(isLabelDisplayed){
     <mat-label>Recherche</mat-label>
     }
@@ -9,39 +9,70 @@
       [matAutocomplete]="auto"
       [formControl]="textInputControl"
     />
-    <mat-autocomplete
-      class="sidebar-list"
-      #auto="matAutocomplete"
-      (opened)="onAutocompleteOpened()"
-    >
-      @for (product of products$ | async; track $index) {
+    <mat-autocomplete #auto="matAutocomplete" (opened)="onAutocompleteOpened()">
+      @for (productInfo of productsInfos$ | async; track $index) {
       <mat-option
-        [value]="product.product_name"
-        (click)="onSelectItem(product)"
-        class="p-8 d-flex justify-content-between menu-list-item"
+        [value]="productInfo.label"
+        (click)="onSelectItem(productInfo)"
+        class="p-8 d-flex justify-content-between"
       >
-        <span>
-          <strong>
-            {{ product.product_name }}
-          </strong>
-        </span>
-        <div>
-          <img
-            mat-card-image
-            class="w-auto ah-48"
-            src="{{ product.image_small_url }}"
-          />
-        </div>
+        <mat-card class="m-0 overflow-hidden shadow aw-280">
+          <div class="d-flex justify-content-between ah-80">
+            <div class="d-grid justify-content-center p-4">
+              <mat-card-title
+                class="d-flex justify-content-start align-items-start gap-4"
+              >
+                <span class="f-s-12 m-x-4 l-h-12">
+                  {{ productInfo.label! }}
+                </span>
+              </mat-card-title>
+              <div class="d-flex gap-4 justify-content-start p-y-4 m-t-auto">
+                <img
+                  mat-card-image
+                  class="ah-24 w-auto"
+                  src="{{ productInfo.nutriscore }}"
+                />
+                <img
+                  mat-card-image
+                  class="ah-24 w-auto p-x-4"
+                  src="{{ productInfo.ecoscore }}"
+                />
+                <img
+                  mat-card-image
+                  class="ah-24 w-auto"
+                  src="{{ productInfo.novagroup }}"
+                />
+              </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+              <img
+                mat-card-image
+                class="ah-80 w-auto"
+                src="{{ productInfo.image }}"
+              />
+            </div>
+          </div>
+        </mat-card>
       </mat-option>
       }
     </mat-autocomplete>
     @if(textInputControl.value){
     <button mat-icon-button matSuffix (click)="resetForm()">
-      <mat-icon color="primary">close</mat-icon>
+      <i-tabler name="x"></i-tabler>
     </button>
     }
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="isSearchFavorite = !isSearchFavorite; searchFavorite()"
+    >
+      <i-tabler
+        name="heart"
+        class="{{ isSearchFavorite ? 'fill-error' : 'text-error' }}"
+      ></i-tabler>
+    </button>
     <button mat-icon-button matSuffix disabled>
-      <mat-icon class="icon">search</mat-icon>
+      <i-tabler name="search"></i-tabler>
     </button>
   </mat-form-field>
 </form>

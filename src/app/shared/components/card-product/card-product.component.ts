@@ -8,7 +8,8 @@ import {
   Output,
 } from '@angular/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
-import { catchError, EMPTY, Subscription, switchMap, tap } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { catchError, EMPTY, Subscription, tap } from 'rxjs';
 import { FavoriteModel, FavoriteService } from '../../../../generated';
 import { MaterialModule } from '../../material/material.module';
 import { ProductInfosModel } from '../../model/product-attribute-displayed.model';
@@ -17,7 +18,6 @@ import {
   CodeModaleEnum,
   DialogGenericService,
 } from '../dialogs/dialog-generic.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: true,

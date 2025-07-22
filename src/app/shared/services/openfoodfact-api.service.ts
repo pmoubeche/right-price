@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ResponseProduct, ResponseProducts } from '../model/product.model';
 import { Injectable } from '@angular/core';
+import { ProductInfosModel } from '../model/product-attribute-displayed.model';
+import { ProductUtils } from '../utils/product.utils';
 
 @Injectable({ providedIn: 'root' })
 export class OpenFoodFactsApiService {
@@ -60,5 +62,15 @@ export class OpenFoodFactsApiService {
     return this.httpClient.get(
       `https://world.openfoodfacts.org/api/v0/search?code=${stringBarcodes}&page=${page}&fields=id,product_name,image_small_url,nutriscore_grade,ecoscore_grade,nova_group,nutriments,nutriments_estimated&page_size=${pageSize}`
     ) as Observable<ResponseProducts>;
+  }
+
+  fromResponseProductsToProductInfos(
+    responseProducts$: Observable<ResponseProducts>
+  ): Observable<ProductInfosModel[]> {
+    return responseProducts$.pipe(
+      map((response) =>
+        ProductUtils.setProductsInfoFromResponseProducts(response)
+      )
+    );
   }
 }
