@@ -7,7 +7,7 @@ export class ResponseProduct {
 
 export class ResponseProducts {
   count?: number;
-  page?: string;
+  page?: number;
   page_count?: number;
   page_size?: number;
   products?: Product[];

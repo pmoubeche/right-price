@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { UserResponse } from '../../../generated';
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +23,7 @@ export class ContextService {
   }
 
   isAuthenticated(): Observable<boolean> {
-    return this.currentUser$.getValue() ? of(true) : of(false);
+    return this.currentUser$.asObservable().pipe(map((user) => !!user));
   }
 
   isNotAuthenticated(): Observable<boolean> {

@@ -2,14 +2,13 @@ import { CommonModule } from '@angular/common';
 import {} from '@angular/common/http';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { AvatarModule } from 'ngx-avatars';
-import { ToastrService } from 'ngx-toastr';
 import { RoleAdmin } from '../../constants/role.constant';
 import { MaterialModule } from '../../material/material.module';
 import { RoleModel } from '../../model/role.model';
 import { AuthServiceFront } from '../../services/auth-front.service';
 import { ContextService } from '../../services/context.service';
-import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
   standalone: true,
@@ -28,13 +27,11 @@ export class ProfileComponent {
 
   constructor(
     private readonly contextService: ContextService,
-    private readonly snackbarService: ToastrService,
     private readonly authService: AuthServiceFront
   ) {}
 
   logOut(): void {
     this.authService.logOut();
-    this.snackbarService.success('Vous êtes déconnecté');
   }
 
   hasUserAdminRole(roles?: RoleModel[]): boolean {

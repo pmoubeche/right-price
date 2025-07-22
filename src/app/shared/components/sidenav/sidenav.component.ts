@@ -50,6 +50,13 @@ export class SidenavComponent implements OnInit {
       availableGuest: true,
     },
     {
+      title: 'Favoris',
+      icon: 'heart',
+      route: '/favorites',
+      roleId: RoleGuest.id,
+      availableGuest: true,
+    },
+    {
       title: 'Repas',
       icon: 'tools-kitchen-2',
       route: '/meal',

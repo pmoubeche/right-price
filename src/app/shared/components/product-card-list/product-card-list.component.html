@@ -15,22 +15,25 @@
     <div class="spinner-overlay">
       <mat-spinner diameter="50"></mat-spinner>
     </div>
-    } @for (productInfoModel of productsAttributesToDisplay; track $index) {
+    } @for (productInfoModel of productInfos; track $index) {
+
     <app-card-product
       [productInfoModel]="productInfoModel"
       [isClickable]="true"
       (cardClick)="onSelectItem(productInfoModel)"
+      [displayDeleteFavoriteButton]="displayDeleteFavoriteButton"
+      (relaodCards)="onReloadCards()"
     ></app-card-product>
     }
   </div>
-  @if(isPaginated && (httpProducts !== undefined)){
+  @if(isPaginated && (productInfos !== undefined)){
   <br />
   <mat-paginator
     class="d-flex justify-content-center"
-    [length]="httpProducts.count"
-    [pageIndex]="httpProducts.page"
-    [pageSize]="httpProducts.page_size"
-    [pageSizeOptions]="[httpProducts.page_count!]"
+    [length]="totalElements!"
+    [pageIndex]="pageIndex!"
+    [pageSize]="pageSize!"
+    [pageSizeOptions]="pageSizeOptions!"
     (page)="onPageChange($event)"
     showFirstLastButtons
   >

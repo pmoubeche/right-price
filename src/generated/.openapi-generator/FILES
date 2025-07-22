@@ -5,6 +5,7 @@ api/api.ts
 api/auth.service.ts
 api/banner.service.ts
 api/cgmImport.service.ts
+api/favorite.service.ts
 api/lProductMeal.service.ts
 api/meals.service.ts
 api/products.service.ts
@@ -22,7 +23,10 @@ model/bannerFilterModel.ts
 model/bannerInfoModel.ts
 model/cgmInfoModel.ts
 model/dateRangeFilter.ts
+model/favoriteFilterModel.ts
+model/favoriteModel.ts
 model/getBannerResponseModel.ts
+model/getFavoriteResponseModel.ts
 model/getUserResponseModel.ts
 model/mealModel.ts
 model/mealProductInfoGenModel.ts

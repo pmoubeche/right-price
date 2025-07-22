@@ -21,7 +21,6 @@
         }"
         class="menu-list-item"
         (click)="onItemSelected(item)"
-        [disabled]="!item.enabled"
       >
         <i-tabler
           name="{{ !item.enabled ? 'lock' : item.icon }}"

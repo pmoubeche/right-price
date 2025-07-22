@@ -100,8 +100,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     private readonly contexteService: ContextService,
     private readonly authFrontService: AuthServiceFront,
     private readonly ar: ActivatedRoute,
-    private readonly router: Router,
-    private readonly cdr: ChangeDetectorRef
+    private readonly router: Router
   ) {}
 
   ngOnInit() {

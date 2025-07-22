@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
+@use "variables" as *;
 
 @include mat.form-field-overrides(
   (
@@ -23,5 +24,13 @@ html {
 
   .demo-inline-calendar-card {
     width: 300px;
+  }
+
+  .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+    background-color: $light-primary;
+  }
+
+  .mat-mdc-form-field-icon-suffix {
+    display: flex;
   }
 }

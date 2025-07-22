@@ -8,7 +8,7 @@ import {
   ChartOptions,
   DoughnutControllerDatasetOptions,
 } from 'chart.js';
-import { Subscription, switchMap, tap } from 'rxjs';
+import { EMPTY, Subscription, switchMap, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../../shared/common/paginated/paginated-datasource';
 import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
 import { ChartComponent } from '../../../shared/components/chart/chart.component';
@@ -36,6 +36,18 @@ import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-a
 import { ProductUtils } from '../../../shared/utils/product.utils';
 import { CompareProductService } from '../../compare-products/compare-product.service';
 import { MealService } from '../../meal/meal.service';
+import {
+  FavoriteFilterModel,
+  FavoriteModel,
+  FavoriteService,
+} from '../../../../generated';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../../../shared/components/dialogs/dialog-generic.service';
+import { ToastrService } from 'ngx-toastr';
+import { PageRequest } from '../../../shared/common/paginated/page';
+import { SearchFavoriteService } from '../../../shared/common/paginated/search-favorite.service';
 
 export class IngredientInfoModel {
   id?: string;
@@ -237,6 +249,9 @@ export class DetailProductComponent implements OnInit, OnDestroy {
   };
 
   isTier1 = false;
+  isFavorite = false;
+  IdFavorite?: string;
+  IdProduct?: string;
 
   subscription = new Subscription();
 
@@ -247,7 +262,11 @@ export class DetailProductComponent implements OnInit, OnDestroy {
     private readonly cardResultService: CardResultGenericService,
     private readonly compareProductService: CompareProductService,
     private readonly mealService: MealService,
+    private readonly favoriteService: FavoriteService,
+    private readonly favoriteSearchService: SearchFavoriteService,
     private readonly contextService: ContextService,
+    private readonly dialogService: DialogGenericService,
+    private readonly toastr: ToastrService,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute
   ) {}
@@ -255,6 +274,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     ChartUtils.setChartImports();
     this.getProductFromOFFApi();
+    this.searchFavorite(this.IdProduct!);
     this.setRights();
   }
 
@@ -307,6 +327,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
           switchMap((data) =>
             this.openFoodFactApiService.findProductByBarCode(data['id']).pipe(
               tap((httpProduct) => {
+                this.IdProduct = data['id'];
                 this.httpProduct = httpProduct;
               })
             )
@@ -315,6 +336,85 @@ export class DetailProductComponent implements OnInit, OnDestroy {
         .subscribe()
     );
   }
+
+  searchFavorite(idProduct: string): void {
+    this.subscription.add(
+      this.contextService
+        .isAuthenticated()
+        .pipe(
+          switchMap((isAuth) => {
+            if (!isAuth) {
+              return EMPTY;
+            } else {
+              const pageFavRequest: PageRequest<FavoriteModel> = {
+                page: 0, // Page 1 is index 0 !!!!
+                size: 24,
+                sort: { property: 'dateCreation', order: 'desc' },
+              };
+
+              const favoriteFilterModel: FavoriteFilterModel = {
+                productId: idProduct,
+                productsId: undefined,
+                name: undefined,
+                nutriscore: undefined,
+                ecoscore: undefined,
+                novagroup: undefined,
+                isEnabled: undefined,
+                dateCreationEnd: undefined,
+                dateCreationStart: undefined,
+              };
+
+              return this.favoriteSearchService
+                .page(pageFavRequest, favoriteFilterModel)
+                .pipe(
+                  tap((res) => {
+                    this.IdFavorite = res.content[0].id;
+                    this.isFavorite = res.content[0].isEnabled!;
+                  })
+                );
+            }
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  clickFav = (product: Product) => {
+    this.subscription.add(
+      this.contextService
+        .isAuthenticated()
+        .pipe(
+          switchMap((isAuth) => {
+            if (!isAuth) {
+              this.dialogService.openDialog(CodeModaleEnum.SIGNIN);
+              return EMPTY;
+            } else {
+              const req: FavoriteModel = {
+                id: this.IdFavorite,
+                name: product.product_name,
+                nutriscore: this.nutriscoreImageUrl,
+                ecoscore: this.ecoscoreImageUrl,
+                novagroup: this.novagroupImageUrl,
+                isEnabled: !this.isFavorite,
+                productId: product.id,
+                imageUrl: product.image_front_url,
+              };
+              return this.favoriteService.createOrUpdateFavorite(req).pipe(
+                tap((res) => {
+                  this.isFavorite = res?.isEnabled!;
+                  this.toastr.success(
+                    `${res.name} ${
+                      res.isEnabled ? 'ajouté aux' : 'retiré des'
+                    } favoris`
+                  );
+                })
+              );
+            }
+          })
+        )
+        .subscribe()
+    );
+  };
 
   private setGaugesParamsDatas(httpProduct: ResponseProduct) {
     this.gaugeChartParamCal = {
