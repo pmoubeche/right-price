@@ -49,7 +49,7 @@ export class ProductUtils {
     httpProducts: ResponseProducts
   ): ProductInfosModel[] {
     if (httpProducts.products) {
-      httpProducts.page = (Number.parseInt(httpProducts.page!) - 1).toString();
+      httpProducts.page = httpProducts.page! - 1;
       return httpProducts.products.map(
         (productApi) =>
           ({

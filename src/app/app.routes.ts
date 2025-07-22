@@ -21,6 +21,7 @@ import { resetPasswordGuard } from './shared/guard/reset-password.guard';
 import { requireAnyRole } from './shared/guard/role.guard';
 import { getListDatesWhereMealsResolver } from './shared/routes/grocery-list-resolver.service';
 import { getUserByIdResolver } from './shared/routes/user-resolver.service';
+import { FavoritesComponent } from './features/favorites/favorites.component';
 
 export const routes: Routes = [
   {
@@ -55,6 +56,11 @@ export const routes: Routes = [
   {
     path: 'compare',
     component: CompareProductsComponent,
+  },
+  {
+    path: 'favorites',
+    component: FavoritesComponent,
+    canActivate: [authGuard()],
   },
   {
     path: 'settings/:id',

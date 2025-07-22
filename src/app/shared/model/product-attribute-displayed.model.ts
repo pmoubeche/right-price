@@ -14,6 +14,8 @@ export class ProductInfosModel {
   nutriscore?: string = NutriscoreLinks.NUTRISCORE_UNKNOWN;
   ecoscore?: string = EcoscoreLinks.ECOSCORE_UNKNOWN;
   novagroup?: string = NovagroupLinks.NOVAGROUP_UNKNOWN;
+  idFavorite?: string;
+  isFavorite?: boolean;
 }
 
 export interface MealProductInfoModel extends ProductMealInfoModel {

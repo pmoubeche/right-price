@@ -14,6 +14,10 @@ import {
 import { ContextService } from '../services/context.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import { AuthServiceFront } from '../services/auth-front.service';
+import {
+  CodeModaleEnum,
+  DialogGenericService,
+} from '../components/dialogs/dialog-generic.service';
 
 export function authGuard(): CanActivateFn {
   return (
@@ -24,11 +28,12 @@ export function authGuard(): CanActivateFn {
     const refreshTokenService = inject(RefreshTokenService);
     const contextService = inject(ContextService);
     const authFrontService = inject(AuthServiceFront);
+    const dialogService = inject(DialogGenericService);
 
     return contextService.isAuthenticated().pipe(
       switchMap((isAuthenticated) => {
         if (!isAuthenticated) {
-          authFrontService.logOut();
+          dialogService.openDialog(CodeModaleEnum.SIGNIN);
           return of(false);
         }
 
