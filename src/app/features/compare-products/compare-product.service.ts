@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Product } from '../../shared/model/product.model';
+import { ProductInfosModel } from '../../shared/model/product-attribute-displayed.model';
 
 @Injectable({ providedIn: 'root' })
 export class CompareProductService {
-  public productBs = new BehaviorSubject<Product>(new Product());
-  public product$ = this.productBs.asObservable();
+  public productInfoModelBs = new BehaviorSubject<ProductInfosModel>(
+    new ProductInfosModel()
+  );
+  public productInfoModel$ = this.productInfoModelBs.asObservable();
 }

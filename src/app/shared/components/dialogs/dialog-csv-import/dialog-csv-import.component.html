@@ -32,8 +32,8 @@
     cdkFocusInitial
     [ngClass]="
       (isImportButtonLoading$ | async)
-        ? 'bg-light-success text-success'
-        : 'bg-light text-dark'
+        ? 'bg-light text-dark'
+        : 'bg-light-success text-success'
     "
     [disabled]="isImportButtonLoading$ | async"
   >

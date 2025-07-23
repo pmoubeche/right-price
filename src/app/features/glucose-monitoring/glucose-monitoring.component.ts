@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -21,19 +22,15 @@ import {
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import 'chartjs-adapter-moment';
 import { ToastrService } from 'ngx-toastr';
 import {
-  BehaviorSubject,
   EMPTY,
-  Observable,
   Subscription,
   catchError,
   combineLatest,
-  map,
-  of,
   switchMap,
   take,
   tap,
@@ -68,9 +65,8 @@ import { RoundNumberDecimalPipe } from '../../shared/pipes/round-number-decimal.
 import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.service';
 import { DateUtils } from '../../shared/utils/date.utils';
 import { ProductUtils } from '../../shared/utils/product.utils';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { CommonModule } from '@angular/common';
 import { GlucoseMonitoringService } from './glucose-monitoring.service';
+import { Router } from '@angular/router';
 
 export class CarbsAndSugarsValuesCharts {
   mealType!: string;
@@ -105,6 +101,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   readonly DEVICE_FIELD = 'device';
   public deviceOptions: CodeLabelModel[] = [
     { code: 'dexcom', label: 'Dexcom' },
+    { code: 'freestyle', label: 'Freestyle' },
   ];
 
   columnParamsMeal: TableColumnParamModel[] = [
@@ -236,7 +233,6 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   cgmChartLineData?: ChartData;
 
   public selectedDate!: Date | null;
-  public selectedDateString?: string;
 
   public deviceSelected!: string;
   public deviceForm!: FormGroup;
@@ -269,10 +265,12 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
     private readonly roundNumberPipe: RoundNumberDecimalPipe,
     private readonly dialogService: DialogGenericService,
     private readonly glucoseMonitoringService: GlucoseMonitoringService,
+    private readonly router: Router,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.selectedDate = new Date();
     this.updateCalendarHighlights();
     ChartUtils.setChartImports();
     this.initForm();
@@ -281,6 +279,12 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   private initForm(): void {
     this.deviceForm = this.formBuilder.group({
       [this.DEVICE_FIELD]: ['', [Validators.required]],
+    });
+  }
+
+  redirectToMeal(): void {
+    this.router.navigate(['/meal'], {
+      queryParams: { selectedDate: DateUtils.formatDate(this.selectedDate!) },
     });
   }
 
@@ -318,7 +322,6 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   };
 
   onSelectedDate(date: Date): void {
-    this.selectedDateString = DateUtils.formatDate(date);
     this.resetDatasOnChange();
     this.getCgmData(date);
     this.getMealProductsInfos(date);
@@ -557,7 +560,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
         });
         this.carbsAndSugarsValuesCharts.push({
           mealType: mealType,
-          dateTime: new Date(mealProductInfo[0].date!).getTime() - 3600 * 1000,
+          dateTime: DateUtils.dateWithTimeZoneParis(mealProductInfo[0].date!),
           sumCarbs: sumCarbs,
           sumSugars: sumSugars,
         });
@@ -628,7 +631,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
   setChartCgmData(datasCgm: CgmInfoModel[]): void {
     const datasChartLine = datasCgm.map((data) => {
       return {
-        x: new Date(data.dateTimestamp).getTime(),
+        x: DateUtils.dateWithTimeZoneParis(data.dateTimestamp),
         y: data.glucoseValue,
       };
     });
@@ -694,6 +697,7 @@ export class GlucoseMonitoringComponent implements OnInit, OnDestroy {
           type: 'line',
           data: datasChartLine.map((el) => el.y),
           borderColor: ChartUtils.getCssVariableValue('primary'),
+          spanGaps: true,
           pointRadius: 0,
           yAxisID: 'y',
           tension: 0.4,

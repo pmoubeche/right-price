@@ -7,27 +7,22 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MaterialModule } from '../../shared/material/material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
-import { SearchBannerService } from '../../shared/common/paginated/paginated-services/search-banner.service';
-import { DialogGenericService } from '../../shared/components/dialogs/dialog-generic.service';
-import { SearchFavoriteService } from '../../shared/common/paginated/search-favorite.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription, tap } from 'rxjs';
-import { PageRequest } from '../../shared/common/paginated/page';
 import { FavoriteFilterModel, FavoriteModel } from '../../../generated';
-import { NutriscoreGrade } from '../../shared/enum/score-grade.enum';
+import { PageRequest } from '../../shared/common/paginated/page';
+import { SearchFavoriteService } from '../../shared/common/paginated/search-favorite.service';
+import { DialogGenericService } from '../../shared/components/dialogs/dialog-generic.service';
+import { ProductCardListComponent } from '../../shared/components/product-card-list/product-card-list.component';
+import { ProductCardListService } from '../../shared/components/product-card-list/product-card-list.service';
 import {
   EcoscoreLinks,
   NovagroupLinks,
   NutriscoreLinks,
 } from '../../shared/enum/svg-urls.enum';
-import { CardResultGenericComponent } from '../../shared/components/card-result-generic/card-result-generic.component';
+import { MaterialModule } from '../../shared/material/material.module';
 import { ProductInfosModel } from '../../shared/model/product-attribute-displayed.model';
-import { Product, ResponseProducts } from '../../shared/model/product.model';
-import { ProductCardListComponent } from '../../shared/components/product-card-list/product-card-list.component';
-import { ProductCardListService } from '../../shared/components/product-card-list/product-card-list.service';
-import { DateUtils } from '../../shared/utils/date.utils';
 
 @Component({
   standalone: true,

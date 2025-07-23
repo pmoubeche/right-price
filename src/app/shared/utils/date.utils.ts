@@ -1,4 +1,10 @@
 import { formatDate } from '@angular/common';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export class DateUtils {
   static DATE_SEPARATOR = '-';
@@ -19,6 +25,10 @@ export class DateUtils {
     return new Date(
       date.getTime() + Math.abs(date.getTimezoneOffset() * 60000)
     );
+  }
+
+  static dateWithTimeZoneParis(dateString: string): number {
+    return dayjs.tz(dateString, 'Europe/Paris').valueOf();
   }
 
   static fromTimeStringToMapTime(timeString: string): {

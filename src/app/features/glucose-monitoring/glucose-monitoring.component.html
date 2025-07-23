@@ -126,84 +126,106 @@
 <mat-card class="shadow">
   <mat-card-header class="d-flex justify-content-between">
     <mat-card-title class="m-b-0"
-      >Apport de la journée du {{ selectedDateString }}</mat-card-title
+      >Apport de la journée du
+      {{ selectedDate | date : "dd-MM-yyyy" }}</mat-card-title
     >
+    <button class="m-x-8 m-t-16" mat-flat-button (click)="redirectToMeal()">
+      <div class="d-flex align-items-center">
+        <i-tabler class="icon-20 m-r-4" name="tools-kitchen-2"></i-tabler
+        ><span class="m-4">Gerer les repas de ce jour</span>
+      </div>
+    </button>
   </mat-card-header>
-  <mat-card-content class="d-flex justify-content-center gap-16 hstack">
+  <mat-card-content
+    class="b-t-1 d-flex flex-column align-items-center justify-content-center gap-16"
+  >
+    <mat-radio-group
+      [(ngModel)]="isMaleReco"
+      (change)="
+        setNutrimentsChartsBarsDataBreakfast(nutrimentsBreakfast);
+        setNutrimentsChartsBarsDataLunch(nutrimentsLunch);
+        setNutrimentsChartsBarsDataDinner(nutrimentsDinner)
+      "
+    >
+      <mat-radio-button [value]="true">Homme</mat-radio-button>
+      <mat-radio-button [value]="false">Femme</mat-radio-button>
+    </mat-radio-group>
+    <div class="d-flex justify-content-center gap-16 hstack">
+      <mat-card class="cardWithShadow theme-card shadow aw-500">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Petit déjeuner</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-flex flex-column gap-16">
+          <app-table-generic
+            [isPaginated]="false"
+            [columns]="columnParamsMeal"
+            [paginatedDataSource]="dataSourceBreakfast"
+            [rowHeight]="'40px'"
+          ></app-table-generic>
+          <div class="d-flex flex-column">
+            @for(chartData of dailyRecommanderIncomeChartsBarDataBreakfast;
+            track $index){
+            <app-chart
+              type="bar"
+              [data]="chartData!"
+              [options]="optionsBarMeal"
+              [height]="30"
+            ></app-chart>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="cardWithShadow theme-card shadow aw-500">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Déjeuner</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-flex flex-column gap-16">
+          <app-table-generic
+            [isPaginated]="false"
+            [columns]="columnParamsMeal"
+            [paginatedDataSource]="dataSourceLunch"
+            [rowHeight]="'40px'"
+          ></app-table-generic>
+          <div class="d-flex flex-column">
+            @for(chartData of dailyRecommanderIncomeChartsBarDataLunch; track
+            $index){
+            <app-chart
+              type="bar"
+              [data]="chartData!"
+              [options]="optionsBarMeal"
+              [height]="30"
+            ></app-chart>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="cardWithShadow theme-card shadow aw-500">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Diner</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1 d-flex flex-column gap-16">
+          <app-table-generic
+            [isPaginated]="false"
+            [columns]="columnParamsMeal"
+            [paginatedDataSource]="dataSourceDinner"
+            [rowHeight]="'40px'"
+          ></app-table-generic>
+          <div class="d-flex flex-column">
+            @for(chartData of dailyRecommanderIncomeChartsBarDataDinner; track
+            $index){
+            <app-chart
+              type="bar"
+              [data]="chartData!"
+              [options]="optionsBarMeal"
+              [height]="30"
+            ></app-chart>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <!-- Table meal products -->
-    <mat-card class="cardWithShadow theme-card shadow aw-500">
-      <mat-card-header class="d-flex justify-content-between">
-        <mat-card-title class="m-b-0">Petit déjeuner</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="b-t-1 d-flex flex-column gap-16">
-        <app-table-generic
-          [isPaginated]="false"
-          [columns]="columnParamsMeal"
-          [paginatedDataSource]="dataSourceBreakfast"
-          [rowHeight]="'40px'"
-        ></app-table-generic>
-        <div class="d-flex flex-column">
-          @for(chartData of dailyRecommanderIncomeChartsBarDataBreakfast; track
-          $index){
-          <app-chart
-            type="bar"
-            [data]="chartData!"
-            [options]="optionsBarMeal"
-            [height]="30"
-          ></app-chart>
-          }
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="cardWithShadow theme-card shadow aw-500">
-      <mat-card-header class="d-flex justify-content-between">
-        <mat-card-title class="m-b-0">Déjeuner</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="b-t-1 d-flex flex-column gap-16">
-        <app-table-generic
-          [isPaginated]="false"
-          [columns]="columnParamsMeal"
-          [paginatedDataSource]="dataSourceLunch"
-          [rowHeight]="'40px'"
-        ></app-table-generic>
-        <div class="d-flex flex-column">
-          @for(chartData of dailyRecommanderIncomeChartsBarDataLunch; track
-          $index){
-          <app-chart
-            type="bar"
-            [data]="chartData!"
-            [options]="optionsBarMeal"
-            [height]="30"
-          ></app-chart>
-          }
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="cardWithShadow theme-card shadow aw-500">
-      <mat-card-header class="d-flex justify-content-between">
-        <mat-card-title class="m-b-0">Diner</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="b-t-1 d-flex flex-column gap-16">
-        <app-table-generic
-          [isPaginated]="false"
-          [columns]="columnParamsMeal"
-          [paginatedDataSource]="dataSourceDinner"
-          [rowHeight]="'40px'"
-        ></app-table-generic>
-        <div class="d-flex flex-column">
-          @for(chartData of dailyRecommanderIncomeChartsBarDataDinner; track
-          $index){
-          <app-chart
-            type="bar"
-            [data]="chartData!"
-            [options]="optionsBarMeal"
-            [height]="30"
-          ></app-chart>
-          }
-        </div>
-      </mat-card-content>
-    </mat-card>
   </mat-card-content>
 </mat-card>

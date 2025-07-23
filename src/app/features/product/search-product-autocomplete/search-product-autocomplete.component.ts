@@ -13,7 +13,9 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import {
   EMPTY,
   Observable,
@@ -24,20 +26,13 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { FavoriteFilterModel, FavoriteModel } from '../../../../generated';
+import { PageRequest } from '../../../shared/common/paginated/page';
+import { SearchFavoriteService } from '../../../shared/common/paginated/search-favorite.service';
 import { CardResultGenericService } from '../../../shared/components/card-result-generic/card-result-generic.service';
 import { MaterialModule } from '../../../shared/material/material.module';
-import { Product, ResponseProducts } from '../../../shared/model/product.model';
-import { NutriscoreUrlFromGradePipe } from '../../../shared/pipes/nutriscore-url-from-grade.pipe';
-import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
-import { ProductUtils } from '../../../shared/utils/product.utils';
-import { MatAutocomplete } from '@angular/material/autocomplete';
 import { ProductInfosModel } from '../../../shared/model/product-attribute-displayed.model';
-import { CardProductComponent } from '../../../shared/components/card-product/card-product.component';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { SearchFavoriteService } from '../../../shared/common/paginated/search-favorite.service';
-import { PageRequest } from '../../../shared/common/paginated/page';
-import { FavoriteFilterModel, FavoriteModel } from '../../../../generated';
-import { TrimStringPipe } from '../../../shared/pipes/trim-string.pipe';
+import { OpenFoodFactsApiService } from '../../../shared/services/openfoodfact-api.service';
 
 export enum ChipParamSearch {
   BARCODE = 'Code barre',

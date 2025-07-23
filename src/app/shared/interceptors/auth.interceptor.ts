@@ -1,19 +1,17 @@
 import {
-  HttpErrorResponse,
   HttpEvent,
   HttpHandlerFn,
   HttpInterceptorFn,
   HttpRequest,
-  HttpStatusCode,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { Observable, catchError, throwError } from 'rxjs';
-import { environment } from '../../env-dev';
-import { SnackbarService } from '../services/snackbar.service';
-import { TokenStorageService } from '../services/token-storage.service';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { environment } from '../../env-dev';
+import { AuthServiceFront } from '../services/auth-front.service';
+import { TokenStorageService } from '../services/token-storage.service';
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<any>,
@@ -22,35 +20,35 @@ export const authInterceptor: HttpInterceptorFn = (
   const router = inject(Router);
   const tokenService = inject(TokenStorageService);
   const snackbarService = inject(ToastrService);
-  const accessToken = tokenService.getAccessToken();
+  const authFrontService = inject(AuthServiceFront);
+  const baseUrl = environment.API.BASE_SERVER_URL;
 
-  if (
-    accessToken &&
-    // Adding Authorization header on backend api
-    req.url.startsWith(environment.API.BASE_SERVER_URL) &&
-    // exclude non authenticated endpoints
-    !Object.values(environment.NON_AUTH_API).includes(req.url)
-  ) {
-    req = req.clone({
-      setHeaders: { Authorization: `Bearer ${accessToken}` },
-    });
+  const requiresAuth =
+    req.url.startsWith(baseUrl) &&
+    !Object.values(environment.NON_AUTH_API).includes(req.url);
+
+  if (!requiresAuth) {
+    return next(req); // Pas besoin de token
   }
 
-  return next(req).pipe(
-    catchError(
-      (erreur: HttpErrorResponse, event: Observable<HttpEvent<unknown>>) => {
-        if (
-          erreur.status === HttpStatusCode.Unauthorized ||
-          erreur.status === HttpStatusCode.Forbidden
-        ) {
-          snackbarService.error(
-            "Vous n'êtes pas autorisé à effectuer cette action. Veuillez vous connecter pour pouvoir y acceder"
-          );
-          router.navigate(['/home']);
-        }
-
-        return throwError(() => erreur);
+  return authFrontService.checkOrRefreshToken().pipe(
+    switchMap((isValid) => {
+      if (!isValid) {
+        snackbarService.error(
+          'Votre session a expiré. Veuillez vous reconnecter.'
+        );
+        router.navigate(['/home']);
+        return throwError(() => new Error('Non authentifié'));
       }
-    )
+
+      const accessToken = tokenService.getAccessToken();
+      const cloned = req.clone({
+        setHeaders: { Authorization: `Bearer ${accessToken}` },
+      });
+      return next(cloned);
+    }),
+    catchError((err) => {
+      return throwError(() => err);
+    })
   );
 };

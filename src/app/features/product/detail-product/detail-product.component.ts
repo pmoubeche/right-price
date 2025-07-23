@@ -310,7 +310,9 @@ export class DetailProductComponent implements OnInit, OnDestroy {
 
   public redirectAndAddToCompare(): void {
     this.router.navigate(['/compare']);
-    this.compareProductService.productBs.next(this.httpProduct.product!);
+    this.compareProductService.productInfoModelBs.next(
+      ProductUtils.setProductInfoFromProduct(this.httpProduct.product!)
+    );
   }
 
   public redirectAndAddToMeal(): void {
