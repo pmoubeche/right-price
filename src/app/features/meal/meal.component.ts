@@ -260,7 +260,6 @@ export class MealComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly cardsService: CardResultGenericService,
     private readonly mealService: MealService,
     private readonly lProductMealApiService: LProductMealService,
     private readonly mealApiService: MealsService,
@@ -271,14 +270,14 @@ export class MealComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.selectedDate = DateUtils.formatDate(new Date());
+    this.onDateChange(new Date());
     this.initForm();
-    this.updateCalendarHighlights();
-    this.getMealsByDate();
-    this.cardsService.selectItem$.subscribe((item) => {
-      this.productInfoModelSelected = item;
+    this.activatedRoute.queryParams.subscribe((param) => {
+      if (param['selectedDate']) {
+        this.onDateChange(DateUtils.parseDateFromString(param['selectedDate']));
+      }
     });
-
+    this.updateCalendarHighlights();
     this.setProductInfoSelectedFromProductDetail();
   }
 
@@ -352,17 +351,21 @@ export class MealComponent implements OnInit, OnDestroy {
     });
 
     this.timeCreateMealControl.valueChanges.subscribe((timeCreate) => {
-      this.timeCreate = {
-        hours: timeCreate.getHours(),
-        minutes: timeCreate.getMinutes(),
-      };
+      if (timeCreate instanceof Date) {
+        this.timeCreate = {
+          hours: timeCreate.getHours(),
+          minutes: timeCreate.getMinutes(),
+        };
+      }
     });
 
     this.timeEditMealControl.valueChanges.subscribe((timeEdit) => {
-      this.timeEdit = {
-        hours: timeEdit.getHours(),
-        minutes: timeEdit.getMinutes(),
-      };
+      if (timeEdit instanceof Date) {
+        this.timeEdit = {
+          hours: timeEdit.getHours(),
+          minutes: timeEdit.getMinutes(),
+        };
+      }
     });
   }
 
@@ -380,31 +383,10 @@ export class MealComponent implements OnInit, OnDestroy {
 
   dateClass = (date: Date): MatCalendarCellCssClasses => {
     const dateStr = date.toLocaleDateString();
-
     const isMeal = this.mealsDatesSet.has(dateStr);
-
     if (isMeal) return 'highlight-date-success';
-
     return '';
   };
-
-  // dateClass = (date: Date): MatCalendarCellCssClasses => {
-  //   let classApplied = '';
-  //   this.dates$.subscribe((dates) => {
-  //     const meDates = dates.map((date: any) => new Date(date));
-  //     const index = meDates.findIndex(
-  //       (x: any) =>
-  //         new Date(x).toLocaleDateString() === date.toLocaleDateString()
-  //     );
-  //     if (index > -1) {
-  //       if (meDates[index]) {
-  //         classApplied = 'highlight-date-success';
-  //       }
-  //     }
-  //     return classApplied;
-  //   });
-  //   return classApplied;
-  // };
 
   onDateChange(event: Date) {
     this.selectedDate = DateUtils.formatDate(event);

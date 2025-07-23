@@ -40,16 +40,33 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   title = 'Choisissez votre offre';
   description =
     "Envie d'en savoir plus sur votre alimentation ? Choisissez l'offre qui vous correspond !";
+
+  private guestFeatures = [
+    'Recherche et détails des aliments',
+    'Compartif nutritionnel entre 2 aliments',
+    'Enregistrement des aliments favoris',
+  ];
+
+  private tier1Features = [
+    ...this.guestFeatures,
+    'Création des repas et dashboard journalier',
+    'Export de la liste de courses associée',
+  ];
+
+  private tier2Features = [
+    ...this.tier1Features,
+    'Import des Glucose Continuous Monitoring',
+    'Vusialisation journaliere du CGM',
+    'Récapitulatif journalier des apports',
+  ];
+
   public prices: Sub[] = [
     {
       type: this.GUEST,
       class: 'bg-light-primary text-primary rounded f-w-600 p-6 p-y-4 f-s-16',
       title: 'Découvrir',
       price: '0€',
-      features: [
-        'Recherche et détails des aliments',
-        'Compartif nutritionnel entre 2 aliments',
-      ],
+      features: this.guestFeatures,
       buttonDisplayed$: of(true),
       link: "S'inscrire gratuitement",
       action: () => this.redirectRegister(),
@@ -59,12 +76,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       class: 'bg-light-success text-success rounded f-w-600 p-6 p-y-4 f-s-16',
       title: 'Niveau 1',
       price: '7,99€',
-      features: [
-        'Recherche et détails des aliments',
-        'Compartif nutritionnel entre 2 aliments',
-        'Création des repas et dashboard journalier',
-        'Export de la liste de courses associée',
-      ],
+      features: this.tier1Features,
       buttonDisplayed$: of(true),
       link: "S'abonner",
       action: () => this.subscribeTier1(),
@@ -74,15 +86,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       class: 'bg-light-warning text-warning rounded f-w-600 p-6 p-y-4 f-s-16',
       title: 'Niveau 2',
       price: '12,99€',
-      features: [
-        'Recherche et détails des aliments',
-        'Compartif nutritionnel entre 2 aliments',
-        'Création des repas et dashboard journalier',
-        'Export de la liste de courses associée',
-        'Import des Glucose Continuous Monitoring',
-        'Vusialisation journaliere du CGM',
-        'Récapitulatif journalier des apports',
-      ],
+      features: this.tier2Features,
       buttonDisplayed$: of(true),
       link: "S'abonner",
       action: () => this.subscribeTier2(),

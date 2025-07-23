@@ -10,6 +10,7 @@
       <mat-card class="cardWithShadow theme-card shadow aw-300 h-fit-content">
         <mat-calendar
           (selectedChange)="onDateChange($event!)"
+          [startAt]="selectedDateDate!"
           [dateClass]="dateClass"
           [selected]="selectedDateDate!"
         >

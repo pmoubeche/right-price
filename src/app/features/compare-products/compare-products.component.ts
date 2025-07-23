@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Subscription, tap } from 'rxjs';
 import { PaginatedDataSource } from '../../shared/common/paginated/paginated-datasource';
-import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
+import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
 import { ChartComponent } from '../../shared/components/chart/chart.component';
 import { ChartUtils } from '../../shared/components/chart/chart.utils';
 import { TableGenericComponent } from '../../shared/components/table-generic/table-generic.component';
@@ -26,7 +26,7 @@ import { OpenFoodFactsApiService } from '../../shared/services/openfoodfact-api.
 import { ProductUtils } from '../../shared/utils/product.utils';
 import { NutrimentInfoModel } from '../product/detail-product/detail-product.component';
 import { SearchProductAutocompleteComponent } from '../product/search-product-autocomplete/search-product-autocomplete.component';
-import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
+import { CompareProductService } from './compare-product.service';
 
 export class PercentCompareModel {
   id?: string;
@@ -180,7 +180,7 @@ export class CompareProductsComponent implements OnInit {
   private subscription = new Subscription();
 
   constructor(
-    private readonly cardsService: CardResultGenericService,
+    private readonly compareService: CompareProductService,
     private readonly openFoodFactsApiService: OpenFoodFactsApiService,
     private readonly router: Router
   ) {}
@@ -195,7 +195,7 @@ export class CompareProductsComponent implements OnInit {
       this.productB.nutriments!
     );
     ChartUtils.setChartImports();
-    this.cardsService.selectItem$.subscribe((item) => {
+    this.compareService.productInfoModel$.subscribe((item) => {
       this.productInfoModelSelected = item;
     });
   }

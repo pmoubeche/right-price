@@ -37,7 +37,10 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
   dateSelected?: string;
 
   @Input() set mealProduct(mealProductInfoModel: MealProductInfoModel) {
-    if (mealProductInfoModel.mealId !== undefined) {
+    if (
+      mealProductInfoModel !== undefined &&
+      mealProductInfoModel.mealId !== undefined
+    ) {
       this._mealProduct = mealProductInfoModel;
       this.initDataMealsOnInitAndDateChange();
     }
@@ -173,7 +176,6 @@ export class TableProductMealComponent implements OnInit, OnDestroy {
                 if (mealProductInfosList.length > 0) {
                   mealProductInfosList.forEach((productInfo) => {
                     this.addProductToRightList(productInfo);
-                    // productInfo.isEditable = false;
                   });
                 }
                 this.eventMealProductsBreakfast.emit(
