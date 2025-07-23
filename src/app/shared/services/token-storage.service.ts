@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { RolesConstants } from '../constants/role.constant';
 import {
   RefreshTokenRequest,
   RefreshTokenResponse,
   UserResponse,
 } from '../../../generated';
+import { RolesConstants } from '../constants/role.constant';
 
 const TOKEN_KEY = 'accesstoken';
 const REFRESH_TOKEN = 'refreshToken';
-const EXP = 'exp';
 
 @Injectable({
   providedIn: 'root',
@@ -31,11 +30,6 @@ export class TokenStorageService {
     window.sessionStorage.setItem(REFRESH_TOKEN, refreshToken);
   }
 
-  public saveExpirationDate(exp: string): void {
-    window.sessionStorage.removeItem(EXP);
-    window.sessionStorage.setItem(EXP, exp);
-  }
-
   public getAccessToken(): string | null {
     if (typeof window === 'undefined') {
       return null;
@@ -48,13 +42,6 @@ export class TokenStorageService {
       return null;
     }
     return window.sessionStorage.getItem(REFRESH_TOKEN)!;
-  }
-
-  public getExpiresAt(): string | null {
-    if (typeof window === 'undefined') {
-      return null;
-    }
-    return window.sessionStorage.getItem(EXP)!;
   }
 
   getCurrentUserFromToken(): UserResponse {
@@ -72,7 +59,6 @@ export class TokenStorageService {
     return {
       accessToken: this.getAccessToken()!,
       refreshToken: this.getRefreshToken()!,
-      accessTokenExpiresAt: this.getExpiresAt()!,
       forceRenewal: !forceRenewal ? false : forceRenewal,
     } as RefreshTokenRequest;
   }
@@ -80,16 +66,20 @@ export class TokenStorageService {
   saveRefreshTokenResponseInLocalStorage(response: RefreshTokenResponse): void {
     this.saveAccessToken(response.accessToken!);
     this.saveRefreshToken(response.refreshToken!);
-    this.saveExpirationDate(response.expiresAt!);
   }
 
   public isAccessTokenExpired(): boolean {
-    return Date.parse(this.getExpiresAt()!) < Date.now();
+    return this.getExpFromToken() < Date.now();
   }
 
   public getImageUrlFromToken(): string {
     var token: any = jwtDecode(this.getAccessToken()!);
     return token['img'];
+  }
+
+  public getExpFromToken(): number {
+    var token: any = jwtDecode(this.getAccessToken()!);
+    return token['exp'] * 1000; // Convert to milliseconds
   }
 
   public getUserIdFromToken(): string {

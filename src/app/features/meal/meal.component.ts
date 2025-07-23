@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   LOCALE_ID,
@@ -27,8 +26,17 @@ import {
   MatCalendarCellCssClasses,
 } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { ToastrService } from 'ngx-toastr';
 import { EMPTY, Observable, Subscription, catchError, map, tap } from 'rxjs';
-import { CardResultGenericService } from '../../shared/components/card-result-generic/card-result-generic.service';
+import {
+  LProductMealService,
+  MealModel,
+  MealProductParam,
+  MealsService,
+  ProductMealInfoModel,
+} from '../../../generated';
+import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
 import {
   ButtonAction,
   DialogConfirmContentModel,
@@ -52,18 +60,6 @@ import { SearchProductAutocompleteComponent } from '../product/search-product-au
 import { ChartMealProductComponent } from './chart-meal-product/chart-meal-product.component';
 import { MealService } from './meal.service';
 import { TableProductMealComponent } from './table-product-meal/table-product-meal.component';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { CardProductComponent } from '../../shared/components/card-product/card-product.component';
-import {
-  LProductMealService,
-  MealModel,
-  MealProductParam,
-  MealsService,
-  ProductMealInfoModel,
-} from '../../../generated';
-import { SnackbarService } from '../../shared/services/snackbar.service';
-import { ToastrService } from 'ngx-toastr';
-import { MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   standalone: true,
