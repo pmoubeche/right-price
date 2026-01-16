@@ -1,0 +1,142 @@
+<h1>{{ event.name }}</h1>
+<br />
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="Dépenses">
+    <br />
+    <div class="d-flex gap-8">
+      <mat-card class="cardWithShadow theme-card w-30">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Membres </mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          class="b-t-1 d-flex hstack justify-content-evenly flex-column"
+        >
+          <form class="m-t-24 gap-16 d-flex" [formGroup]="memberCreateForm!">
+            <mat-form-field appearance="outline">
+              <mat-label>Nom</mat-label>
+              <input
+                matInput
+                type="text"
+                [formControlName]="MEMBER_NAME"
+                required
+              />
+              @if(memeberNameControl.invalid){
+              <mat-error>Champ obligatoire</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Compte pour</mat-label>
+              <input
+                matInput
+                type="number"
+                [formControlName]="MEMBER_COUNT"
+                required
+              />
+              @if(memeberNameControl.invalid){
+              <mat-error>Champ obligatoire</mat-error>
+              }
+            </mat-form-field>
+            <button
+              class="bg-light-success text-success"
+              mat-flat-button
+              (click)="createMember()"
+            >
+              <span class="me-1">Ajouter</span>
+              <mat-icon>add</mat-icon>
+            </button>
+          </form>
+          <app-table-generic
+            [paginatedDataSource]="dataSourceMembers"
+            [columns]="columnParamsMembers"
+            [buttons]="actionButtonsMember"
+            [hasFooter]="true"
+            [isPaginated]="false"
+          ></app-table-generic>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="cardWithShadow theme-card w-70">
+        <mat-card-header class="d-flex justify-content-between">
+          <mat-card-title class="m-b-0">Dépenses </mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          class="b-t-1 d-flex hstack justify-content-evenly flex-column"
+        >
+          <form class="m-t-24 gap-16 d-flex" [formGroup]="expenseCreateForm!">
+            <mat-form-field appearance="outline">
+              <mat-label>Nom</mat-label>
+              <input
+                matInput
+                type="text"
+                [formControlName]="EXPENSE_NAME"
+                required
+              />
+              @if(expenseNameControl.invalid){
+              <mat-error>Champ obligatoire</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Montant</mat-label>
+              <input
+                matInput
+                type="number"
+                [formControlName]="EXPENSE_AMOUNT"
+                required
+              />
+              @if(expenseAmountControl.invalid){
+              <mat-error>Champ obligatoire</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Payé par</mat-label>
+              <mat-select [formControlName]="EXPENSE_PAID_BY">
+                @for (member of membersSignal(); track $index) {
+                <mat-option [value]="member">{{ member.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Concernés</mat-label>
+              <mat-select
+                [formControlName]="EXPENSE_MEMBERS_INVOLVED"
+                [compareWith]="compareCategoryObjects"
+                multiple
+                ngDefaultControl
+              >
+                <app-select-check-all
+                  [model]="expenseMembersInvolvedControl"
+                  [values]="membersSignal()"
+                ></app-select-check-all>
+                @for (member of membersSignal(); track $index) {
+                <mat-option [value]="member">{{ member.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <button
+              class="bg-light-success text-success"
+              mat-flat-button
+              (click)="createExpense()"
+            >
+              <span class="me-1">Ajouter</span>
+              <mat-icon>add</mat-icon>
+            </button>
+          </form>
+          <app-table-generic
+            [paginatedDataSource]="dataSourceExpenses"
+            [columns]="columnParamsExpenses"
+            [buttons]="actionButtonsExpense"
+            [hasFooter]="true"
+            [isPaginated]="false"
+          ></app-table-generic>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-tab>
+  <mat-tab label="Equilibres">
+    <br />
+    <app-balances
+      [membersSignal]="membersSignal"
+      [expensesSignal]="expensesSignal"
+    ></app-balances>
+  </mat-tab>
+</mat-tab-group>

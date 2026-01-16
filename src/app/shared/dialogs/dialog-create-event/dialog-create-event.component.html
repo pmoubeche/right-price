@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Créer Evènement</h2>
+<mat-dialog-content class="b-t-1 d-flex" style="justify-content: center">
+  <form class="m-t-24 gap-16 d-flex flex-column" [formGroup]="eventCreateForm!">
+    <mat-form-field appearance="outline">
+      <mat-label>Nom de l'évènement</mat-label>
+      <input matInput type="text" [formControlName]="EVENT_NAME" required />
+      @if(eventNameControl.invalid){
+      <mat-error>Champ obligatoire</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button (click)="createOrUpdate()">
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="device-floppy"></i-tabler>
+      <span class="m-4">Enregistrer</span>
+    </div>
+  </button>
+  <button mat-button mat-dialog-close>
+    <div class="d-flex align-items-center">
+      <i-tabler class="icon-20 m-r-4" name="x"></i-tabler
+      ><span class="m-4">Fermer</span>
+    </div>
+  </button>
+</mat-dialog-actions>

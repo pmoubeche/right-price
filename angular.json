@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "datafood-front": {
+    "right-price": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -18,7 +18,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/datafood-front",
+            "outputPath": "dist/right-price",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -27,11 +27,7 @@
             "stylePreprocessorOptions": {
               "includePaths": ["src/assets/scss"]
             },
-            "styles": [
-              "src/styles.scss",
-              "src/assets/scss/style.scss",
-              "node_modules/ngx-toastr/toastr.css"
-            ],
+            "styles": ["src/styles.scss", "src/assets/scss/style.scss"],
             "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,
@@ -67,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "datafood-front:build:production"
+              "buildTarget": "right-price:build:production"
             },
             "development": {
-              "buildTarget": "datafood-front:build:development"
+              "buildTarget": "right-price:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "datafood-front:build"
+            "buildTarget": "right-price:build"
           }
         },
         "test": {

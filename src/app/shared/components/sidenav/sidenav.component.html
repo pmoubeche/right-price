@@ -1,7 +1,7 @@
 <mat-sidenav-container class="blue_theme light-theme" style="height: 92%">
   <mat-sidenav #sidenav opened="true" mode="side" class="sidebarNav p-y-16">
     <mat-nav-list class="sidebar-list">
-      @for (item of listItemsGuests; track $index) {
+      @for (item of items; track $index) {
       <a
         mat-list-item
         [ngClass]="{
@@ -11,21 +11,6 @@
         (click)="onItemSelected(item)"
       >
         <i-tabler name="{{ item.icon }}" matListItemIcon></i-tabler>
-        <span class="hide-menu" matListItemTitle>{{ item.title }}</span>
-      </a>
-      } @for (item of listItemsSuscribers; track $index) {
-      <a
-        mat-list-item
-        [ngClass]="{
-          activeMenu: item.route ? router.isActive(item.route, true) : false
-        }"
-        class="menu-list-item"
-        (click)="onItemSelected(item)"
-      >
-        <i-tabler
-          name="{{ !item.enabled ? 'lock' : item.icon }}"
-          matListItemIcon
-        ></i-tabler>
         <span class="hide-menu" matListItemTitle>{{ item.title }}</span>
       </a>
       }

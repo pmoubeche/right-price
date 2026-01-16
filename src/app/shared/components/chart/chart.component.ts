@@ -35,7 +35,7 @@ export class ChartComponent implements AfterViewInit, OnChanges {
   @Input() type!: ChartType;
   @Input() data!: ChartData;
   @Input() options!: ChartOptions;
-  @Input() height = 150;
+  @Input() height = 50;
   @Input() width = 300;
   @Input() plugins?: any[];
   /** Force destroy and redraw on chart update */

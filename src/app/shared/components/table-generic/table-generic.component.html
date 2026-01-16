@@ -61,25 +61,46 @@
         <div>
           <mat-chip-set>
             @for(option of element[column.columDef!]; track $index){
-            <mat-chip disabled>{{ option }}</mat-chip>
+            <mat-chip disabled>
+              @if(isObject(option)){
+              {{ option.name }}
+              } @else {
+              {{ option }}
+              }
+            </mat-chip>
             }
           </mat-chip-set>
         </div>
         } @else if(column.type! === columnTypeEnum.PERCENT) {
-        {{ element[column.columDef!] | percentFormat : 100 }}
-        } @else if(column.type! === columnTypeEnum.STRING) {
+        <!-- {{ element[column.columDef!] | percentFormat : 100 }} -->
+        }
+        @else if(column.type! === columnTypeEnum.CONSTANT) {
+        {{ column.constantValue }}
+        }
+        @else if(column.type! === columnTypeEnum.STRING) {
         <div
           [ngStyle]="{ height: rowHeight }"
           class="d-flex align-items-center"
         >
-          @if(element[column.columDef!] &&
-          element[column.columDef!].startsWith('--')){
-          <i-tabler class="icon-20 m-r-8" name="corner-down-right"></i-tabler>
+          @if(isObject(element[column.columDef!])){
+          {{ element[column.columDef!].name }}
+          } @else {
+          {{ element[column.columDef!] }}
           }
-          {{ element[column.columDef!] | tableChildrenLine }}
         </div>
+        } @else if(column.type === columnTypeEnum.CHART){
+        <app-chart
+          class="aw-300"
+          style="height: 50px !important"
+          [type]="column.chartConfig?.type!"
+          [data]="column.chartConfig?.data(element)!"
+          [options]="column.chartConfig?.options!"
+          [height]="column.chartConfig?.height!"
+          [width]="column.chartConfig?.width!"
+        >
+        </app-chart>
         } @else if(column.type! === columnTypeEnum.DATE) {
-        {{ element[column.columDef!] | formatDate }}
+        <!-- {{ element[column.columDef!] | formatDate }} -->
         } @else if (column.type! === columnTypeEnum.ACTIONS) {
         <button
           mat-icon-button
@@ -121,10 +142,29 @@
             <i-tabler class="icon-20 m-r-8" name="check"></i-tabler>
           </button>
         </form>
+        } @if(column.type === columnTypeEnum.CURRENCY){
+        {{ element[column.columDef!] | currency : "EUR" }}
         } @else {
         {{ element[column.columDef!] }}
         } }
       </td>
+      @if(hasFooter ){ @if(columns[0].columDef! === column.columDef!){
+      <td mat-footer-cell *matFooterCellDef>
+        <strong>{{ column?.footerLabel }}</strong>
+      </td>
+      } @if(column.type === columnTypeEnum.NUMBER && column.footerFunction !==
+      undefined){
+      <td mat-footer-cell *matFooterCellDef>
+        <strong>{{ column?.footerFunction() }}</strong>
+      </td>
+      } @if(column.type === columnTypeEnum.CURRENCY && column.footerFunction !==
+      undefined){
+      <td mat-footer-cell *matFooterCellDef>
+        <strong>{{ column?.footerFunction() | currency : "EUR" }}</strong>
+      </td>
+      } @else {
+      <td mat-footer-cell *matFooterCellDef></td>
+      } }
     </ng-container>
     }
 
@@ -135,6 +175,9 @@
       [ngStyle]="{ height: rowHeight,
       }"
     ></tr>
+    @if(hasFooter){
+    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+    }
   </table>
 
   @if(isPaginated){

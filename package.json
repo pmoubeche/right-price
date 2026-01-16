@@ -1,5 +1,5 @@
 {
-  "name": "datafood-front",
+  "name": "right-price",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -8,7 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:datafood-front": "node dist/datafood-front/server/server.mjs",
+    "serve:ssr:right-price": "node dist/right-price/server/server.mjs",
     "generate-api": "npx @openapitools/openapi-generator-cli generate -i C:/Users/pmoub/Documents/projects/datafood-back/src/main/resources/open-api-contract/open-api.yml -g typescript-angular -o src/generated"
   },
   "private": true,
@@ -38,9 +38,6 @@
     "material-icons": "^1.13.12",
     "material-symbols": "^0.17.1",
     "moment": "^2.30.1",
-    "ngx-avatars": "^1.7.0",
-    "ngx-scrollbar": "^18.0.0",
-    "ngx-toastr": "^19.0.0",
     "primeflex": "^3.3.1",
     "roboto-fontface": "^0.10.0",
     "rxjs": "~7.8.0",

@@ -1,0 +1,32 @@
+<div class="d-flex gap-16">
+  <mat-card class="mt-16 cardWithShadow theme-card">
+    <mat-card-header class="d-flex justify-content-between">
+      <mat-card-title class="m-b-0">Soldes des membres </mat-card-title>
+    </mat-card-header>
+    <mat-card-content
+      class="b-t-1 d-flex hstack justify-content-evenly flex-column"
+    >
+      <app-table-generic
+        [paginatedDataSource]="dataSourceMembers"
+        [columns]="columnParamsMembers()"
+        [hasFooter]="true"
+        [isPaginated]="false"
+      ></app-table-generic>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header class="d-flex justify-content-between">
+      <mat-card-title class="m-b-0">Transactions suggérées </mat-card-title>
+    </mat-card-header>
+    <mat-card-content
+      class="b-t-1 d-flex hstack justify-content-evenly flex-column"
+    >
+      <app-table-generic
+        [paginatedDataSource]="dataSourceTransactions"
+        [columns]="columsParamsTransactions"
+        [isPaginated]="false"
+      ></app-table-generic>
+    </mat-card-content>
+  </mat-card>
+</div>

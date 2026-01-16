@@ -1,30 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { SidenavComponent } from './shared/components/sidenav/sidenav.component';
-import { ToolbarComponent } from './shared/components/toolbar/toolbar.component';
-import { ContextService } from './shared/services/context.service';
-import { TokenStorageService } from './shared/services/token-storage.service';
 
 @Component({
   standalone: true,
   selector: 'app-root',
-  imports: [ToolbarComponent, SidenavComponent],
+  imports: [SidenavComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  title = 'datafood_front';
+  constructor() {}
 
-  constructor(
-    private readonly tokenService: TokenStorageService,
-    private readonly contextService: ContextService
-  ) {}
-
-  ngOnInit(): void {
-    // only useful for reloading page and check if user is already logged in
-    if (this.tokenService.getAccessToken() !== null) {
-      this.contextService.setCurrentUser(
-        this.tokenService.getCurrentUserFromToken()
-      );
-    }
-  }
+  ngOnInit(): void {}
 }

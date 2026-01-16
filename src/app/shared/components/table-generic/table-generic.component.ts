@@ -18,19 +18,18 @@ import {
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { of } from 'rxjs';
-import { PaginatedDataSource } from '../../common/paginated/paginated-datasource';
 import { MaterialModule } from '../../material/material.module';
+import { TableGenericService } from './table-generic.service';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import {
   ColumnTypeParamEnum,
   TableColumnParamModel,
-} from '../../model/table-column-param.model';
-import { FormatDatePipe } from '../../pipes/format-date.pipe';
-import { PercentFormatPipe } from '../../pipes/percent-format.pipe';
-import { CardResultGenericService } from '../card-result-generic/card-result-generic.service';
-import { TableGenericService } from './table-generic.service';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { TableChildrenLinePipe } from '../../pipes/table-children-line.pipe';
-import { ButtonParam } from '../../model/button-param';
+} from '../../models/table-column-param.model';
+import { PaginatedDataSource } from '../../models/paginated-datasource';
+import { ButtonParam } from '../../models/button-param';
+import { ChartComponent } from '../chart/chart.component';
+import { ChartUtils } from '../chart/chart.utils';
+import { ChartData, ChartOptions, ChartType } from 'chart.js';
 
 export class UpdateData {
   element: any;
@@ -43,12 +42,10 @@ export class UpdateData {
   imports: [
     MaterialModule,
     CommonModule,
-    PercentFormatPipe,
-    FormatDatePipe,
-    TableChildrenLinePipe,
     ReactiveFormsModule,
     FormsModule,
     TablerIconsModule,
+    ChartComponent,
   ],
   templateUrl: './table-generic.component.html',
 })
@@ -78,6 +75,7 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   @Input() isPaginated = true;
   @Input() pageSizeOptions: number[] = [24];
   @Input() isSection = false;
+  @Input() hasFooter = false;
 
   @Output() onValidateUpdateItem = new EventEmitter<UpdateData>();
   @Output() eventSelectLine = new EventEmitter<T>();
@@ -99,11 +97,11 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private readonly formBuilder: FormBuilder,
-    private readonly tableGenericService: TableGenericService,
-    private readonly cardGenericService: CardResultGenericService
+    private readonly tableGenericService: TableGenericService
   ) {}
 
   ngOnInit(): void {
+    ChartUtils.setChartImports();
     this.tableGenericService.loading$.subscribe(
       (loading) => (this.loading = loading)
     );
@@ -166,5 +164,9 @@ export class TableGenericComponent<T> implements AfterViewInit, OnInit {
       formInputValue: this.editForm?.get(this.EDITABLE_FIELD)!.value,
     };
     this.onValidateUpdateItem.next(data);
+  }
+
+  isObject(value: any): boolean {
+    return value && typeof value === 'object' && !Array.isArray(value);
   }
 }

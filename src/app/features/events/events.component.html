@@ -1,0 +1,16 @@
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header class="d-flex justify-content-between">
+    <mat-card-title class="m-b-0">Evènements </mat-card-title>
+    <button
+      class="bg-light-success text-success"
+      mat-flat-button
+      (click)="openCreateEventPopIn()"
+    >
+      <span class="me-1">Créer Evènement</span>
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-card-header>
+  <mat-card-content class="b-t-1 d-flex hstack justify-content-evenly">
+    <app-card-list [models]="events()"> </app-card-list>
+  </mat-card-content>
+</mat-card>

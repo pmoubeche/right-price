@@ -1,0 +1,31 @@
+<div class="d-flex flex-column justify-items-center">
+  <div class="position-relative d-flex flex-wrap-wrap justify-content-center">
+    @if(isLoading$ | async){
+    <div class="spinner-overlay">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+    } @for (model of models; track $index) {
+
+    <app-card
+      [model]="model"
+      [isClickable]="true"
+      (cardClick)="onSelectItem(model)"
+      [displayDeleteFavoriteButton]="displayDeleteFavoriteButton"
+      (relaodCards)="onReloadCards()"
+    ></app-card>
+    }
+  </div>
+  @if(isPaginated && (models !== undefined)){
+  <br />
+  <mat-paginator
+    class="d-flex justify-content-center"
+    [length]="totalElements!"
+    [pageIndex]="pageIndex!"
+    [pageSize]="pageSize!"
+    [pageSizeOptions]="pageSizeOptions!"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+  >
+  </mat-paginator>
+  }
+</div>
