@@ -1,0 +1,29 @@
+<mat-form-field appearance="outline" class="w-100">
+  <mat-label>{{ label() }}</mat-label>
+
+  <mat-select
+    [multiple]="multiple()"
+    [disabled]="disabled"
+    [value]="value"
+    [compareWith]="compareByCode"
+    (selectionChange)="onSelectionChange($event.value)"
+  >
+    @if (multiple() && enableSelectAll()) {
+      <mat-checkbox
+        [checked]="isAllSelected()"
+        [indeterminate]="isIndeterminate()"
+        (change)="toggleSelectAll()"
+      >
+        Select All
+      </mat-checkbox>
+
+      <mat-divider></mat-divider>
+    }
+
+    @for (option of options(); track option.code) {
+      <mat-option [value]="option">
+        {{ option.label }}
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
