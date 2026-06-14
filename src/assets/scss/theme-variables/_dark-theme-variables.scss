@@ -1,0 +1,92 @@
+html .dark-theme {
+  color-scheme: dark;
+  --mat-sys-corner-small: 7px;
+  --mat-sys-background: #141a21;
+  --mat-sys-surface-bright: #1e2736;
+  --mat-sys-surface: #1a2130;
+  --mat-sys-surface-container: #1e2736;
+  --mat-sys-surface-container-low: #141a21;
+  --mat-sys-on-background: #e0e4f4;
+  --mat-sys-outline: #3a4a5c;
+  --mat-sys-outline-variant: #2d3d52;
+  --mdc-elevated-card-container-color: #1e2736;
+  --mdc-outlined-card-container-color: #1e2736;
+  --mdc-outlined-text-field-hover-outline-color: #3a4a5c;
+  --mdc-checkbox-unselected-hover-state-layer-color: #2d3d52;
+  --mat-menu-item-hover-state-layer-color: #1e2736;
+  --mat-standard-button-toggle-state-layer-color: #1e2736;
+  --mat-option-focus-state-layer-color: #1e2736;
+  --mat-option-hover-state-layer-color: #1e2736;
+  --mdc-switch-unselected-track-color: #2d3d52;
+  --mat-stepper-header-focus-state-layer-color: #1e2736;
+  --mat-stepper-header-hover-state-layer-color: #1e2736;
+  --mdc-dialog-container-color: #1e2736;
+  --mdc-dialog-supporting-text-color: var(--mat-sys-on-background);
+  --mat-expansion-header-hover-state-layer-color: #1e2736;
+  --mat-sidenav-container-background-color: #1a2130;
+  --mat-sidenav-content-background-color: #141a21;
+  --mat-sys-primary-fixed-dim: rgba(93, 135, 255, 0.25);
+  --mat-table-background-color: #1a2130;
+  --mat-table-header-container-height: 56px;
+  --mat-menu-container-color: #1e2736;
+  --mat-menu-item-label-text-color: #e0e4f4;
+  --mat-select-panel-background-color: #1e2736;
+  --mat-option-label-text-color: #e0e4f4;
+  --mat-option-selected-state-label-text-color: var(--mat-sys-primary);
+  --mdc-dialog-subhead-color: #e0e4f4;
+  --mdc-dialog-supporting-text-color: #e0e4f4;
+
+  // Cards — mat.card-overrides() injecte background-color directement, overrider avec sélecteur ciblé
+  .mat-mdc-card {
+    --mdc-elevated-card-container-color: #1e2736;
+    background-color: #1e2736 !important;
+  }
+
+  // Tables
+  .mat-mdc-table {
+    background-color: #1a2130;
+  }
+
+  .mat-mdc-header-row {
+    background-color: #1e2736;
+  }
+
+  .mat-mdc-row:hover .mat-mdc-cell {
+    background-color: #252f40;
+  }
+
+  // Inputs & form fields
+  .mat-mdc-text-field-wrapper {
+    background-color: transparent;
+  }
+
+  // Sidenav panel
+  .mat-drawer {
+    background-color: #1a2130;
+  }
+
+  // Select dropdown panel
+  .mat-mdc-select-panel {
+    background-color: #1e2736;
+  }
+
+  // Menu
+  .mat-mdc-menu-panel {
+    background-color: #1e2736;
+  }
+
+  // Dialog
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-color: #1e2736;
+  }
+
+  // Tabs
+  .mat-mdc-tab-header {
+    background-color: #1a2130;
+  }
+
+  // Chips
+  .mat-mdc-chip {
+    background-color: #252f40;
+  }
+}

@@ -4,7 +4,7 @@
 
 @include mat.form-field-overrides(
   (
-    container-height: 37px,
+    container-height: $form-field-height,
     outlined-container-shape: var(--mat-sys-corner-small),
     container-vertical-padding: 6px,
   )

@@ -46,13 +46,22 @@
 }
 
 .hstack {
+  --hstack-gap: 20px;
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: var(--hstack-gap);
 }
 
 @media (max-width: 767px) {
   .hstack {
     flex-direction: column;
+  }
+
+  .flex-wrap-mobile {
+    flex-wrap: wrap;
+  }
+
+  .w-sm-full {
+    width: 100% !important;
   }
 }

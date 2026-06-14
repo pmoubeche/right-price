@@ -1,0 +1,9 @@
+@use "@angular/material" as mat;
+@use "../variables" as *;
+
+html {
+  .mat-mdc-tab-header {
+    border-radius: $border-radius $border-radius 0 0;
+    overflow: hidden;
+  }
+}

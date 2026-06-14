@@ -1,6 +1,6 @@
-<mat-sidenav-container class="blue_theme light-theme" style="height: 92%">
+<mat-sidenav-container [ngClass]="['blue_theme', isDarkMode ? 'dark-theme' : 'light-theme']" style="height: 100%">
   <mat-sidenav #sidenav opened="true" mode="side" class="sidebarNav p-y-16">
-    <mat-nav-list class="sidebar-list">
+    <mat-nav-list class="sidebar-list flex-1-auto">
       @for (item of items; track $index) {
       <a
         mat-list-item
@@ -15,6 +15,16 @@
       </a>
       }
     </mat-nav-list>
+
+    <div class="dark-mode-toggle">
+      <i-tabler name="sun" class="icon-18 toggle-icon"></i-tabler>
+      <mat-slide-toggle
+        [checked]="isDarkMode"
+        (change)="toggleDarkMode()"
+        color="primary"
+      ></mat-slide-toggle>
+      <i-tabler name="moon" class="icon-18 toggle-icon"></i-tabler>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content class="pageWrapper">
     <router-outlet></router-outlet>
