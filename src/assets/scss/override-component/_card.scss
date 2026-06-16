@@ -39,12 +39,13 @@ html {
   }
 
   .card-hover {
-    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                outline 200ms ease,
+                scale 200ms ease;
 
     &:hover {
       outline: 2px solid $primary;
-      scale: 1.05;
-      transition: all 0s ease-in 0s;
+      scale: 1.02;
       cursor: pointer;
     }
   }
@@ -94,12 +95,13 @@ html {
   }
 
   .cardNoClick {
-    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                outline 200ms ease,
+                scale 200ms ease;
 
     &:hover {
       outline: 2px solid $primary;
-      scale: 1.05;
-      transition: all 0s ease-in 0s;
+      scale: 1.02;
     }
   }
 

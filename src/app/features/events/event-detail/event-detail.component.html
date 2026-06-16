@@ -1,10 +1,8 @@
-<h1>{{ event.name }}</h1>
-<br />
+<h1 class="m-b-16">{{ event.name }}</h1>
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
   <mat-tab label="Dépenses">
-    <br />
-    <div class="d-flex gap-8">
-      <mat-card class="cardWithShadow theme-card w-30">
+    <div class="d-flex gap-8 m-t-16 flex-wrap-mobile">
+      <mat-card class="cardWithShadow theme-card w-30 w-sm-full">
         <mat-card-header class="d-flex justify-content-between">
           <mat-card-title class="m-b-0">Membres </mat-card-title>
         </mat-card-header>
@@ -20,8 +18,8 @@
                 [formControlName]="MEMBER_NAME"
                 required
               />
-              @if(memeberNameControl.invalid){
-              <mat-error>Champ obligatoire</mat-error>
+              @if (memeberNameControl.invalid) {
+                <mat-error>Champ obligatoire</mat-error>
               }
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -32,8 +30,8 @@
                 [formControlName]="MEMBER_COUNT"
                 required
               />
-              @if(memeberNameControl.invalid){
-              <mat-error>Champ obligatoire</mat-error>
+              @if (memeberNameControl.invalid) {
+                <mat-error>Champ obligatoire</mat-error>
               }
             </mat-form-field>
             <button
@@ -55,7 +53,7 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="cardWithShadow theme-card w-70">
+      <mat-card class="cardWithShadow theme-card w-69 w-sm-full">
         <mat-card-header class="d-flex justify-content-between">
           <mat-card-title class="m-b-0">Dépenses </mat-card-title>
         </mat-card-header>
@@ -71,8 +69,8 @@
                 [formControlName]="EXPENSE_NAME"
                 required
               />
-              @if(expenseNameControl.invalid){
-              <mat-error>Champ obligatoire</mat-error>
+              @if (expenseNameControl.invalid) {
+                <mat-error>Champ obligatoire</mat-error>
               }
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -83,15 +81,15 @@
                 [formControlName]="EXPENSE_AMOUNT"
                 required
               />
-              @if(expenseAmountControl.invalid){
-              <mat-error>Champ obligatoire</mat-error>
+              @if (expenseAmountControl.invalid) {
+                <mat-error>Champ obligatoire</mat-error>
               }
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Payé par</mat-label>
               <mat-select [formControlName]="EXPENSE_PAID_BY">
                 @for (member of membersSignal(); track $index) {
-                <mat-option [value]="member">{{ member.name }}</mat-option>
+                  <mat-option [value]="member">{{ member.name }}</mat-option>
                 }
               </mat-select>
             </mat-form-field>
@@ -108,7 +106,7 @@
                   [values]="membersSignal()"
                 ></app-select-check-all>
                 @for (member of membersSignal(); track $index) {
-                <mat-option [value]="member">{{ member.name }}</mat-option>
+                  <mat-option [value]="member">{{ member.name }}</mat-option>
                 }
               </mat-select>
             </mat-form-field>
