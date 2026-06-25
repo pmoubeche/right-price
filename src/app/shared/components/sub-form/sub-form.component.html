@@ -1,0 +1,23 @@
+<form [formGroup]="form()" (change)="onChange()">
+  <input type="hidden" formControlName="index" [value]="index()" />
+
+  <mat-form-field appearance="outline">
+    <mat-label>Nom</mat-label>
+    <input matInput type="text" formControlName="nameChild" />
+  </mat-form-field>
+
+  <app-select-multiple-all
+    formControlName="select"
+    label="Tags"
+    [options]="selectValues()"
+    [multiple]="true"
+    [enableSelectAll]="true"
+  ></app-select-multiple-all>
+  <br />
+  <app-chip-input
+    [defaultValues]="this.item().chips || []"
+    formControlName="chips"
+    placeholder="Ajouter un tag"
+  ></app-chip-input>
+  <br />
+</form>

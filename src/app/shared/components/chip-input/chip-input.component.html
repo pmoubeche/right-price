@@ -1,0 +1,30 @@
+<div>
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      [(ngModel)]="inputValue"
+      [placeholder]="placeholder()"
+      [disabled]="disabled"
+      (blur)="addChip(); $event.preventDefault()"
+      (keydown.enter)="addChip(); $event.preventDefault()"
+    />
+  </mat-form-field>
+
+  <mat-chip-listbox multiple>
+    @for (chip of chips; track $index) {
+      <mat-chip-option
+        [selected]="chip.selected"
+        [disabled]="chip.disabled || disabled"
+        (click)="toggleSelection(chip)"
+        (removed)="removeChip(chip)"
+      >
+        {{ chip.label }}
+        @if (removable() && !disabled) {
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        }
+      </mat-chip-option>
+    }
+  </mat-chip-listbox>
+</div>

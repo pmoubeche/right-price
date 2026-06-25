@@ -1,1 +1,27 @@
-<app-events></app-events>
+<!-- <app-events></app-events> -->
+<form [formGroup]="formGlobal">
+  <form [formGroup]="formParent" formGroupName="parent">
+    <mat-form-field appearance="outline">
+      <mat-label>Parent Name</mat-label>
+      <input matInput type="text" formControlName="textParent" />
+    </mat-form-field>
+    <br />
+    <mat-divider></mat-divider>
+  </form>
+
+  <div formArrayName="childs">
+    @for (item of subItems; track $index) {
+      <br />
+      <app-sub-form
+        [item]="item"
+        [index]="$index"
+        (changes)="onSubFormChange($event)"
+      ></app-sub-form>
+      <mat-divider></mat-divider>
+    }
+  </div>
+</form>
+
+<button mat-raised-button color="primary" type="button" (click)="submit()">
+  Submit
+</button>
